@@ -1,0 +1,85 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/rtf/com/lowagie/text/rtf/parser/destinations
+http://www.printwiki.00mm.org/printwiki
+add
+
+RtfDestinationStylesheetTable.java
+file
+
+
+
+add
+
+RtfDestinationListTable.java
+file
+
+
+
+add
+
+RtfDestinationListener.java
+file
+
+
+
+add
+
+RtfDestinationMgr.java
+file
+
+
+
+add
+
+RtfDestinationColorTable.java
+file
+
+
+
+add
+
+RtfDestinationShppict.java
+file
+
+
+
+add
+
+RtfDestinationNull.java
+file
+
+
+
+add
+
+RtfDestinationInfo.java
+file
+
+
+
+add
+
+RtfDestinationDocument.java
+file
+
+
+
+add
+
+RtfDestinationFontTable.java
+file
+
+
+
+add
+
+RtfDestination.java
+file
+
+
+
+add
+

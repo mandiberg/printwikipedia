@@ -1,0 +1,141 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/fonts
+http://www.printwiki.00mm.org/printwiki
+add
+
+Helvetica-Bold.afm
+file
+
+
+
+add
+
+Times-Italic.afm
+file
+
+
+
+add
+
+mustRead.html
+file
+
+
+
+add
+
+Times-BoldItalic.afm
+file
+
+
+
+add
+
+Courier-Bold.afm
+file
+
+
+
+add
+
+glyphlist.txt
+file
+
+
+
+add
+
+Times-Roman.afm
+file
+
+
+
+add
+
+Times-Bold.afm
+file
+
+
+
+add
+
+cmaps
+dir
+
+
+
+add
+
+Helvetica-Oblique.afm
+file
+
+
+
+add
+
+Helvetica-BoldOblique.afm
+file
+
+
+
+add
+
+Helvetica.afm
+file
+
+
+
+add
+
+Symbol.afm
+file
+
+
+
+add
+
+Courier-Oblique.afm
+file
+
+
+
+add
+
+cmap_info.txt
+file
+
+
+
+add
+
+Courier-BoldOblique.afm
+file
+
+
+
+add
+
+Courier.afm
+file
+
+
+
+add
+
+FontsResourceAnchor.java
+file
+
+
+
+add
+
+ZapfDingbats.afm
+file
+
+
+
+add
+

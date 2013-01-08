@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/printwiki/!svn/ver/5/trunk/src/wikitest
+END
+WikiParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/printwiki/!svn/ver/5/trunk/src/wikitest/WikiParser.java
+END
+MainTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/printwiki/!svn/ver/12/trunk/src/wikitest/MainTest.java
+END
+Charset.java
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/printwiki/!svn/ver/5/trunk/src/wikitest/Charset.java
+END
+Regexp.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/printwiki/!svn/ver/5/trunk/src/wikitest/Regexp.java
+END
+NewMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/printwiki/!svn/ver/12/trunk/src/wikitest/NewMain.java
+END

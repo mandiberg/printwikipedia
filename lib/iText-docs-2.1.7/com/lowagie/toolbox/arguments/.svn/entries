@@ -1,0 +1,120 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/toolbox/arguments
+http://www.printwiki.00mm.org/printwiki
+add
+
+FileArrayArgument.html
+file
+
+
+
+add
+
+ColorArgument.html
+file
+
+
+
+add
+
+FileArgument.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+ImageArgument.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+
+BitsetArgument.html
+file
+
+
+
+add
+
+IntegerArgument.html
+file
+
+
+
+add
+
+filters
+dir
+
+
+
+add
+
+AbstractArgument.html
+file
+
+
+
+add
+
+FloatArgument.html
+file
+
+
+
+add
+
+StringArgument.html
+file
+
+
+
+add
+
+PageSizeArgument.html
+file
+
+
+
+add
+
+OptionArgument.Entry.html
+file
+
+
+
+add
+
+OptionArgument.html
+file
+
+
+
+add
+

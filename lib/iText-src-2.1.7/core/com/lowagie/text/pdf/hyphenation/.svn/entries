@@ -1,0 +1,78 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/hyphenation
+http://www.printwiki.00mm.org/printwiki
+add
+
+CharVector.java
+file
+
+
+
+add
+
+Hyphenator.java
+file
+
+
+
+add
+
+SimplePatternParser.java
+file
+
+
+
+add
+
+TernaryTree.java
+file
+
+
+
+add
+
+HyphenationException.java
+file
+
+
+
+add
+
+HyphenationTree.java
+file
+
+
+
+add
+
+Hyphenation.java
+file
+
+
+
+add
+
+ByteVector.java
+file
+
+
+
+add
+
+PatternConsumer.java
+file
+
+
+
+add
+
+Hyphen.java
+file
+
+
+
+add
+

@@ -1,0 +1,57 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7
+http://www.printwiki.00mm.org/printwiki
+add
+
+ant
+dir
+
+
+
+add
+
+toolbox
+dir
+
+
+
+add
+
+core
+dir
+
+
+
+add
+
+rups
+dir
+
+
+
+add
+
+rtf
+dir
+
+
+
+add
+
+test.xml
+file
+
+
+
+add
+
+build.xml
+file
+
+
+
+add
+

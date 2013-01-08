@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner
+END
+HtmlTokenizer.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/HtmlTokenizer.java
+END
+Utils.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/Utils.java
+END
+CompactXmlSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/CompactXmlSerializer.java
+END
+PrettyXmlSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/PrettyXmlSerializer.java
+END
+EndTagToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/EndTagToken.java
+END
+CommentToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/CommentToken.java
+END
+SimpleXmlSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/SimpleXmlSerializer.java
+END
+DoctypeToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/DoctypeToken.java
+END
+ITagInfoProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/ITagInfoProvider.java
+END
+HtmlTagProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/HtmlTagProvider.java
+END
+ContentToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/ContentToken.java
+END
+BaseToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/BaseToken.java
+END
+TagToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/TagToken.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/package.html
+END
+TagNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/TagNode.java
+END
+SpecialEntities.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/SpecialEntities.java
+END
+CommandLine.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/CommandLine.java
+END
+TagInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/TagInfo.java
+END
+XmlSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/XmlSerializer.java
+END
+HtmlCleaner.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/printwiki/!svn/ver/5/trunk/src/info/bliki/htmlcleaner/HtmlCleaner.java
+END

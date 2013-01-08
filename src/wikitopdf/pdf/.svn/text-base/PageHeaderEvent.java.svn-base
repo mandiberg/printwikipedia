@@ -1,0 +1,112 @@
+/*
+ */
+package wikitopdf.pdf;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.GrayColor;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPageEventHelper;
+import com.lowagie.text.pdf.PdfWriter;
+import wikitopdf.WikiLogger;
+
+/**
+ *
+ * @author Denis Lunev <den.lunev@gmail.com>
+ */
+public class PageHeaderEvent extends PdfPageEventHelper {
+
+    /**
+     *
+     * @param startPage
+     */
+    public PageHeaderEvent(int startPage) {
+        this.startPage = startPage;
+    }
+
+    @Override
+    public void onOpenDocument(PdfWriter writer, Document document) {
+
+        contentPage = writer.getDirectContent();
+        
+        try {
+            WikiFontSelector wikiFontSelector = new WikiFontSelector();
+            wikiFontSelector.getTitleFontSelector().process("");
+            bsFont = wikiFontSelector.getCommonFont().getBaseFont();
+        } catch (Exception e) {
+            WikiLogger.getLogger().severe(e.getMessage());
+        }
+    }
+
+    @Override
+    public void onStartPage(PdfWriter writer, Document document){
+       pageNum = writer.getPageNumber() + startPage;
+       contentPage.saveState();
+
+       if ((pageNum % 2) == 1 && pageNum != 1) {
+
+           writeHeader(currentTitle, 27,
+                    document.getPageSize().getHeight() - 27,
+                    PdfContentByte.ALIGN_LEFT);
+       } 
+    }
+
+    @Override
+    public void onEndPage(PdfWriter writer, Document document) {
+        pageNum = writer.getPageNumber() + startPage;
+        contentPage.saveState();
+
+        if(pageNum == 1){
+            writeHeader(currentTitle, 27,
+                    document.getPageSize().getHeight() - 27,
+                    PdfContentByte.ALIGN_LEFT);
+        }
+
+        if ((pageNum % 2) == 0) {
+            writeHeader(currentTitle, document.getPageSize().getWidth() - 27,
+                    document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_RIGHT);
+        }
+    }
+
+    /**
+     *
+     * @param line
+     */
+    public void setCurrentTitle(String line) {
+        //Current line for header
+        currentTitle = line;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getPageNum(){
+        return pageNum;
+    }
+
+    private void writeHeader(String text, float x, float y, int align){
+        
+        int sign = (align == PdfContentByte.ALIGN_LEFT) ? -1 : 1;
+
+        contentPage.beginText();
+        contentPage.setFontAndSize(bsFont, 8);
+
+        contentPage.showTextAligned(align, text, x, y, 0);
+        
+        contentPage.endText();
+        contentPage.restoreState();
+
+        //13.5f - space to left or right page border
+        contentPage.moveTo(x + 13.5f * sign, y + 10);
+        contentPage.setColorStroke(new GrayColor(1));
+        contentPage.lineTo(x + 13.5f * sign, y - 1);
+        contentPage.stroke();
+    }
+
+    private PdfContentByte contentPage;
+    private BaseFont bsFont;
+    private int pageNum = 0;
+    private int startPage = 0;
+    private String currentTitle = "";
+}

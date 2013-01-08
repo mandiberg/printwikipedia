@@ -1,0 +1,78 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/rups/com/lowagie/rups/view/itext
+http://www.printwiki.00mm.org/printwiki
+add
+
+OutlineTree.java
+file
+
+
+
+add
+
+PdfObjectPanel.java
+file
+
+
+
+add
+
+FormTree.java
+file
+
+
+
+add
+
+PagesTable.java
+file
+
+
+
+add
+
+treenodes
+dir
+
+
+
+add
+
+StreamTextArea.java
+file
+
+
+
+add
+
+PdfTree.java
+file
+
+
+
+add
+
+XRefTable.java
+file
+
+
+
+add
+
+XfaTextArea.java
+file
+
+
+
+add
+
+XfaTree.java
+file
+
+
+
+add
+

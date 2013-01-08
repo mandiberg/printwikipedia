@@ -1,0 +1,71 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/xml/simpleparser
+http://www.printwiki.00mm.org/printwiki
+add
+
+EntitiesToSymbol.html
+file
+
+
+
+add
+
+EntitiesToUnicode.html
+file
+
+
+
+add
+
+SimpleXMLDocHandler.html
+file
+
+
+
+add
+
+SimpleXMLDocHandlerComment.html
+file
+
+
+
+add
+
+IanaEncodings.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+SimpleXMLParser.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+

@@ -1,0 +1,29 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/fonts/cmaps
+http://www.printwiki.00mm.org/printwiki
+add
+
+CMap.java
+file
+
+
+
+add
+
+CodespaceRange.java
+file
+
+
+
+add
+
+CMapParser.java
+file
+
+
+
+add
+

@@ -1,0 +1,42 @@
+8
+
+dir
+5
+http://www.printwiki.00mm.org/printwiki/trunk/src/info/bliki/wiki/namespaces
+http://www.printwiki.00mm.org/printwiki
+
+
+
+2009-11-02T07:53:48.434079Z
+5
+denis
+
+
+svn:special svn:externals svn:needs-lock
+
+INamespace.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+e88098e9d41947706eb9bf5802161d53
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+Namespace.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+39e89a3c61c9c7b650c0ec44ec8b2617
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+

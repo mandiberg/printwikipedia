@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="https://demo.open-manager.eu/crm/soap/index.php?op=email&amp;wsdl" uri="xml-resources/web-service-references/index/wsdl/demo.open-manager.eu/crm/soap/index.php.op_email.wsdl"/>
+</catalog>

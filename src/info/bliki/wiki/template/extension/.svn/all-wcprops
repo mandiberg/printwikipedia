@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension
+END
+AttributeList.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension/AttributeList.java
+END
+DollarContext.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension/DollarContext.java
+END
+AttributeRenderer.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension/AttributeRenderer.java
+END
+Allmacros.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension/Allmacros.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/extension/package.html
+END

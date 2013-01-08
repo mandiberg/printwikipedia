@@ -1,0 +1,169 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/pdf/codec
+http://www.printwiki.00mm.org/printwiki
+add
+
+TIFFDirectory.html
+file
+
+
+
+add
+
+TIFFFaxDecoder.html
+file
+
+
+
+add
+
+BmpImage.html
+file
+
+
+
+add
+
+JBIG2SegmentReader.JBIG2Segment.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+Base64.html
+file
+
+
+
+add
+
+TIFFConstants.html
+file
+
+
+
+add
+
+wmf
+dir
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+PngImage.html
+file
+
+
+
+add
+
+GifImage.GifFrame.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+
+TiffImage.html
+file
+
+
+
+add
+
+JBIG2SegmentReader.JBIG2Page.html
+file
+
+
+
+add
+
+TIFFField.html
+file
+
+
+
+add
+
+Base64.InputStream.html
+file
+
+
+
+add
+
+PngImage.NewByteArrayOutputStream.html
+file
+
+
+
+add
+
+Base64.OutputStream.html
+file
+
+
+
+add
+
+JBIG2Image.html
+file
+
+
+
+add
+
+CCITTG4Encoder.html
+file
+
+
+
+add
+
+JBIG2SegmentReader.html
+file
+
+
+
+add
+
+GifImage.html
+file
+
+
+
+add
+
+TIFFLZWDecoder.html
+file
+
+
+
+add
+

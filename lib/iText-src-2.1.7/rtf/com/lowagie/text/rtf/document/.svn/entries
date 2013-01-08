@@ -1,0 +1,85 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/rtf/com/lowagie/text/rtf/document
+http://www.printwiki.00mm.org/printwiki
+add
+
+output
+dir
+
+
+
+add
+
+RtfProtectionSetting.java
+file
+
+
+
+add
+
+RtfInfoElement.java
+file
+
+
+
+add
+
+RtfGenerator.java
+file
+
+
+
+add
+
+RtfProtection.java
+file
+
+
+
+add
+
+RtfDocumentHeader.java
+file
+
+
+
+add
+
+RtfCodePage.java
+file
+
+
+
+add
+
+RtfInfoGroup.java
+file
+
+
+
+add
+
+RtfPageSetting.java
+file
+
+
+
+add
+
+RtfDocument.java
+file
+
+
+
+add
+
+RtfDocumentSettings.java
+file
+
+
+
+add
+

@@ -1,0 +1,78 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/toolbox/com/lowagie/toolbox
+http://www.printwiki.00mm.org/printwiki
+add
+
+plugins
+dir
+
+
+
+add
+
+AbstractTool.java
+file
+
+
+
+add
+
+ToolMenuItems.java
+file
+
+
+
+add
+
+arguments
+dir
+
+
+
+add
+
+Toolbox.java
+file
+
+
+
+add
+
+swing
+dir
+
+
+
+add
+
+1t3xt.gif
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+Versions.java
+file
+
+
+
+add
+
+tools.txt
+file
+
+
+
+add
+

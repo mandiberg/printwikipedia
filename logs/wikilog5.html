@@ -1,0 +1,38 @@
+<span style="color:#AA0000">[18.04.10] 17:51:53 : wikitopdf.WikiHDProcessor.createPdf	Communications link failure due to underlying exception: 
+
+** BEGIN NESTED EXCEPTION ** 
+
+java.net.ConnectException
+MESSAGE: Connection refused
+
+STACKTRACE:
+
+java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:333)
+	at java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:195)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:182)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:432)
+	at java.net.Socket.connect(Socket.java:525)
+	at java.net.Socket.connect(Socket.java:475)
+	at java.net.Socket.<init>(Socket.java:372)
+	at java.net.Socket.<init>(Socket.java:215)
+	at com.mysql.jdbc.StandardSocketFactory.connect(StandardSocketFactory.java:256)
+	at com.mysql.jdbc.MysqlIO.<init>(MysqlIO.java:271)
+	at com.mysql.jdbc.Connection.createNewIO(Connection.java:2771)
+	at com.mysql.jdbc.Connection.<init>(Connection.java:1555)
+	at com.mysql.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:285)
+	at java.sql.DriverManager.getConnection(DriverManager.java:582)
+	at java.sql.DriverManager.getConnection(DriverManager.java:185)
+	at wikitopdf.SQLProcessor.<init>(SQLProcessor.java:36)
+	at wikitopdf.WikiHDProcessor.createPdf(WikiHDProcessor.java:38)
+	at wikitopdf.PageParserExec.main(PageParserExec.java:21)
+
+
+** END NESTED EXCEPTION **
+
+
+
+Last packet sent to the server was 1 ms ago.
+</span><br /><span style="color:#AA0000">[18.04.10] 17:51:53 : wikitopdf.PageParserExec.main	null
+</span><br />

@@ -1,0 +1,99 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/xml/xmp
+http://www.printwiki.00mm.org/printwiki
+add
+
+PdfA1Schema.html
+file
+
+
+
+add
+
+XmpMMSchema.html
+file
+
+
+
+add
+
+XmpWriter.html
+file
+
+
+
+add
+
+LangAlt.html
+file
+
+
+
+add
+
+XmpArray.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+XmpSchema.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+XmpReader.html
+file
+
+
+
+add
+
+DublinCoreSchema.html
+file
+
+
+
+add
+
+XmpBasicSchema.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+
+PdfSchema.html
+file
+
+
+
+add
+

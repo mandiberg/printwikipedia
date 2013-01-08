@@ -1,0 +1,57 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/tools
+http://www.printwiki.00mm.org/printwiki
+add
+
+Executable.java
+file
+
+
+
+add
+
+ConcatPdf.java
+file
+
+
+
+add
+
+BuildTutorial.java
+file
+
+
+
+add
+
+SplitPdf.java
+file
+
+
+
+add
+
+ToolboxAvailable.java
+file
+
+
+
+add
+
+HandoutPdf.java
+file
+
+
+
+add
+
+EncryptPdf.java
+file
+
+
+
+add
+

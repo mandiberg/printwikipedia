@@ -1,0 +1,36 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/toolbox/com/lowagie/toolbox/swing
+http://www.printwiki.00mm.org/printwiki
+add
+
+PdfInformationPanel.java
+file
+
+
+
+add
+
+EventDispatchingThread.java
+file
+
+
+
+add
+
+CustomDialog.java
+file
+
+
+
+add
+
+FileList.java
+file
+
+
+
+add
+

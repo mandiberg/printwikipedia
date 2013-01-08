@@ -1,0 +1,50 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/internal
+http://www.printwiki.00mm.org/printwiki
+add
+
+PdfXConformanceImp.java
+file
+
+
+
+add
+
+PdfViewerPreferencesImp.java
+file
+
+
+
+add
+
+PdfVersionImp.java
+file
+
+
+
+add
+
+PolylineShapeIterator.java
+file
+
+
+
+add
+
+PolylineShape.java
+file
+
+
+
+add
+
+PdfAnnotationsImp.java
+file
+
+
+
+add
+

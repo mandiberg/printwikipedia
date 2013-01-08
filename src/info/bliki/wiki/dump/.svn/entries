@@ -1,0 +1,81 @@
+8
+
+dir
+5
+http://www.printwiki.00mm.org/printwiki/trunk/src/info/bliki/wiki/dump
+http://www.printwiki.00mm.org/printwiki
+
+
+
+2009-11-02T07:53:48.434079Z
+5
+denis
+
+
+svn:special svn:externals svn:needs-lock
+
+PrintArticle.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+0f52fab4e8080c8e2e6cc3518a080c2b
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+WikiXMLParser.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+2c96f38caa9681378a293dc36f2b90ca
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+IArticleFilter.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+1aa9bdd920550ca113a1e2e10c4b3ea8
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+WikiArticle.java
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+ac6783dd325e73bcd3bc25da81a75ccf
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+package.html
+file
+
+
+
+
+2009-08-24T15:05:38.000000Z
+5b7ce917b8787ae8288a4f3e284a0487
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+

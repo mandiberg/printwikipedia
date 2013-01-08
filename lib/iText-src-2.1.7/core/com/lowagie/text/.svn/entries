@@ -1,0 +1,442 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text
+http://www.printwiki.00mm.org/printwiki
+add
+
+factories
+dir
+
+
+
+add
+
+SimpleTable.java
+file
+
+
+
+add
+
+RectangleReadOnly.java
+file
+
+
+
+add
+
+DocWriter.java
+file
+
+
+
+add
+
+ImgCCITT.java
+file
+
+
+
+add
+
+Section.java
+file
+
+
+
+add
+
+FontFactoryImp.java
+file
+
+
+
+add
+
+SpecialSymbol.java
+file
+
+
+
+add
+
+Font.java
+file
+
+
+
+add
+
+HeaderFooter.java
+file
+
+
+
+add
+
+ImgTemplate.java
+file
+
+
+
+add
+
+ElementTags.java
+file
+
+
+
+add
+
+Annotation.java
+file
+
+
+
+add
+
+List.java
+file
+
+
+
+add
+
+BadElementException.java
+file
+
+
+
+add
+
+Image.java
+file
+
+
+
+add
+
+MPL-1.1.txt
+file
+
+
+
+add
+
+html
+dir
+
+
+
+add
+
+Chapter.java
+file
+
+
+
+add
+
+Meta.java
+file
+
+
+
+add
+
+ImgRaw.java
+file
+
+
+
+add
+
+ImgWMF.java
+file
+
+
+
+add
+
+RtfElementInterface.java
+file
+
+
+
+add
+
+Table.java
+file
+
+
+
+add
+
+MarkedSection.java
+file
+
+
+
+add
+
+GreekList.java
+file
+
+
+
+add
+
+SimpleCell.java
+file
+
+
+
+add
+
+MarkedObject.java
+file
+
+
+
+add
+
+DocumentException.java
+file
+
+
+
+add
+
+FontFactory.java
+file
+
+
+
+add
+
+ElementListener.java
+file
+
+
+
+add
+
+exceptions
+dir
+
+
+
+add
+
+LargeElement.java
+file
+
+
+
+add
+
+Rectangle.java
+file
+
+
+
+add
+
+Paragraph.java
+file
+
+
+
+add
+
+Row.java
+file
+
+
+
+add
+
+PageSize.java
+file
+
+
+
+add
+
+RomanList.java
+file
+
+
+
+add
+
+ZapfDingbatsList.java
+file
+
+
+
+add
+
+SplitCharacter.java
+file
+
+
+
+add
+
+Chunk.java
+file
+
+
+
+add
+
+Anchor.java
+file
+
+
+
+add
+
+Utilities.java
+file
+
+
+
+add
+
+DocListener.java
+file
+
+
+
+add
+
+Document.java
+file
+
+
+
+add
+
+misc_licenses.txt
+file
+
+
+
+add
+
+Cell.java
+file
+
+
+
+add
+
+xml
+dir
+
+
+
+add
+
+ZapfDingbatsNumberList.java
+file
+
+
+
+add
+
+apache_license.txt
+file
+
+
+
+add
+
+Phrase.java
+file
+
+
+
+add
+
+Jpeg.java
+file
+
+
+
+add
+
+ExceptionConverter.java
+file
+
+
+
+add
+
+Jpeg2000.java
+file
+
+
+
+add
+
+ChapterAutoNumber.java
+file
+
+
+
+add
+
+Header.java
+file
+
+
+
+add
+
+pdf
+dir
+
+
+
+add
+
+Element.java
+file
+
+
+
+add
+
+ImgJBIG2.java
+file
+
+
+
+add
+
+ListItem.java
+file
+
+
+
+add
+
+lgpl.txt
+file
+
+
+
+add
+
+TextElementArray.java
+file
+
+
+
+add
+

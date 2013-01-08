@@ -1,0 +1,2024 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="crmemail"
+             targetNamespace="urn:crmemail"
+             xmlns:typens="urn:crmemail"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+  <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+              targetNamespace="urn:crmemail">
+
+
+    <xsd:complexType name="crmgetTreeResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetTreeResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetTreeResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="parent" type="xsd:int"/>
+        <xsd:element name="name" type="xsd:string"/>
+        <xsd:element name="imap" type="xsd:int"/>
+        <xsd:element name="unread" type="xsd:int"/>
+        <xsd:element name="total" type="xsd:int"/>
+        <xsd:element name="chguser" type="xsd:int"/>
+        <xsd:element name="chgtime" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmTreeItem">
+      <xsd:all>
+        <xsd:element name="crmTreeItemElements" type="typens:crmTreeItemElementArray" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmTreeItemElementArray">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmTreeItemElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmTreeItemElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="parent" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="name" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="imap" type="xsd:int" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetMailHeadersResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetMailHeadersResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetMailHeadersResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="folder" type="xsd:int"/>
+        <xsd:element name="uidl" type="xsd:string"/>
+        <xsd:element name="to" type="xsd:string"/>
+        <xsd:element name="from" type="xsd:string"/>
+        <xsd:element name="cc" type="xsd:string"/>
+        <xsd:element name="bcc" type="xsd:string"/>
+        <xsd:element name="reply" type="xsd:string"/>
+        <xsd:element name="subject" type="xsd:string"/>
+        <xsd:element name="attach" type="xsd:int"/>
+        <xsd:element name="was_read" type="xsd:int"/>
+        <xsd:element name="mail_id" type="xsd:string"/>
+        <xsd:element name="date" type="xsd:int"/>
+        <xsd:element name="priority" type="xsd:int"/>
+        <xsd:element name="intern" type="xsd:int"/>
+        <xsd:element name="size" type="xsd:int"/>
+        <xsd:element name="pid" type="xsd:int"/>
+        <xsd:element name="cid" type="xsd:int"/>
+        <xsd:element name="konto" type="xsd:int"/>
+        <xsd:element name="signed" type="xsd:int"/>
+        <xsd:element name="encrypted" type="xsd:int"/>
+        <xsd:element name="imap" type="xsd:int"/>
+        <xsd:element name="message" type="xsd:int"/>
+        <xsd:element name="flag" type="xsd:int"/>
+        <xsd:element name="answered" type="xsd:int"/>
+        <xsd:element name="forwarded" type="xsd:int"/>
+        <xsd:element name="forwarded_to" type="xsd:string"/>
+        <xsd:element name="forwarded_from" type="xsd:string"/>
+        <xsd:element name="done" type="xsd:int"/>
+        <xsd:element name="remember" type="xsd:int"/>
+        <xsd:element name="remuser" type="xsd:int"/>
+        <xsd:element name="answered_from" type="xsd:string"/>
+        <xsd:element name="return_receipt" type="xsd:string"/>
+        <xsd:element name="disposition_notification" type="xsd:string"/>
+        <xsd:element name="classref" type="xsd:string"/>
+        <xsd:element name="filtered" type="xsd:int"/>
+        <xsd:element name="md5body" type="xsd:string"/>
+        <xsd:element name="tstamp" type="xsd:int"/>
+        <xsd:element name="deposition" type="xsd:string"/>
+        <xsd:element name="received" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetMailIdsResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetMailIdsResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetMailIdsResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetMailResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetMailResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetMailResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="subject" type="xsd:string"/>
+        <xsd:element name="from" type="xsd:string"/>
+        <xsd:element name="to" type="xsd:string"/>
+        <xsd:element name="date" type="xsd:int"/>
+        <xsd:element name="is_html" type="xsd:int"/>
+        <xsd:element name="text" type="xsd:string"/>
+        <xsd:element name="html" type="xsd:string"/>
+        <xsd:element name="attachments" type="typens:attachmentArray"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="attachmentArray">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:attachment[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="attachment">
+      <xsd:all>
+        <xsd:element name="name" type="xsd:string"/>
+        <xsd:element name="ctype" type="xsd:string"/>
+        <xsd:element name="cid" type="xsd:string"/>
+        <xsd:element name="size" type="xsd:int"/>
+        <xsd:element name="content" type="xsd:string"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmparseMailSourceResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmparseMailSourceResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmparseMailSourceResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="subject" type="xsd:string"/>
+        <xsd:element name="from" type="xsd:string"/>
+        <xsd:element name="to" type="xsd:string"/>
+        <xsd:element name="date" type="xsd:int"/>
+        <xsd:element name="is_html" type="xsd:int"/>
+        <xsd:element name="text" type="xsd:string"/>
+        <xsd:element name="html" type="xsd:string"/>
+        <xsd:element name="attachments" type="typens:attachmentArray"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmGetEmailAccountsResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmGetEmailAccountsResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmGetEmailAccountsResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="account_name" type="xsd:string"/>
+        <xsd:element name="name" type="xsd:string"/>
+        <xsd:element name="org" type="xsd:string"/>
+        <xsd:element name="email" type="xsd:string"/>
+        <xsd:element name="reply" type="xsd:string"/>
+        <xsd:element name="def" type="xsd:int"/>
+        <xsd:element name="sig" type="xsd:int"/>
+        <xsd:element name="signature" type="xsd:string"/>
+        <xsd:element name="siganswer" type="xsd:int"/>
+        <xsd:element name="send" type="xsd:int"/>
+        <xsd:element name="get" type="xsd:int"/>
+        <xsd:element name="type" type="xsd:int"/>
+        <xsd:element name="inbox" type="xsd:int"/>
+        <xsd:element name="trash" type="xsd:int"/>
+        <xsd:element name="sent" type="xsd:int"/>
+        <xsd:element name="draft" type="xsd:int"/>
+        <xsd:element name="junk" type="xsd:int"/>
+        <xsd:element name="chguser" type="xsd:int"/>
+        <xsd:element name="chgtime" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="MailItem">
+      <xsd:all>
+        <xsd:element name="account_id" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="to" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="cc" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="bcc" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="subject" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="body" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="priority" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="is_html" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="sign" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="encrypt" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="return_receipt" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="disposition_notification" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="MailItemAttachments" type="typens:MailItemAttachmentArray" minOccurs="0"/>
+        <xsd:element name="mail_id" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="kind" type="xsd:int" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="MailItemAttachmentArray">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:MailItemAttachment[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="MailItemAttachment">
+      <xsd:all>
+        <xsd:element name="name" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="cid" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="content" type="xsd:string" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="EPRSearch">
+      <xsd:all>
+        <xsd:element name="userid" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="customer" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="supplier" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="orderno" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="article" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="cas" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="tracking" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="ordertype" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="notes" type="xsd:string" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetERPMailHeadersResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetERPMailHeadersResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetERPMailHeadersResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="userid" type="xsd:int"/>
+        <xsd:element name="folder" type="xsd:int"/>
+        <xsd:element name="uidl" type="xsd:string"/>
+        <xsd:element name="to" type="xsd:string"/>
+        <xsd:element name="from" type="xsd:string"/>
+        <xsd:element name="cc" type="xsd:string"/>
+        <xsd:element name="bcc" type="xsd:string"/>
+        <xsd:element name="reply" type="xsd:string"/>
+        <xsd:element name="subject" type="xsd:string"/>
+        <xsd:element name="attach" type="xsd:int"/>
+        <xsd:element name="was_read" type="xsd:int"/>
+        <xsd:element name="mail_id" type="xsd:string"/>
+        <xsd:element name="date" type="xsd:int"/>
+        <xsd:element name="priority" type="xsd:int"/>
+        <xsd:element name="intern" type="xsd:int"/>
+        <xsd:element name="size" type="xsd:int"/>
+        <xsd:element name="pid" type="xsd:int"/>
+        <xsd:element name="cid" type="xsd:int"/>
+        <xsd:element name="konto" type="xsd:int"/>
+        <xsd:element name="signed" type="xsd:int"/>
+        <xsd:element name="encrypted" type="xsd:int"/>
+        <xsd:element name="imap" type="xsd:int"/>
+        <xsd:element name="message" type="xsd:int"/>
+        <xsd:element name="flag" type="xsd:int"/>
+        <xsd:element name="answered" type="xsd:int"/>
+        <xsd:element name="forwarded" type="xsd:int"/>
+        <xsd:element name="forwarded_to" type="xsd:string"/>
+        <xsd:element name="forwarded_from" type="xsd:string"/>
+        <xsd:element name="done" type="xsd:int"/>
+        <xsd:element name="remember" type="xsd:int"/>
+        <xsd:element name="remuser" type="xsd:int"/>
+        <xsd:element name="answered_from" type="xsd:string"/>
+        <xsd:element name="return_receipt" type="xsd:string"/>
+        <xsd:element name="disposition_notification" type="xsd:string"/>
+        <xsd:element name="classref" type="xsd:string"/>
+        <xsd:element name="filtered" type="xsd:int"/>
+        <xsd:element name="md5body" type="xsd:string"/>
+        <xsd:element name="tstamp" type="xsd:int"/>
+        <xsd:element name="deposition" type="xsd:string"/>
+        <xsd:element name="received" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetERPMailResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetERPMailResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetERPMailResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="subject" type="xsd:string"/>
+        <xsd:element name="from" type="xsd:string"/>
+        <xsd:element name="to" type="xsd:string"/>
+        <xsd:element name="date" type="xsd:int"/>
+        <xsd:element name="classref" type="xsd:string"/>
+        <xsd:element name="is_html" type="xsd:int"/>
+        <xsd:element name="text" type="xsd:string"/>
+        <xsd:element name="html" type="xsd:string"/>
+        <xsd:element name="attachments" type="typens:attachmentArray"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmGetPContactsResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmGetPContactsResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmGetPContactsResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="userid" type="xsd:int"/>
+        <xsd:element name="firstname" type="xsd:string"/>
+        <xsd:element name="lastname" type="xsd:string"/>
+        <xsd:element name="middlename" type="xsd:string"/>
+        <xsd:element name="birthday" type="xsd:int"/>
+        <xsd:element name="anniversary" type="xsd:int"/>
+        <xsd:element name="spousename" type="xsd:string"/>
+        <xsd:element name="childrennames" type="xsd:string"/>
+        <xsd:element name="displayname" type="xsd:string"/>
+        <xsd:element name="nickname" type="xsd:string"/>
+        <xsd:element name="emailadr1" type="xsd:string"/>
+        <xsd:element name="emailadr2" type="xsd:string"/>
+        <xsd:element name="emailadr3" type="xsd:string"/>
+        <xsd:element name="email_format" type="xsd:int"/>
+        <xsd:element name="screen_name" type="xsd:string"/>
+        <xsd:element name="screen_name2" type="xsd:string"/>
+        <xsd:element name="screen_name3" type="xsd:string"/>
+        <xsd:element name="phone_work" type="xsd:string"/>
+        <xsd:element name="phone_home" type="xsd:string"/>
+        <xsd:element name="phone_fax" type="xsd:string"/>
+        <xsd:element name="phone_pager" type="xsd:string"/>
+        <xsd:element name="phone_mobil" type="xsd:string"/>
+        <xsd:element name="phone_mms" type="xsd:string"/>
+        <xsd:element name="phone_sms" type="xsd:string"/>
+        <xsd:element name="phone_car" type="xsd:string"/>
+        <xsd:element name="phone_radio" type="xsd:string"/>
+        <xsd:element name="phone_company" type="xsd:string"/>
+        <xsd:element name="phone_assistant" type="xsd:string"/>
+        <xsd:element name="phone_work2" type="xsd:string"/>
+        <xsd:element name="phone_fax_work" type="xsd:string"/>
+        <xsd:element name="phone_home2" type="xsd:string"/>
+        <xsd:element name="home_address1" type="xsd:string"/>
+        <xsd:element name="home_address2" type="xsd:string"/>
+        <xsd:element name="home_city" type="xsd:string"/>
+        <xsd:element name="home_region" type="xsd:string"/>
+        <xsd:element name="home_postcode" type="xsd:string"/>
+        <xsd:element name="home_country" type="xsd:string"/>
+        <xsd:element name="home_website" type="xsd:string"/>
+        <xsd:element name="work_title" type="xsd:string"/>
+        <xsd:element name="work_department" type="xsd:string"/>
+        <xsd:element name="work_organisation" type="xsd:string"/>
+        <xsd:element name="work_address1" type="xsd:string"/>
+        <xsd:element name="work_address2" type="xsd:string"/>
+        <xsd:element name="work_city" type="xsd:string"/>
+        <xsd:element name="work_region" type="xsd:string"/>
+        <xsd:element name="work_postcode" type="xsd:string"/>
+        <xsd:element name="work_country" type="xsd:string"/>
+        <xsd:element name="work_location" type="xsd:string"/>
+        <xsd:element name="work_website" type="xsd:string"/>
+        <xsd:element name="other_address1" type="xsd:string"/>
+        <xsd:element name="other_address2" type="xsd:string"/>
+        <xsd:element name="other_city" type="xsd:string"/>
+        <xsd:element name="other_region" type="xsd:string"/>
+        <xsd:element name="other_postcode" type="xsd:string"/>
+        <xsd:element name="other_country" type="xsd:string"/>
+        <xsd:element name="custom1" type="xsd:string"/>
+        <xsd:element name="custom2" type="xsd:string"/>
+        <xsd:element name="custom3" type="xsd:string"/>
+        <xsd:element name="custom4" type="xsd:string"/>
+        <xsd:element name="notes" type="xsd:string"/>
+        <xsd:element name="picture" type="xsd:string"/>
+        <xsd:element name="list" type="xsd:int"/>
+        <xsd:element name="suffix" type="xsd:string"/>
+        <xsd:element name="managername" type="xsd:string"/>
+        <xsd:element name="assistantname" type="xsd:string"/>
+        <xsd:element name="customer_id" type="xsd:string"/>
+        <xsd:element name="gov_id" type="xsd:string"/>
+        <xsd:element name="accountname" type="xsd:string"/>
+        <xsd:element name="nosync" type="xsd:int"/>
+        <xsd:element name="chguser" type="xsd:int"/>
+        <xsd:element name="chgtime" type="xsd:int"/>
+        <xsd:element name="createuser" type="xsd:int"/>
+        <xsd:element name="createtime" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmGetPContactIdsResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmGetPContactIdsResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmGetPContactIdsResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="PContactItem">
+      <xsd:all>
+        <xsd:element name="public" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="firstname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="lastname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="middlename" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="birthday" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="anniversary" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="spousename" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="childrennames" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="displayname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="nickname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="emailadr1" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="emailadr2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="emailadr3" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="email_format" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="screen_name" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="screen_name2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="screen_name3" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_work" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_home" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_fax" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_pager" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_mobil" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_mms" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_sms" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_car" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_radio" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_company" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_assistant" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_work2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_fax_work" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="phone_home2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_address1" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_address2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_city" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_region" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_postcode" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_country" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="home_website" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_title" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_department" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_organisation" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_address1" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_address2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_city" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_region" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_postcode" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_country" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_location" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="work_website" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_address1" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_address2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_city" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_region" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_postcode" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="other_country" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="custom1" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="custom2" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="custom3" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="custom4" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="notes" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="picture" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="list" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="suffix" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="managername" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="assistantname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="customer_id" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="gov_id" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="accountname" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="nosync" type="xsd:int" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetPContactAddrsResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetPContactAddrsResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetPContactAddrsResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="mid" type="xsd:int"/>
+        <xsd:element name="cid" type="xsd:int"/>
+        <xsd:element name="pid" type="xsd:int"/>
+        <xsd:element name="uid" type="xsd:int"/>
+        <xsd:element name="pcid" type="xsd:int"/>
+        <xsd:element name="chguser" type="xsd:int"/>
+        <xsd:element name="chgtime" type="xsd:int"/>
+        <xsd:element name="createuser" type="xsd:int"/>
+        <xsd:element name="createtime" type="xsd:int"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="addPContactAddrs">
+      <xsd:all>
+        <xsd:element name="addPContactAddrsElements" type="typens:addPContactAddrsElementArray" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="addPContactAddrsElementArray">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:addPContactAddrsElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="addPContactAddrsElement">
+      <xsd:all>
+        <xsd:element name="mid" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="cid" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="pid" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="uid" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="pcid" type="xsd:int" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="ChangeMailItems">
+      <xsd:all>
+        <xsd:element name="ChangeMailItemsElements" type="typens:ChangeMailItemsElementArray" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+    <xsd:complexType name="ChangeMailItemsElementArray">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:ChangeMailItemsElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ChangeMailItemsElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="folder" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="was_read" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="priority" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="intern" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="konto" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="flag" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="answered" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="forwarded" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="forwarded_to" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="forwarded_from" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="done" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="remember" type="xsd:int" minOccurs="0"/>
+        <xsd:element name="answered_from" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="return_receipt" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="disposition_notification" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="filtered" type="xsd:int" minOccurs="0"/>
+      </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="crmgetMailInfoResult">
+      <xsd:complexContent>
+        <xsd:restriction base="soapenc:Array">
+          <xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:crmgetMailInfoResultElement[]"/>
+        </xsd:restriction>
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="crmgetMailInfoResultElement">
+      <xsd:all>
+        <xsd:element name="id" type="xsd:int"/>
+        <xsd:element name="answered" type="xsd:string"/>
+        <xsd:element name="forwarded" type="xsd:string"/>
+        <xsd:element name="tocontact" type="xsd:string"/>
+        <xsd:element name="toproject" type="xsd:string"/>
+        <xsd:element name="done" type="xsd:string"/>
+        <xsd:element name="flag" type="xsd:string"/>
+      </xsd:all>
+    </xsd:complexType>
+
+  </xsd:schema>
+</types>
+
+<message name="crmgetTree">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmgetTreeResponse">
+   <part name="return" type="typens:crmgetTreeResult"/>
+</message>
+<message name="crmaddTreeEntry">
+   <part name="session_id" type="xsd:string"/>
+   <part name="parent" type="xsd:string"/>
+   <part name="name" type="xsd:string"/>
+</message>
+
+<message name="crmaddTreeEntryResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmaddImapEntry">
+   <part name="session_id" type="xsd:string"/>
+   <part name="parent" type="xsd:string"/>
+   <part name="name" type="xsd:string"/>
+</message>
+
+<message name="crmaddImapEntryResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmrenameTreeEntry">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="newname" type="xsd:string"/>
+</message>
+
+<message name="crmrenameTreeEntryResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmrenameImapEntry">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="newname" type="xsd:string"/>
+</message>
+
+<message name="crmrenameImapEntryResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmdeleteEntry">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+</message>
+
+<message name="crmdeleteEntryResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmsyncTree">
+   <part name="session_id" type="xsd:string"/>
+   <part name="crmTreeItem" type="typens:crmTreeItem"/>
+</message>
+
+<message name="crmsyncTreeResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetInboxFolder">
+   <part name="session_id" type="xsd:string"/>
+   <part name="konto" type="xsd:string"/>
+</message>
+
+<message name="crmgetInboxFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetOutboxFolder">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmgetOutboxFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetTrashFolder">
+   <part name="session_id" type="xsd:string"/>
+   <part name="konto" type="xsd:string"/>
+</message>
+
+<message name="crmgetTrashFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetSentFolder">
+   <part name="session_id" type="xsd:string"/>
+   <part name="konto" type="xsd:string"/>
+</message>
+
+<message name="crmgetSentFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetDraftFolder">
+   <part name="session_id" type="xsd:string"/>
+   <part name="konto" type="xsd:string"/>
+</message>
+
+<message name="crmgetDraftFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetJunkFolder">
+   <part name="session_id" type="xsd:string"/>
+   <part name="konto" type="xsd:string"/>
+</message>
+
+<message name="crmgetJunkFolderResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetMailHeaders">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailHeadersResponse">
+   <part name="return" type="typens:crmgetMailHeadersResult"/>
+</message>
+<message name="crmgetMailIds">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailIdsResponse">
+   <part name="return" type="typens:crmgetMailIdsResult"/>
+</message>
+<message name="crmgetMail">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+   <part name="attachments" type="xsd:string"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailResponse">
+   <part name="return" type="typens:crmgetMailResult"/>
+</message>
+<message name="crmparseMailSource">
+   <part name="session_id" type="xsd:string"/>
+   <part name="source" type="xsd:string"/>
+   <part name="attachments" type="xsd:string"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmparseMailSourceResponse">
+   <part name="return" type="typens:crmparseMailSourceResult"/>
+</message>
+<message name="crmgetMailText">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailTextResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetMailSource">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailSourceResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmImportMailSource">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="source" type="xsd:string"/>
+</message>
+
+<message name="crmImportMailSourceResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmSendNotification">
+   <part name="session_id" type="xsd:string"/>
+   <part name="to" type="xsd:string"/>
+   <part name="subject" type="xsd:string"/>
+   <part name="body" type="xsd:string"/>
+</message>
+
+<message name="crmSendNotificationResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmGetEmailAccounts">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmGetEmailAccountsResponse">
+   <part name="return" type="typens:crmGetEmailAccountsResult"/>
+</message>
+<message name="crmCreateMail">
+   <part name="session_id" type="xsd:string"/>
+   <part name="MailItem" type="typens:MailItem"/>
+</message>
+
+<message name="crmCreateMailResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmCreateNewMail">
+   <part name="session_id" type="xsd:string"/>
+   <part name="MailItem" type="typens:MailItem"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmCreateNewMailResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmSendMail">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmSendMailResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmReceiveMail">
+   <part name="session_id" type="xsd:string"/>
+   <part name="account_id" type="xsd:string"/>
+</message>
+
+<message name="crmReceiveMailResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmSyncImapMail">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmSyncImapMailResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetERPMailHeaders">
+   <part name="session_id" type="xsd:string"/>
+   <part name="EPRSearch" type="typens:EPRSearch"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmgetERPMailHeadersResponse">
+   <part name="return" type="typens:crmgetERPMailHeadersResult"/>
+</message>
+<message name="crmgetERPMail">
+   <part name="session_id" type="xsd:string"/>
+   <part name="userid" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+   <part name="gzip" type="xsd:string"/>
+</message>
+
+<message name="crmgetERPMailResponse">
+   <part name="return" type="typens:crmgetERPMailResult"/>
+</message>
+<message name="crmGetPContacts">
+   <part name="session_id" type="xsd:string"/>
+   <part name="search" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmGetPContactsResponse">
+   <part name="return" type="typens:crmGetPContactsResult"/>
+</message>
+<message name="crmGetPContactIds">
+   <part name="session_id" type="xsd:string"/>
+   <part name="search" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmGetPContactIdsResponse">
+   <part name="return" type="typens:crmGetPContactIdsResult"/>
+</message>
+<message name="crmGetPContactIdsString">
+   <part name="session_id" type="xsd:string"/>
+   <part name="search" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmGetPContactIdsStringResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmAddPContact">
+   <part name="session_id" type="xsd:string"/>
+   <part name="PContactItem" type="typens:PContactItem"/>
+</message>
+
+<message name="crmAddPContactResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmChangePContact">
+   <part name="session_id" type="xsd:string"/>
+   <part name="contact_id" type="xsd:string"/>
+   <part name="PContactItem" type="typens:PContactItem"/>
+</message>
+
+<message name="crmChangePContactResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmdeletePContact">
+   <part name="session_id" type="xsd:string"/>
+   <part name="contact_id" type="xsd:string"/>
+</message>
+
+<message name="crmdeletePContactResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmdeletePContactsString">
+   <part name="session_id" type="xsd:string"/>
+   <part name="contact_ids" type="xsd:string"/>
+</message>
+
+<message name="crmdeletePContactsStringResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetPContactAddrs">
+   <part name="session_id" type="xsd:string"/>
+   <part name="contact_id" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+</message>
+
+<message name="crmgetPContactAddrsResponse">
+   <part name="return" type="typens:crmgetPContactAddrsResult"/>
+</message>
+<message name="crmaddPContactAddrs">
+   <part name="session_id" type="xsd:string"/>
+   <part name="addPContactAddrs" type="typens:addPContactAddrs"/>
+</message>
+
+<message name="crmaddPContactAddrsResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmdelPContactAddrs">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mid" type="xsd:string"/>
+   <part name="id" type="xsd:string"/>
+</message>
+
+<message name="crmdelPContactAddrsResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmChangeMailItems">
+   <part name="session_id" type="xsd:string"/>
+   <part name="ChangeMailItems" type="typens:ChangeMailItems"/>
+</message>
+
+<message name="crmChangeMailItemsResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmDeleteMails">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+</message>
+
+<message name="crmDeleteMailsResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetMailIdsString">
+   <part name="session_id" type="xsd:string"/>
+   <part name="tree_id" type="xsd:string"/>
+   <part name="timestamp" type="xsd:string"/>
+   <part name="count" type="xsd:string"/>
+   <part name="offset" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailIdsStringResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmEmptyTrash">
+   <part name="session_id" type="xsd:string"/>
+</message>
+
+<message name="crmEmptyTrashResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmSetSpam">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+</message>
+
+<message name="crmSetSpamResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmSetNotSpam">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+</message>
+
+<message name="crmSetNotSpamResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmMoveToUser">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="user_ids" type="xsd:string"/>
+   <part name="notify" type="xsd:string"/>
+</message>
+
+<message name="crmMoveToUserResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmCopyToUser">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="user_ids" type="xsd:string"/>
+   <part name="notify" type="xsd:string"/>
+</message>
+
+<message name="crmCopyToUserResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmMoveToContact">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="cid" type="xsd:string"/>
+</message>
+
+<message name="crmMoveToContactResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmCopyToContact">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="cid" type="xsd:string"/>
+</message>
+
+<message name="crmCopyToContactResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmMoveToProject">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="pid" type="xsd:string"/>
+</message>
+
+<message name="crmMoveToProjectResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmCopyToProject">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_ids" type="xsd:string"/>
+   <part name="pid" type="xsd:string"/>
+</message>
+
+<message name="crmCopyToProjectResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+<message name="crmgetMailInfo">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+</message>
+
+<message name="crmgetMailInfoResponse">
+   <part name="return" type="typens:crmgetMailInfoResult"/>
+</message>
+<message name="crmDispositionNotification">
+   <part name="session_id" type="xsd:string"/>
+   <part name="mail_id" type="xsd:string"/>
+</message>
+
+<message name="crmDispositionNotificationResponse">
+   <part name="return" type="xsd:string"/>
+</message>
+
+<portType name="crmemailPort">
+   <operation name="crmgetTree">
+      <input message="typens:crmgetTree"/>
+      <output message="typens:crmgetTreeResponse"/>
+   </operation>
+   <operation name="crmaddTreeEntry">
+      <input message="typens:crmaddTreeEntry"/>
+      <output message="typens:crmaddTreeEntryResponse"/>
+   </operation>
+   <operation name="crmaddImapEntry">
+      <input message="typens:crmaddImapEntry"/>
+      <output message="typens:crmaddImapEntryResponse"/>
+   </operation>
+   <operation name="crmrenameTreeEntry">
+      <input message="typens:crmrenameTreeEntry"/>
+      <output message="typens:crmrenameTreeEntryResponse"/>
+   </operation>
+   <operation name="crmrenameImapEntry">
+      <input message="typens:crmrenameImapEntry"/>
+      <output message="typens:crmrenameImapEntryResponse"/>
+   </operation>
+   <operation name="crmdeleteEntry">
+      <input message="typens:crmdeleteEntry"/>
+      <output message="typens:crmdeleteEntryResponse"/>
+   </operation>
+   <operation name="crmsyncTree">
+      <input message="typens:crmsyncTree"/>
+      <output message="typens:crmsyncTreeResponse"/>
+   </operation>
+   <operation name="crmgetInboxFolder">
+      <input message="typens:crmgetInboxFolder"/>
+      <output message="typens:crmgetInboxFolderResponse"/>
+   </operation>
+   <operation name="crmgetOutboxFolder">
+      <input message="typens:crmgetOutboxFolder"/>
+      <output message="typens:crmgetOutboxFolderResponse"/>
+   </operation>
+   <operation name="crmgetTrashFolder">
+      <input message="typens:crmgetTrashFolder"/>
+      <output message="typens:crmgetTrashFolderResponse"/>
+   </operation>
+   <operation name="crmgetSentFolder">
+      <input message="typens:crmgetSentFolder"/>
+      <output message="typens:crmgetSentFolderResponse"/>
+   </operation>
+   <operation name="crmgetDraftFolder">
+      <input message="typens:crmgetDraftFolder"/>
+      <output message="typens:crmgetDraftFolderResponse"/>
+   </operation>
+   <operation name="crmgetJunkFolder">
+      <input message="typens:crmgetJunkFolder"/>
+      <output message="typens:crmgetJunkFolderResponse"/>
+   </operation>
+   <operation name="crmgetMailHeaders">
+      <input message="typens:crmgetMailHeaders"/>
+      <output message="typens:crmgetMailHeadersResponse"/>
+   </operation>
+   <operation name="crmgetMailIds">
+      <input message="typens:crmgetMailIds"/>
+      <output message="typens:crmgetMailIdsResponse"/>
+   </operation>
+   <operation name="crmgetMail">
+      <input message="typens:crmgetMail"/>
+      <output message="typens:crmgetMailResponse"/>
+   </operation>
+   <operation name="crmparseMailSource">
+      <input message="typens:crmparseMailSource"/>
+      <output message="typens:crmparseMailSourceResponse"/>
+   </operation>
+   <operation name="crmgetMailText">
+      <input message="typens:crmgetMailText"/>
+      <output message="typens:crmgetMailTextResponse"/>
+   </operation>
+   <operation name="crmgetMailSource">
+      <input message="typens:crmgetMailSource"/>
+      <output message="typens:crmgetMailSourceResponse"/>
+   </operation>
+   <operation name="crmImportMailSource">
+      <input message="typens:crmImportMailSource"/>
+      <output message="typens:crmImportMailSourceResponse"/>
+   </operation>
+   <operation name="crmSendNotification">
+      <input message="typens:crmSendNotification"/>
+      <output message="typens:crmSendNotificationResponse"/>
+   </operation>
+   <operation name="crmGetEmailAccounts">
+      <input message="typens:crmGetEmailAccounts"/>
+      <output message="typens:crmGetEmailAccountsResponse"/>
+   </operation>
+   <operation name="crmCreateMail">
+      <input message="typens:crmCreateMail"/>
+      <output message="typens:crmCreateMailResponse"/>
+   </operation>
+   <operation name="crmCreateNewMail">
+      <input message="typens:crmCreateNewMail"/>
+      <output message="typens:crmCreateNewMailResponse"/>
+   </operation>
+   <operation name="crmSendMail">
+      <input message="typens:crmSendMail"/>
+      <output message="typens:crmSendMailResponse"/>
+   </operation>
+   <operation name="crmReceiveMail">
+      <input message="typens:crmReceiveMail"/>
+      <output message="typens:crmReceiveMailResponse"/>
+   </operation>
+   <operation name="crmSyncImapMail">
+      <input message="typens:crmSyncImapMail"/>
+      <output message="typens:crmSyncImapMailResponse"/>
+   </operation>
+   <operation name="crmgetERPMailHeaders">
+      <input message="typens:crmgetERPMailHeaders"/>
+      <output message="typens:crmgetERPMailHeadersResponse"/>
+   </operation>
+   <operation name="crmgetERPMail">
+      <input message="typens:crmgetERPMail"/>
+      <output message="typens:crmgetERPMailResponse"/>
+   </operation>
+   <operation name="crmGetPContacts">
+      <input message="typens:crmGetPContacts"/>
+      <output message="typens:crmGetPContactsResponse"/>
+   </operation>
+   <operation name="crmGetPContactIds">
+      <input message="typens:crmGetPContactIds"/>
+      <output message="typens:crmGetPContactIdsResponse"/>
+   </operation>
+   <operation name="crmGetPContactIdsString">
+      <input message="typens:crmGetPContactIdsString"/>
+      <output message="typens:crmGetPContactIdsStringResponse"/>
+   </operation>
+   <operation name="crmAddPContact">
+      <input message="typens:crmAddPContact"/>
+      <output message="typens:crmAddPContactResponse"/>
+   </operation>
+   <operation name="crmChangePContact">
+      <input message="typens:crmChangePContact"/>
+      <output message="typens:crmChangePContactResponse"/>
+   </operation>
+   <operation name="crmdeletePContact">
+      <input message="typens:crmdeletePContact"/>
+      <output message="typens:crmdeletePContactResponse"/>
+   </operation>
+   <operation name="crmdeletePContactsString">
+      <input message="typens:crmdeletePContactsString"/>
+      <output message="typens:crmdeletePContactsStringResponse"/>
+   </operation>
+   <operation name="crmgetPContactAddrs">
+      <input message="typens:crmgetPContactAddrs"/>
+      <output message="typens:crmgetPContactAddrsResponse"/>
+   </operation>
+   <operation name="crmaddPContactAddrs">
+      <input message="typens:crmaddPContactAddrs"/>
+      <output message="typens:crmaddPContactAddrsResponse"/>
+   </operation>
+   <operation name="crmdelPContactAddrs">
+      <input message="typens:crmdelPContactAddrs"/>
+      <output message="typens:crmdelPContactAddrsResponse"/>
+   </operation>
+   <operation name="crmChangeMailItems">
+      <input message="typens:crmChangeMailItems"/>
+      <output message="typens:crmChangeMailItemsResponse"/>
+   </operation>
+   <operation name="crmDeleteMails">
+      <input message="typens:crmDeleteMails"/>
+      <output message="typens:crmDeleteMailsResponse"/>
+   </operation>
+   <operation name="crmgetMailIdsString">
+      <input message="typens:crmgetMailIdsString"/>
+      <output message="typens:crmgetMailIdsStringResponse"/>
+   </operation>
+   <operation name="crmEmptyTrash">
+      <input message="typens:crmEmptyTrash"/>
+      <output message="typens:crmEmptyTrashResponse"/>
+   </operation>
+   <operation name="crmSetSpam">
+      <input message="typens:crmSetSpam"/>
+      <output message="typens:crmSetSpamResponse"/>
+   </operation>
+   <operation name="crmSetNotSpam">
+      <input message="typens:crmSetNotSpam"/>
+      <output message="typens:crmSetNotSpamResponse"/>
+   </operation>
+   <operation name="crmMoveToUser">
+      <input message="typens:crmMoveToUser"/>
+      <output message="typens:crmMoveToUserResponse"/>
+   </operation>
+   <operation name="crmCopyToUser">
+      <input message="typens:crmCopyToUser"/>
+      <output message="typens:crmCopyToUserResponse"/>
+   </operation>
+   <operation name="crmMoveToContact">
+      <input message="typens:crmMoveToContact"/>
+      <output message="typens:crmMoveToContactResponse"/>
+   </operation>
+   <operation name="crmCopyToContact">
+      <input message="typens:crmCopyToContact"/>
+      <output message="typens:crmCopyToContactResponse"/>
+   </operation>
+   <operation name="crmMoveToProject">
+      <input message="typens:crmMoveToProject"/>
+      <output message="typens:crmMoveToProjectResponse"/>
+   </operation>
+   <operation name="crmCopyToProject">
+      <input message="typens:crmCopyToProject"/>
+      <output message="typens:crmCopyToProjectResponse"/>
+   </operation>
+   <operation name="crmgetMailInfo">
+      <input message="typens:crmgetMailInfo"/>
+      <output message="typens:crmgetMailInfoResponse"/>
+   </operation>
+   <operation name="crmDispositionNotification">
+      <input message="typens:crmDispositionNotification"/>
+      <output message="typens:crmDispositionNotificationResponse"/>
+   </operation>
+</portType>
+
+<binding name="crmemailBinding" type="typens:crmemailPort">
+   <soap:binding style="rpc"
+         transport="http://schemas.xmlsoap.org/soap/http"/>
+
+   <operation name="crmgetTree">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmaddTreeEntry">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmaddImapEntry">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmrenameTreeEntry">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmrenameImapEntry">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmdeleteEntry">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmsyncTree">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetInboxFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetOutboxFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetTrashFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetSentFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetDraftFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetJunkFolder">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailHeaders">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailIds">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmparseMailSource">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailText">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailSource">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmImportMailSource">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmSendNotification">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmGetEmailAccounts">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmCreateMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmCreateNewMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmSendMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmReceiveMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmSyncImapMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetERPMailHeaders">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetERPMail">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmGetPContacts">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmGetPContactIds">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmGetPContactIdsString">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmAddPContact">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmChangePContact">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmdeletePContact">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmdeletePContactsString">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetPContactAddrs">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmaddPContactAddrs">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmdelPContactAddrs">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmChangeMailItems">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmDeleteMails">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailIdsString">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmEmptyTrash">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmSetSpam">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmSetNotSpam">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmMoveToUser">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmCopyToUser">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmMoveToContact">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmCopyToContact">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmMoveToProject">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmCopyToProject">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmgetMailInfo">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+   <operation name="crmDispositionNotification">
+      <soap:operation soapAction="urn:crmemailAction"/>
+      <input>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+         <soap:body use="encoded"
+               namespace="urn:crmemail"
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+   </operation>
+</binding>
+
+<service name="crmemailService">
+   <port name="crmemailPort" binding="typens:crmemailBinding">
+      <soap:address location="https://demo.open-manager.eu/crm/soap/index.php?op=email"/>
+   </port>
+</service>
+
+</definitions>

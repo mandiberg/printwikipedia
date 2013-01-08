@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval
+END
+IBooleanBoolean1Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IBooleanBoolean1Function.java
+END
+DoubleNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/DoubleNode.java
+END
+IBooleanBoolean2Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IBooleanBoolean2Function.java
+END
+IDoubleValue.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IDoubleValue.java
+END
+IDouble0Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IDouble0Function.java
+END
+IDoubleFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IDoubleFunction.java
+END
+IDouble1Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IDouble1Function.java
+END
+IBooleanDouble2Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IBooleanDouble2Function.java
+END
+IDouble2Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/IDouble2Function.java
+END
+DoubleEvaluator.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/DoubleEvaluator.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/printwiki/!svn/ver/5/trunk/src/info/bliki/wiki/template/expr/eval/package.html
+END

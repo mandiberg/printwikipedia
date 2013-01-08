@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api
+END
+MethodException.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/MethodException.java
+END
+HtmlUtilities.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/HtmlUtilities.java
+END
+AbstractXMLParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/AbstractXMLParser.java
+END
+Console.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Console.java
+END
+UnexpectedAnswerException.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/UnexpectedAnswerException.java
+END
+ParseData.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/ParseData.java
+END
+NetworkException.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/NetworkException.java
+END
+XMLParseParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/XMLParseParser.java
+END
+Template.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Template.java
+END
+Page.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Page.java
+END
+XMLUserParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/XMLUserParser.java
+END
+Category.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Category.java
+END
+User.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/User.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/package.html
+END
+MediaWikiComm.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/MediaWikiComm.java
+END
+ErrorData.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/ErrorData.java
+END
+XMLEditParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/XMLEditParser.java
+END
+Connector.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Connector.java
+END
+Link.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Link.java
+END
+XMLPagesParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/XMLPagesParser.java
+END
+Revision.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/Revision.java
+END

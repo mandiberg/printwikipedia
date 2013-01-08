@@ -1,0 +1,22 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/resources
+http://www.printwiki.00mm.org/printwiki
+add
+
+inherit.gif
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+

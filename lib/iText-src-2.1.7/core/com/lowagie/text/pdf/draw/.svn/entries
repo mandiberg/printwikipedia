@@ -1,0 +1,36 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/draw
+http://www.printwiki.00mm.org/printwiki
+add
+
+LineSeparator.java
+file
+
+
+
+add
+
+VerticalPositionMark.java
+file
+
+
+
+add
+
+DottedLineSeparator.java
+file
+
+
+
+add
+
+DrawInterface.java
+file
+
+
+
+add
+

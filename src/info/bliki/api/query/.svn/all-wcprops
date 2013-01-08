@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query
+END
+RequestBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/RequestBuilder.java
+END
+Edit.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/Edit.java
+END
+Query.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/Query.java
+END
+OpenSearch.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/OpenSearch.java
+END
+Sitematrix.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/Sitematrix.java
+END
+Parse.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/printwiki/!svn/ver/5/trunk/src/info/bliki/api/query/Parse.java
+END

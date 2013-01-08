@@ -1,0 +1,71 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/pdf/internal
+http://www.printwiki.00mm.org/printwiki
+add
+
+PolylineShape.html
+file
+
+
+
+add
+
+PdfAnnotationsImp.html
+file
+
+
+
+add
+
+PdfXConformanceImp.html
+file
+
+
+
+add
+
+PdfViewerPreferencesImp.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+PdfVersionImp.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+PolylineShapeIterator.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+

@@ -1,0 +1,78 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/xml/xmp
+http://www.printwiki.00mm.org/printwiki
+add
+
+XmpMMSchema.java
+file
+
+
+
+add
+
+XmpWriter.java
+file
+
+
+
+add
+
+LangAlt.java
+file
+
+
+
+add
+
+XmpArray.java
+file
+
+
+
+add
+
+XmpSchema.java
+file
+
+
+
+add
+
+XmpReader.java
+file
+
+
+
+add
+
+XmpBasicSchema.java
+file
+
+
+
+add
+
+DublinCoreSchema.java
+file
+
+
+
+add
+
+PdfSchema.java
+file
+
+
+
+add
+
+PdfA1Schema.java
+file
+
+
+
+add
+

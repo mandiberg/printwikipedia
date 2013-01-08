@@ -1,0 +1,225 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/pdf/parser
+http://www.printwiki.00mm.org/printwiki
+add
+
+PdfContentStreamProcessor.TextMoveStartNextLine.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.PushGraphicsState.html
+file
+
+
+
+add
+
+SimpleTextExtractingPdfContentStreamProcessor.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.EndText.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.TextMoveStartNextLineWithLeading.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.TextMoveNextLine.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.ShowTextArray.html
+file
+
+
+
+add
+
+Matrix.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextFont.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.BeginText.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.TextSetTextMatrix.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextWordSpacing.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextRenderMode.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.ModifyCurrentTransformationMatrix.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.MoveNextLineAndShowText.html
+file
+
+
+
+add
+
+PdfContentReaderTool.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.MoveNextLineAndShowTextWithSpacing.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+ContentOperator.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.ProcessGraphicsStateResource.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextHorizontalScaling.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.PopGraphicsState.html
+file
+
+
+
+add
+
+GraphicsState.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextCharacterSpacing.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextRise.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.SetTextLeading.html
+file
+
+
+
+add
+
+PdfContentStreamProcessor.ShowText.html
+file
+
+
+
+add
+
+PdfTextExtractor.html
+file
+
+
+
+add
+

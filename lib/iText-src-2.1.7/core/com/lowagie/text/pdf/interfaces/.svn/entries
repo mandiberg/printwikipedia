@@ -1,0 +1,64 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/interfaces
+http://www.printwiki.00mm.org/printwiki
+add
+
+PdfRunDirection.java
+file
+
+
+
+add
+
+PdfVersion.java
+file
+
+
+
+add
+
+PdfEncryptionSettings.java
+file
+
+
+
+add
+
+PdfAnnotations.java
+file
+
+
+
+add
+
+PdfPageActions.java
+file
+
+
+
+add
+
+PdfDocumentActions.java
+file
+
+
+
+add
+
+PdfXConformance.java
+file
+
+
+
+add
+
+PdfViewerPreferences.java
+file
+
+
+
+add
+

@@ -1,0 +1,113 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/pdf/hyphenation
+http://www.printwiki.00mm.org/printwiki
+add
+
+Hyphenator.html
+file
+
+
+
+add
+
+package-frame.html
+file
+
+
+
+add
+
+package-summary.html
+file
+
+
+
+add
+
+ByteVector.html
+file
+
+
+
+add
+
+Hyphenation.html
+file
+
+
+
+add
+
+package-tree.html
+file
+
+
+
+add
+
+PatternConsumer.html
+file
+
+
+
+add
+
+TernaryTree.Iterator.Item.html
+file
+
+
+
+add
+
+Hyphen.html
+file
+
+
+
+add
+
+TernaryTree.Iterator.html
+file
+
+
+
+add
+
+CharVector.html
+file
+
+
+
+add
+
+SimplePatternParser.html
+file
+
+
+
+add
+
+TernaryTree.html
+file
+
+
+
+add
+
+HyphenationException.html
+file
+
+
+
+add
+
+HyphenationTree.html
+file
+
+
+
+add
+

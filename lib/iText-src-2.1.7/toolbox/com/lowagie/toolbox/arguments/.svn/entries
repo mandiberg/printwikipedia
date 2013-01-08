@@ -1,0 +1,92 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/toolbox/com/lowagie/toolbox/arguments
+http://www.printwiki.00mm.org/printwiki
+add
+
+IntegerArgument.java
+file
+
+
+
+add
+
+FileArrayArgument.java
+file
+
+
+
+add
+
+ColorArgument.java
+file
+
+
+
+add
+
+FileArgument.java
+file
+
+
+
+add
+
+ImageArgument.java
+file
+
+
+
+add
+
+AbstractArgument.java
+file
+
+
+
+add
+
+filters
+dir
+
+
+
+add
+
+FloatArgument.java
+file
+
+
+
+add
+
+StringArgument.java
+file
+
+
+
+add
+
+PageSizeArgument.java
+file
+
+
+
+add
+
+OptionArgument.java
+file
+
+
+
+add
+
+BitsetArgument.java
+file
+
+
+
+add
+

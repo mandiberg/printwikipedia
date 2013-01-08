@@ -1,0 +1,78 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/html
+http://www.printwiki.00mm.org/printwiki
+add
+
+Markup.java
+file
+
+
+
+add
+
+WebColors.java
+file
+
+
+
+add
+
+HtmlPeer.java
+file
+
+
+
+add
+
+HtmlParser.java
+file
+
+
+
+add
+
+HtmlWriter.java
+file
+
+
+
+add
+
+HtmlTags.java
+file
+
+
+
+add
+
+SAXmyHtmlHandler.java
+file
+
+
+
+add
+
+HtmlEncoder.java
+file
+
+
+
+add
+
+simpleparser
+dir
+
+
+
+add
+
+HtmlTagMap.java
+file
+
+
+
+add
+

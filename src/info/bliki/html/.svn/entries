@@ -1,0 +1,51 @@
+8
+
+dir
+5
+http://www.printwiki.00mm.org/printwiki/trunk/src/info/bliki/html
+http://www.printwiki.00mm.org/printwiki
+
+
+
+2009-11-02T07:53:48.434079Z
+5
+denis
+
+
+svn:special svn:externals svn:needs-lock
+
+jspwiki
+dir
+
+HTML2WikiConverter.java
+file
+
+
+
+
+2009-08-24T15:05:36.000000Z
+7f3f498dd2002712c1054a55c76ebb52
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+
+wikipedia
+dir
+
+googlecode
+dir
+
+package.html
+file
+
+
+
+
+2009-08-24T15:05:36.000000Z
+923dfdc38d3239f26b41168f6f82d959
+2009-11-02T07:53:48.434079Z
+5
+denis
+has-props
+

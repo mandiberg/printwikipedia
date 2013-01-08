@@ -1,0 +1,36 @@
+10
+
+dir
+0
+http://www.printwiki.00mm.org/printwiki/trunk/lib/bliki-source/bliki-pdf
+http://www.printwiki.00mm.org/printwiki
+add
+
+target
+dir
+
+
+
+add
+
+src
+dir
+
+
+
+add
+
+pom.xml
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
