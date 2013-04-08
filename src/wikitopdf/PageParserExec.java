@@ -4,7 +4,7 @@ import wikitopdf.utils.ByteFormatter;
 import wikitopdf.utils.WikiLogger;
 
 /**
- *
+ * THIS IS THE MAIN.JAVA CLASS - AS IT IS REDEFINED ELSEWHERE TO RUN THIS FIRST
  * @author Denis Lunev <den.lunev@gmail.com>
  */
 public class PageParserExec {
@@ -15,10 +15,12 @@ public class PageParserExec {
     public static void main(String[] args) {
 
         try{
-        //WikiProcessor wikiProcessor = new WikiProcessor();
+        // in 2013 rev, we have switched back to old unthreaded processor, which is working
+        // class is defined in WikiProcessor.java
+        WikiProcessor wikiProcessor = new WikiProcessor();
         //WikiHDProcessor wikiProcessor = new WikiHDProcessor();
-        WikiThreadingProcessor wikiProcessor = new WikiThreadingProcessor();
-        wikiProcessor.createPdf();
+        //WikiThreadingProcessor wikiProcessor = new WikiThreadingProcessor(); // creates new object from wikithreadingprocessor.java
+        wikiProcessor.createPdf(); // calls createPdf method. does not complete this
          }catch(Exception ex){
             WikiLogger.getLogger().severe(ex.getMessage());
         }catch(Error th){

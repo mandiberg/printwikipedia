@@ -122,9 +122,9 @@ public class SQLProcessor {
      * @return
      */
     public int getArticlesCount() {
-        String query = "SELECT COUNT(page.page_id) as count FROM page";
+        String query = "SELECT COUNT(page.page_id) as count FROM page"; 
         int pCount = 0;
-        try {
+        try {  // pulling total number of pages from mysql db
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
             pCount = rs.getInt(1);
@@ -134,7 +134,7 @@ public class SQLProcessor {
             WikiLogger.getLogger().severe(ex.getMessage());
         }
 
-        return pCount;
+        return pCount;  // returns total number of pages in db
     }
 
     /**

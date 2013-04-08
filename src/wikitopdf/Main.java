@@ -21,7 +21,7 @@ import com.sun.pdfview.PDFPage;
 import java.sql.SQLException;
 
 /**
- *
+ * THIS MAIN.JAVA DOES NOT DO ANYTHING AT PRESENT. PAGEPARSEREXEC.JAVA IS DEFINED AS MAIN
  * @author Denis Lunev <den.lunev@gmail.com>
  */
 public class Main {

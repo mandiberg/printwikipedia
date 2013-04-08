@@ -63,7 +63,7 @@ public class WikiProcessor {
 
                     }
 
-                    System.out.println(pdfWrapper.getPageNumb());
+                    System.out.println("sarting PDF, page number" + pdfWrapper.getPageNumb()); // the number that is being printed
                     //pdfWrapper.closeColumn();
                 }
 
