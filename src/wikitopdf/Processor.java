@@ -16,7 +16,7 @@ import wikitopdf.wiki.WikiPage;
  * @author Denis Lunev <den.lunev@gmail.com>
  */
 
-class Processor implements Runnable {
+public class Processor implements Runnable {
 
 
     private int pageBunch = WikiSettings.getInstance().getArticleBunch();
@@ -74,11 +74,10 @@ class Processor implements Runnable {
 
 
 
-    Processor(int currentPage, SQLProcessor sqlReader) {
+    public Processor(int currentPage, SQLProcessor sqlReader) {
         this.startPage = this.currentPage = currentPage;
         this.sqlReader = sqlReader;
         //System.out.println(Thread.currentThread().getName() + " start " + start);
-
     }
 }
 
