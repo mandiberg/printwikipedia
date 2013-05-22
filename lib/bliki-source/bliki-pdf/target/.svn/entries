@@ -1,22 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/bliki-source/bliki-pdf/target
-http://www.printwiki.00mm.org/printwiki
-add
-
-bliki-pdf-3.0.13.jar
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-

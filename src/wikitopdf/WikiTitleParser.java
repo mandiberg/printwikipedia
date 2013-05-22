@@ -50,14 +50,16 @@ public class WikiTitleParser
         try
         {
             //while()
-            {                
+            {   
+                //start writing the first volume
                 pdfWrapper.openMultiColumn();
-
+                
                 
                 while ((line = bufferReader.readLine()) != null)
                 {
                     //sqlProcessor.saveTitle(line);
                     
+                    //if the pages in the current volume == 670, close current pdf, track volume/page numbers, and start new pdf
                     if(pdfWrapper.getPagesCount() % 670 == 0 && pdfWrapper.getTitlesCount() > 100)
                     {
                         System.out.println("file " + num);
@@ -66,9 +68,10 @@ public class WikiTitleParser
                         num ++;
          
                         pdfWrapper = new PdfTitleWrapper(num, pagesCount);
-                        pdfWrapper.openMultiColumn();
+                        pdfWrapper.openMultiColumn(); // starts new volume (starting from vol 2)
                     }
-
+                    
+                    //while there are lines, write the line
                     pdfWrapper.writeTitle(line);
                 }
             }

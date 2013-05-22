@@ -1,36 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/bliki-source/bliki-addons/src/main/java/info/bliki/wiki/addon/latex
-http://www.printwiki.00mm.org/printwiki
-add
-
-PropertyManager.java
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-latex.properties
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-

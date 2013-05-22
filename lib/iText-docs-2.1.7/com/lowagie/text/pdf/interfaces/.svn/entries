@@ -1,85 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-docs-2.1.7/com/lowagie/text/pdf/interfaces
-http://www.printwiki.00mm.org/printwiki
-add
-
-PdfXConformance.html
-file
-
-
-
-add
-
-PdfViewerPreferences.html
-file
-
-
-
-add
-
-PdfRunDirection.html
-file
-
-
-
-add
-
-PdfVersion.html
-file
-
-
-
-add
-
-package-frame.html
-file
-
-
-
-add
-
-PdfEncryptionSettings.html
-file
-
-
-
-add
-
-package-summary.html
-file
-
-
-
-add
-
-PdfAnnotations.html
-file
-
-
-
-add
-
-PdfPageActions.html
-file
-
-
-
-add
-
-package-tree.html
-file
-
-
-
-add
-
-PdfDocumentActions.html
-file
-
-
-
-add
-

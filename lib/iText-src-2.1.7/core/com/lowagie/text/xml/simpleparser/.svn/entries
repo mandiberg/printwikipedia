@@ -1,50 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/xml/simpleparser
-http://www.printwiki.00mm.org/printwiki
-add
-
-SimpleXMLDocHandlerComment.java
-file
-
-
-
-add
-
-IanaEncodings.java
-file
-
-
-
-add
-
-SimpleXMLParser.java
-file
-
-
-
-add
-
-EntitiesToSymbol.java
-file
-
-
-
-add
-
-SimpleXMLDocHandler.java
-file
-
-
-
-add
-
-EntitiesToUnicode.java
-file
-
-
-
-add
-

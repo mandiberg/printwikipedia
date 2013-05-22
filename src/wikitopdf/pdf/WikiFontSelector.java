@@ -25,7 +25,10 @@ public class WikiFontSelector {
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
         fontLatin = new Font(bsFontLatin);
-        fontLatin.setSize(10.5f);
+        //this is where TOC font is set, as well as the H1 font for the full entries
+        //set at 10.5  for full entries, 7 for TOC
+ //       fontLatin.setSize(7f);  
+        fontLatin.setSize(10.5f);  
         //fontLatin.setStyle(fontLatin.BOLD);
 
         //font color is RGB, for example {255,0,0} is RED
@@ -34,7 +37,10 @@ public class WikiFontSelector {
         //fontLatin.setColor(0,0,0);
 
         Font fontGlyph = new Font(bsFontGlyph);
-        fontGlyph.setSize(10.5f);
+        //this is where TOC font is set, as well as the H1 font for the full entries
+        //set at 10.5  for full entries, 7 for TOC
+ //      fontGlyph.setSize(7f); //was 10.5
+         fontGlyph.setSize(10.5f); //was 10.5
         fontGlyph.setStyle(Font.BOLD);
 
         //fontHieroglyph.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
@@ -58,6 +64,8 @@ public class WikiFontSelector {
 
         return getFontSelector();
     }
+    
+    
 
     /**
      *

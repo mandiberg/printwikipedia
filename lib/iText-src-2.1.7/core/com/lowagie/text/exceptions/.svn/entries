@@ -1,36 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/exceptions
-http://www.printwiki.00mm.org/printwiki
-add
-
-InvalidPdfException.java
-file
-
-
-
-add
-
-UnsupportedPdfException.java
-file
-
-
-
-add
-
-BadPasswordException.java
-file
-
-
-
-add
-
-IllegalPdfSyntaxException.java
-file
-
-
-
-add
-

@@ -15,6 +15,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+
 /**
  *
  * @author Denis Lunev <den.lunev@gmail.com>
@@ -36,7 +37,7 @@ public class PdfTitleWrapper {
      */
     public PdfTitleWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
         //Read settings
-        String outputFileName = "temp/output" + num + ".pdf";
+        String outputFileName = "temp/wikipedia-toc-volume" + num + ".pdf";
 
         pdfDocument = new Document(new Rectangle(432, 648));
 
@@ -78,6 +79,7 @@ public class PdfTitleWrapper {
             //Phrase ph = new Phrase(ch);
             Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
             ph.setLeading(10);
+            //ph.setFontSize(20);
 
             Paragraph pr = new Paragraph(ph);
             //calculate width of word
@@ -86,8 +88,9 @@ public class PdfTitleWrapper {
             pr.setKeepTogether(true);
 
             //if word wraps
+            // this needs to be adjusted to indent wrapped words 2013
             if (widthLine > 85) {
-                pr.setAlignment(Element.ALIGN_RIGHT);
+            //    pr.setAlignment(Element.ALIGN_RIGHT);
             }
 
             if (mct.isOverflow()) {
@@ -175,22 +178,45 @@ public class PdfTitleWrapper {
         }
 
         cb.beginText();
+        
         cb.setFontAndSize(times, 32);
         cb.setTextMatrix(pdfDocument.right() - 130, 500);
         cb.showText("Wikipedia");
+        
         cb.setFontAndSize(times, 8);
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
         cb.showText("table of contents");
+        
+        cb.setFontAndSize(times, 12);
+        cb.setTextMatrix(pdfDocument.right() - 200, 200);
+        cb.showText("testing - delete me");
+        
         cb.endText();
 
         pdfDocument.newPage();
 
-        String copyrightText = "Copyright (c) 2009 WIKIMEDIA FOUNDATION. \r\n" +
+               
+        /*
+        // adding blank page - WHY ISN'T THIS WORKING???
+        cb.beginText();
+        
+        cb.setFontAndSize(times, 32);
+        cb.setTextMatrix(pdfDocument.right() - 130, 500);
+        cb.showText("blank page");
+        
+        cb.endText();
+
+        pdfDocument.newPage();
+*/
+        
+        
+        
+        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
                 "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
                 "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
                 "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
                 "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
-                "in the section entitled “GNU Free Documentation License”.";
+                "in the section entitled ‚ÄúGNU Free Documentation License‚Äù.";
 
         cb.beginText();
         cb.setFontAndSize(times, 8);
@@ -203,6 +229,10 @@ public class PdfTitleWrapper {
 
         cb.endText();
         pdfDocument.newPage();
+        
+        
+        
+        
     }
 
     /**

@@ -1,43 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/ant
-http://www.printwiki.00mm.org/printwiki
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-release.xml
-file
-
-
-
-add
-
-site.xml
-file
-
-
-
-add
-
-compile.xml
-file
-
-
-
-add
-
-pom.xml
-file
-
-
-
-add
-

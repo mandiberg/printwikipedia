@@ -1,36 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/toolbox/com/lowagie/toolbox/arguments/filters
-http://www.printwiki.00mm.org/printwiki
-add
-
-PdfFilter.java
-file
-
-
-
-add
-
-U3DFilter.java
-file
-
-
-
-add
-
-DirFilter.java
-file
-
-
-
-add
-
-ImageFilter.java
-file
-
-
-
-add
-

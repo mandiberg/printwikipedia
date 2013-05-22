@@ -1,57 +1,0 @@
-10
-
-dir
-0
-http://www.printwiki.00mm.org/printwiki/trunk/lib/iText-src-2.1.7/core/com/lowagie/text/pdf/parser
-http://www.printwiki.00mm.org/printwiki
-add
-
-PdfContentStreamProcessor.java
-file
-
-
-
-add
-
-GraphicsState.java
-file
-
-
-
-add
-
-Matrix.java
-file
-
-
-
-add
-
-PdfContentReaderTool.java
-file
-
-
-
-add
-
-ContentOperator.java
-file
-
-
-
-add
-
-SimpleTextExtractingPdfContentStreamProcessor.java
-file
-
-
-
-add
-
-PdfTextExtractor.java
-file
-
-
-
-add
-
