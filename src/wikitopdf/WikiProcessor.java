@@ -5,8 +5,10 @@ import wikitopdf.utils.WikiSettings;
 import wikitopdf.utils.WikiLogger;
 import com.lowagie.text.DocumentException;
 import java.io.IOException;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wikitopdf.pdf.PdfPageWrapper;
@@ -29,6 +31,13 @@ public class WikiProcessor {
         int startLimit = WikiSettings.getInstance().getStartPage();
         boolean isInProggress = true;
         int cPageNum = 0;
+        int cVolNum = 1;
+        Date newTime = new Date();
+        Date oldTime;
+        //String tempName = "";
+        //String outputName = "";
+        //File oldName;
+        //File newName;
 
         SQLProcessor sqlReader = null;
         PdfPageWrapper pdfWrapper = null;
@@ -45,6 +54,7 @@ public class WikiProcessor {
             while (isInProggress) {
 
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
+                //tempName = pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 
                 // While still pages in database and still writing pages to this volume 
                 // This inner while loop creates a single pdf volume
@@ -72,6 +82,18 @@ public class WikiProcessor {
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
                 
+                //Renaming Added Wendesday May 22 by CE
+                //oldName = new File(tempName);
+                //newName = new File(outputName);
+                
+                //Time
+                oldTime = newTime;
+                newTime = new Date();
+                //Print time for last volume in seconds
+                System.out.println("Time for vol" + cVolNum + ": " + (newTime.getTime() - oldTime.getTime())/1000);
+                //Print out current time
+                System.out.println("Current Time: " + newTime.getTime());
+                cVolNum++;
 
                 //Info
                 pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " +
