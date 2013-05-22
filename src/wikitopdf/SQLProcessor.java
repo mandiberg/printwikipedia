@@ -73,18 +73,15 @@ public class SQLProcessor {
         ArrayList<WikiPage> pages = new ArrayList<WikiPage>();
 
         String query = "SELECT " +
-                "page.page_id, " +
-                "page.page_title," +
-                "revision.rev_user_text," +
-                "revision.rev_comment," +
+                "pagesubset.page_id, " +
+                "pagesubset.page_title, " +
+                "revision.rev_user_text, " +
+                "revision.rev_comment, " +
                 "text.old_text " +
-                "FROM " +
-                "page " +
-                "INNER JOIN revision ON (page.page_id = revision.rev_page) " +
-                "INNER JOIN text ON (revision.rev_id = text.old_id)" +
-                "ORDER BY page.page_title " +
-                //"WHERE revision.rev_id = " + textID;
-                "LIMIT " + start + ", " + limit;
+                "FROM (SELECT page.page_id as page_id, page.page_title as page_title FROM `page` " +
+                "ORDER BY page.page_title LIMIT " + start + ", " + limit + ") as pagesubset " + 
+                "INNER JOIN revision ON (pagesubset.page_id = revision.rev_page) " +
+                "INNER JOIN text ON (revision.rev_id = text.old_id)";
 
         try {
 
