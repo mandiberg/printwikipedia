@@ -18,11 +18,9 @@ import wikitopdf.wiki.WikiPage;
  *
  * @author Denis Lunev <den.lunev@gmail.com>
  */
-public class WikiProcessor {
+/*public class WikiProcessor {
 
-    /**
-     *
-     */
+   
     public void createPdf() {
         int pageBunch = WikiSettings.getInstance().getArticleBunch();
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
@@ -47,22 +45,21 @@ public class WikiProcessor {
         //while (isInProggress) {
 
         try {
-
+             //i want this to get built and broken down with each iteration to ensure no memory leaking in it.
             sqlReader = new SQLProcessor();
             int artCount = sqlReader.getArticlesCount();// Counts total from database
-
+            sqlReader = null;
 
             while (isInProggress) {
-
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
                 tempName = "output\\" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
-                
+                sqlReader = new SQLProcessor();
                 // While still pages in database and still writing pages to this volume 
                 // This inner while loop creates a single pdf volume
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
                     
                     // Get all article entries from the database
-                    ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1); 
+                    ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
                     //for (WikiPage page : pages) {
                       //  pdfWrapper.writePage(page);
                     //}
@@ -87,13 +84,16 @@ public class WikiProcessor {
                     
                     numArt = artWritten;
                     artWritten = 0; // Added May 23 by CE resets incramentor so that it doesn't skip articles next loop through
-                    
+                    pages = null;
                     //System.out.println("starting PDF, page number: " + pdfWrapper.getPageNumb()); // the number that is being printed
                     //pdfWrapper.closeColumn();
                 } // End of Volume
                 
+                
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
+               
+                
                 
                 //Renaming Added May 24 by CE, renames outputfile
                 outputName = "output\\Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
@@ -121,8 +121,10 @@ public class WikiProcessor {
                         pdfWrapper.getCurrentTitle() + ")";
                 WikiLogger.getLogger().fine("Retrieved " + startLimit + "/" + artCount + " articles " + pageInfo);
                 WikiLogger.getLogger().info("Free memory: " + ByteFormatter.format(runtime.freeMemory()));
+                //here's some closing code at the end of each volume
+                pdfWrapper = null;
+                sqlReader = null;
             } //End of all volumes/PDFs
-
             //Stamping all page numbers
             PdfStamp stamp = new PdfStamp();
             WikiLogger.getLogger().info("Stamping page numbers...");
@@ -137,7 +139,7 @@ public class WikiProcessor {
 
         WikiLogger.getLogger().fine("Finished (" + startLimit + " pages)");
     }
-}
+}*/
 
 
 /*
@@ -147,7 +149,7 @@ public class WikiProcessor {
  * IF AKKA BRANCH, IT SHOULD BE GIVEN A NEW NAME
  * E.G. AkkaWikiProcessor 
  * SO THE TWO CAN COEXIST. 
-
+*/ 
 public class WikiProcessor {
 
 
