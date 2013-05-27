@@ -29,6 +29,7 @@ public class WikiProcessor {
         String pageInfo = "";
         int startLimit = WikiSettings.getInstance().getStartPage();
         boolean isInProggress = true;
+        int totalPageNum = 0;
         int cPageNum = 0;
         int artWritten = 0;
         int numArt = 0;
@@ -94,20 +95,30 @@ public class WikiProcessor {
                 
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
-               
-                
+                System.out.println("trying to read " + pdfWrapper.getOutputFileName() );               
+                PdfStamp stamp = new PdfStamp();
+                //stamp.stampDir(cPageNum);
+                stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
+                totalPageNum += cPageNum;
+                System.out.println("after stamping outputName is " + outputName);
                 
                 //Renaming Added May 24 by CE, renames outputfile
                 outputName = "./output/Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
+                System.out.println("after stamping outputName is " + outputName +" and tempName is " + tempName );
                 oldFile = new File(tempName);
+                String tempNameNoUnderscore = tempName.replace("_","");
+                File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
                 if(newFile.exists()){
                     newFile.delete();
                 }
                 if(!(oldFile.renameTo(newFile))){
-                    System.out.println("File not renamed");
+                    System.out.println("File not renamed first time");
+                    if (!(oldFileNoUnderscore.renameTo(newFile))){
+                        System.out.println("File not renamed second time, matching" + tempNameNoUnderscore);
+                    }
                 }
-                
+             
                 //Timing
                 oldTime = newTime;
                 newTime = new Date();

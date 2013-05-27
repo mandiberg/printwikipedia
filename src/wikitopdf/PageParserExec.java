@@ -1,6 +1,7 @@
 package wikitopdf;
 
 import wikiactorprocessor.ActorProcessor; 
+import wikitopdf.pdf.PdfStamp;
 import wikitopdf.utils.ByteFormatter;
 import wikitopdf.utils.WikiLogger;
 
