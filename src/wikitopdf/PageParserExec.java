@@ -54,6 +54,14 @@ public class PageParserExec {
                     
                 } else if(wikiProcess.equals("covers")){
                     System.out.println("Running " + wikiProcess);
+                    WikiCoverParser parser = new WikiCoverParser();
+                    try {
+                        parser.parseCover();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    
                 }
 
         

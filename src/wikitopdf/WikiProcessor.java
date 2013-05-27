@@ -18,9 +18,11 @@ import wikitopdf.wiki.WikiPage;
  *
  * @author Denis Lunev <den.lunev@gmail.com>
  */
-/*public class WikiProcessor {
+public class WikiProcessor {
 
-   
+    /**
+     *
+     */
     public void createPdf() {
         int pageBunch = WikiSettings.getInstance().getArticleBunch();
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
@@ -139,7 +141,7 @@ import wikitopdf.wiki.WikiPage;
 
         WikiLogger.getLogger().fine("Finished (" + startLimit + " pages)");
     }
-}*/
+}
 
 
 /*
@@ -149,7 +151,7 @@ import wikitopdf.wiki.WikiPage;
  * IF AKKA BRANCH, IT SHOULD BE GIVEN A NEW NAME
  * E.G. AkkaWikiProcessor 
  * SO THE TWO CAN COEXIST. 
-*/ 
+
 public class WikiProcessor {
 
 
