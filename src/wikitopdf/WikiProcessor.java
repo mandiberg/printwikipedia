@@ -54,7 +54,7 @@ public class WikiProcessor {
 
             while (isInProggress) {
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
-                tempName = "output\\" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
+                tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
                 // While still pages in database and still writing pages to this volume 
                 // This inner while loop creates a single pdf volume
@@ -98,7 +98,7 @@ public class WikiProcessor {
                 
                 
                 //Renaming Added May 24 by CE, renames outputfile
-                outputName = "output\\Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
+                outputName = "./output/Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
                 oldFile = new File(tempName);
                 newFile = new File(outputName);
                 if(newFile.exists()){

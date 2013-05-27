@@ -21,19 +21,19 @@
 		<font-family>Cardo</font-family>
 	</contributor>
 	<db-host>
-		10.10.61.157
+		localhost
 	</db-host>
 	<db-port>
-		3306
+		8889
 	</db-port>
 	<db-name>
-		printwiki
+		wiki
 	</db-name>
 	<db-user>
 		root
 	</db-user>
 	<db-pass>
-		
+		root
 	</db-pass>
 	<article-bunch>
 		20
