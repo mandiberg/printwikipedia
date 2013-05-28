@@ -6,6 +6,7 @@ import wikitopdf.utils.WikiLogger;
 import com.lowagie.text.DocumentException;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileFilter;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
@@ -40,6 +41,26 @@ public class WikiProcessor {
         String outputName = "";
         File oldFile;
         File newFile;
+        
+        //Added May 28 by CE for Graceful Restart
+        /****************************************/
+        FileFilter dsFilter = new FileFilter(){
+            public boolean accept(File file){
+                return (!(file.getName().contains("DS_Store")));
+            }
+        };
+        
+        File[] listOfFiles = new File("output").listFiles(dsFilter);
+        
+        if (listOfFiles.length > 0){
+            WikiRestart restartSettings = new WikiRestart(listOfFiles);
+            startLimit = restartSettings.getRestartLimit();
+            totalPageNum = restartSettings.getRestartPage();
+            cVolNum = restartSettings.getRestartVol();
+        }
+        System.out.println("Starting from Vol: " + cVolNum + " " + "Page: " + 
+                totalPageNum + " " + "Article: " + startLimit);
+        /****************************************/
 
         SQLProcessor sqlReader = null;
         PdfPageWrapper pdfWrapper = null;
@@ -103,20 +124,22 @@ public class WikiProcessor {
                 System.out.println("after stamping outputName is " + outputName);
                 
                 //Renaming Added May 24 by CE, renames outputfile
-                outputName = "./output/Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
-                System.out.println("after stamping outputName is " + outputName +" and tempName is " + tempName );
+                tempName = tempName.replaceAll("_", "");
+                outputName = "./output/Vol-" + String.format("%05d", cVolNum) + "-" + 
+                        outputName + "-" + startLimit + "-" +  totalPageNum + ".pdf";
+                //System.out.println("after stamping outputName is " + outputName +" and tempName is " + tempName );
                 oldFile = new File(tempName);
-                String tempNameNoUnderscore = tempName.replace("_","");
-                File oldFileNoUnderscore = new File(tempName);
+                //String tempNameNoUnderscore = tempName.replace("_","");
+                //File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
                 if(newFile.exists()){
                     newFile.delete();
                 }
                 if(!(oldFile.renameTo(newFile))){
                     System.out.println("File not renamed first time");
-                    if (!(oldFileNoUnderscore.renameTo(newFile))){
-                        System.out.println("File not renamed second time, matching" + tempNameNoUnderscore);
-                    }
+                    //if (!(oldFileNoUnderscore.renameTo(newFile))){
+                      //  System.out.println("File not renamed second time, matching" + tempNameNoUnderscore);
+                    //}
                 }
              
                 //Timing
@@ -130,7 +153,7 @@ public class WikiProcessor {
                 cVolNum++;
 
                 //Info
-                pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " +
+                pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " + 
                         pdfWrapper.getCurrentTitle() + ")";
                 WikiLogger.getLogger().fine("Retrieved " + startLimit + "/" + artCount + " articles " + pageInfo);
                 WikiLogger.getLogger().info("Free memory: " + ByteFormatter.format(runtime.freeMemory()));

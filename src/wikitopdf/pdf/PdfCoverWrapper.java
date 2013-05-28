@@ -73,7 +73,7 @@ public class PdfCoverWrapper {
 
 
         PdfContentByte cb = pdfWriter.getDirectContent();
-        ct = new ColumnText(cb);
+        //ct = new ColumnText(cb);
         //ct.setIndent(20);
 
     }
@@ -95,6 +95,10 @@ public class PdfCoverWrapper {
         cb.setFontAndSize(times, 32);
         cb.setTextMatrix(pdfDocument.right() - 130, 500);
         cb.showText("Wikipedia");
+        //Use the code below to create rotated text the first constant indicates alignment,
+        //the third and fourth arguments indicate the origin of rotation,
+        //the last argument is the rotation in degrees
+        //cb.showTextAligned(cb.ALIGN_LEFT,"Wikipedia",0,0,90);
         
         cb.setFontAndSize(times, 8);
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
