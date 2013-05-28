@@ -19,10 +19,6 @@ public class WikiRestart {
     public WikiRestart(File[] folder) throws NumberFormatException{
         try {
             File lastFile = folder[folder.length - 1];
-            for(File file : folder)
-            {
-                System.out.println(file.getCanonicalFile() + "\n");
-            }
             String pathName = lastFile.getCanonicalPath();
             String[] pathArray = pathName.split("/");
             String lastOutput = pathArray[pathArray.length - 1];
