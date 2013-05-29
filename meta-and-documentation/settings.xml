@@ -36,7 +36,7 @@
 		
 	</db-pass>
 	<article-bunch>
-		4000
+		5000
 	</article-bunch>
 	<page-file-limit>
 		670
@@ -45,7 +45,7 @@
 		6000000
 	</start-page>
 	<time-limit>
-		50
+		1620
 	</time-limit>
 	<thread-limit>
 		6

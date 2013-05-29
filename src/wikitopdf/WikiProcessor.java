@@ -49,7 +49,7 @@ public class WikiProcessor {
         /****************************************/
         FileFilter dsFilter = new FileFilter(){
             public boolean accept(File file){
-                return (!(file.getName().contains("DS_Store")));
+                return (!(file.getName().contains("DS_Store") || file.getName().contains("output.pdf")));
             }
         };
         
@@ -63,6 +63,7 @@ public class WikiProcessor {
         }
         System.out.println("Starting from Vol: " + cVolNum + " " + "Page: " + 
                 totalPageNum + " " + "Article: " + startLimit);
+        listOfFiles = null;
         /****************************************/
 
         SQLProcessor sqlReader = null;
@@ -100,6 +101,20 @@ public class WikiProcessor {
                         artWritten++;
                     }
                     outputName = outputName + "-" + pages.get(artWritten - 1).getTitle();
+                    outputName = outputName.replace("/", "_");
+                    outputName = outputName.replace("\\", "_");
+                    outputName = outputName.replace(":", "");
+                    outputName = outputName.replace("@", "");
+                    outputName = outputName.replace("$", "");
+                    outputName = outputName.replace("%", "");
+                    outputName = outputName.replace("^", "");
+                    outputName = outputName.replace("&", "");
+                    outputName = outputName.replace("*", "");
+                    outputName = outputName.replace("|", "");
+                    outputName = outputName.replace("?", "");
+                    outputName = outputName.replace("<", "");
+                    outputName = outputName.replace(">", "");
+                    outputName = outputName.replace("\"", "");
 
                     isInProggress = sqlReader.isInProggres(); // checks to see if there is still database entries
                     //TODO change from test value
@@ -126,7 +141,7 @@ public class WikiProcessor {
                 totalPageNum += cPageNum;
                 
                 //Renaming Added May 24 by CE, renames outputfile
-                tempName = tempName.replaceAll("_", "");
+                tempName = tempName.replace("_", "");
                 outputName = "./output/Vol-" + String.format("%05d", cVolNum) + "-" + 
                         outputName + "-" + startLimit + "-" +  totalPageNum + ".pdf";
                 oldFile = new File(tempName);

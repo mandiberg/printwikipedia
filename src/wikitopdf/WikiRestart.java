@@ -26,6 +26,8 @@ public class WikiRestart {
             startVol = Integer.parseInt(settings[1]);
             startLimit = Integer.parseInt(settings[settings.length - 3]);
             startPage = Integer.parseInt(settings[settings.length - 2]);
+            settings = null;
+            pathArray = null;
         }
         catch (Exception ex)
         {
