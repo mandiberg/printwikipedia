@@ -109,16 +109,17 @@ Building the wikitopdf.jar
 	You will need to build it from the NetBeans project in your GitHub repository. 
 	Start NetBeans and open the "printwikipedia" NetBeans Project in your GitHub 
 	repository.
-	It will come up with conflicts about not finding the "scala-library-2.9.1-1.jar" 
-	and "akka-actor-2.0.jar" libraries.
-	Click "resolve problems" then select "scala-library-2.9.1-1.jar" from the conflicts 
-	window. 
-	Navigate to the "lib" folder in the GitHub "printwikipedia" repository and find the 
-	"scala-library-2.9.1-1.jar" file. Select it and click resolve. A green check should 
-	replace the red x beside "scala-library-2.9.1-1.jar" in the conflicts window.
+	It will come up with a window about Project Problems
+	Click "Resolve Problems…" then select "scala-library-2.9.1-1.jar" from the "Project
+	Problmes:" list, and click "Resolve…"
+	In the popup window navigate to the "lib" folder in the GitHub "printwikipedia"
+	repository and find the "scala-library-2.9.1-1.jar" file. Select it and click 
+	"Choose". A green check should replace the yellow triangle beside 
+	"scala-library-2.9.1-1.jar" in the Project Problems window.
 	Next select "akka-actor-2.0.jar" from the conflicts window and once again navigate 
-	to the "lib" folder in your GitHub "printwikipedia" repository and select the "akka-
-	actor-2.0.jar" file. This should resolve all project issues. 
+	to the "lib" folder in your GitHub (it may open here by default this time)
+	"printwikipedia" repository and select the "akka-actor-2.0.jar" file. This should 	resolve all project issues. 
+	Click "Close" to exit from the Project Problems window.
 	Now simply click the build button in the upper left portion of NetBeans (sybolized 
 	by a hammer). It should display "BUILD SUCCESSFUL" in green letters in the bottom 
 	of the window.
