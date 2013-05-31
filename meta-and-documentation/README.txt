@@ -1,0 +1,263 @@
+Hello future Michael or anyone else interested in printing Wikipedia!
+
+This will remind or teach you how to get printwiki up and running.
+
+The first thing you will need to do is to create a new directory where you want to
+store the printwiki project and all of its components. (It isn't absolutely necessary 
+that everypart of the project is in the same directory but it makes things easier to 
+manage.)
+
+**************************************************************************************
+Setting up the database
+
+This first thing you will want to start doing is setting up the database, as it will 
+take a long time to write all of the article entries into the database and you can use 
+this time to get other parts of the project ready to go.
+
+--------------------------------------------------------------------------------------
+Tools
+First we need a few things in order to be able to host and use the database
+
+1. MySQL 
+	This can be downloaded from: http://dev.mysql.com/downloads/mysql/
+2. MySQL Workbench 
+	This can be downloaded from: http://dev.mysql.com/downloads/tools/workbench/5.2.html
+3. The Wikipedia database .bz2 file. Put this in the folder where you will run the 
+project from.
+	You can get this from : 
+4. The "mwdumper.jar" file from the GitHub repository. Copy this into the same folder 
+you put the bz2 file into in step 3.
+5. The "structure.sql" file from the "meta-and-documentation" folder in the GitHub 
+repository, once again move this to your project folder.
+6. 40+ GB of free space to store the database in (As time goes on and Wikipedia grows 
+this number will increase)
+
+You now have everything you need in order to get the database set up
+--------------------------------------------------------------------------------------
+Now that we the necessary tools we can set the database up!
+--------------------------------------------------------------------------------------
+Setting up a schema
+	Open MySQL Workbench.
+	In the top left corner click the "create new schema button" (The symbol is the 2 
+	golden pucks stacked ontop of eachother)
+	Give the schema a name and SWITCH COLLATION TO "utf8 - default collation", then 
+	click "Apply" in the bottom left corner
+--------------------------------------------------------------------------------------
+Structuring the schema
+	Open the terminal or command prompt
+	Navigate to the folder you stored the "structure.sql" file.
+	Type "mysql -u root" to login to the mysql client
+	Next type "USE yourschemaname" to switch to your newly made schema, you should see 
+	a message saying "Database changed" in your terminal window
+	Finally type "\.structure.sql" this will apply the needed structure to your schema 
+	in order for it to hold the printwikipedia database
+--------------------------------------------------------------------------------------
+Building the Database
+	**************
+	NOTE : You must have structured the schema before doing this, if you do not this 
+	process will do NOTHING
+	**************
+	Now we just need to fill the schema with all the data.
+	In the terminal window navigate to the folder where you have the "mwdumper.jar" and 
+	bz2 file stored (This can be the folder you are already in)
+	Type "java -jar mwdumper.jar --format=sql:1.5 yourbz2filename.bz2 --filter=latest --
+	filter=notalk | mysql -u root -p --default-character-set=utf8 yourschemaname" into 
+	the terminal (replace yourbz2filename and yourschemaname with the correct names)
+	If everything is working correctly the terminal will start to print messages like 
+	"11,000 pages (367.432/sec), 11,000 revs (367.432/sec)"
+	This will take some time, likely 10+ hours, if you feel like it you may set up 
+	other areas of the project, however there are still steps you must do to set up the 
+	database after this process finishes.
+--------------------------------------------------------------------------------------
+Speeding up the Database
+	Now you have all the information necessary to start creating outputs, unfortunately 
+	if you try running it right now it will be horrendeously slow, inorder to fix this 
+	we will be indexing the database. 
+	Open up MySQL Workbench
+	Twirl down the schema containing the database
+	Twirl down the "Tables" tab and find the table labelled "page"
+	Right click on "page" and select "alter table"
+	In the bottom of the table alter window select "Indexes"
+	Pick a new index name and make it of type "INDEX"
+	In the middle of the window under the "Column" tab check off "page_title"
+	On the right choose "Storage Type" to be "BTREE"
+	Click "apply", then select "apply" in the popup window as well.
+	Wait for it to finish updating then select "finish"
+  Congradulations your Database is ready to go!
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+Setting up the project to run
+--------------------------------------------------------------------------------------
+Housekeeping
+There is a list of things you will need to have in your project directory inorder to be able to successfully run printwiki:
+1. The "fonts" directory: 
+	This is found in your GitHub repository. Simply copy it to the directory where you 
+	will be running printwiki from.
+2. The "logs" directory:
+	This is also in the GitHub repository. Once again copy it.
+3. The "output" directory:
+	This stores all of the output pdfs. In the directory where you are running 
+	printwiki make a new folder labelled "output".
+4. The settings file: 
+	In the meta-and-documentation folder where this README is stored there is a file 
+	labelled settings.xml. Copy this file into the directory you are running printwiki 
+	from.
+--------------------------------------------------------------------------------------
+Building the wikitopdf.jar
+	The "wikitopdf.jar" file is the file that actually converts the database into pdfs. 
+	You will need to build it from the NetBeans project in your GitHub repository. 
+	Start NetBeans and open the "printwikipedia" NetBeans Project in your GitHub 
+	repository.
+	It will come up with conflicts about not finding the "scala-library-2.9.1-1.jar" 
+	and "akka-actor-2.0.jar" libraries.
+	Click "resolve problems" then select "scala-library-2.9.1-1.jar" from the conflicts 
+	window. 
+	Navigate to the "lib" folder in the GitHub "printwikipedia" repository and find the 
+	"scala-library-2.9.1-1.jar" file. Select it and click resolve. A green check should 
+	replace the red x beside "scala-library-2.9.1-1.jar" in the conflicts window.
+	Next select "akka-actor-2.0.jar" from the conflicts window and once again navigate 
+	to the "lib" folder in your GitHub "printwikipedia" repository and select the "akka-
+	actor-2.0.jar" file. This should resolve all project issues. 
+	Now simply click the build button in the upper left portion of NetBeans (sybolized 
+	by a hammer). It should display "BUILD SUCCESSFUL" in green letters in the bottom 
+	of the window.
+	This will have created a file named "wikitopdf.jar" in the folder labelled "dist" 
+	in the "printwikipedia" repository in your GitHub repositories folder.
+	Find and open the folder called "dist" and copy the "wikitopdf.jar" file into your 
+	project directory (the same one where you copied "fonts" "logs" "output" etc.)
+	You now have everything you need to start running printwikipedia, all that is left 
+	to do is set up the settings.
+--------------------------------------------------------------------------------------
+Settings
+	To control the behavior of "wikitopdf.jar" you can manipulate the "settings.xml" 
+	file.
+	Right click "settings.xml" and open it in the text editor of your choice. 
+	This first thing we will need to do is get put in the settings for the database. 
+	If you are hosting the database on the same computer that you are running printwiki 
+	on then under <db-host> write 127.0.0.1.
+	If you are hosting the database on a seperate computer enter the IP address of that 
+	computer under <db-host>.
+	Next fill in the <db-port> with 3306 (default port for mysql) 
+	Under <db-name> enter the name of the schema you are using to hold the database
+	Under <db-user> type "root", and leave <db-pass> blank
+	
+	The next 5 settins all control the behaviour of "wikitopdf.jar"
+	<article-bunch> controls how many articles you will query from the database at a 
+	time. For speeds sake it is a good idea to always query much more than you will 
+	need as the time needed to find the articles is much larger than the time needed to 
+	move them.
+	<page-file-limit> determines the minimum pdf pages that will be written to a single 
+	pdf document. 
+	<start-page> determins what article number you will begin creating pdfs from
+	<time-limit> controls how long the "wikitopdf.jar" will run before gracefully 
+	shutting down (more on this later).
+	<thread-limit> controls the number of different threads you will be using if you 
+	are using the threaded version (at time of writing the threaded version was not 
+	working, this may change in the future).
+	
+	The settings we originally ran on were : 
+	<article-bunch>
+		5000
+	</article-bunch>
+	<page-file-limit>
+		670
+	</page-file-limit>
+	<start-page>
+		6704441
+	</start-page>
+	<time-limit>
+		1620
+	</time-limit>
+--------------------------------------------------------------------------------------
+**************************************************************************************
+Running Manually
+	You will likely want to run "wikitopdf.jar" manually a few times inorder to ensure 
+	that everything is working and to familiarize yourself with the outputs and settins.
+	To do so open a terminal or command prompt window. 
+	Navigate to the directory with "wikitopdf.jar" in it.
+	Type "java -jar wikitopdf.jar" to start the program running on a single-treaded 
+	processor
+	There are a series of different arguments you can use to specify different actions 
+	the "wikitopdf.jar" can do
+	1. "java -jar wikitopdf.jar pdf" the defualt settins, exactly the same as above.
+	2. "java -jar wikitopdf.jar threaded" runs it using a multi-threaded processor (at 
+	the time of writing this is not working)
+	3. "java -jar wikitopdf.jar toc" creates the table of contents volumes
+	4. "java -jar wikitopdf.jar pagenumbers" does nothing as of yet
+	5. "java -jar wikitopdf.jar covers" creates the coverpages for the outputs in the 
+	output file. 
+	Have some fun experimenting with the different settings to familiarize yourself 
+	with how the progam works, and make sure things are working correctly
+--------------------------------------------------------------------------------------
+Possible Problems:
+	1. The "wikitopdf.jar" uses large amounts of dynamic memory. On some machines this will result in frequent crashing. In order to fix this add the "Xmx1024m" argument to your java command: "java -Xmx1024m -jar wikitopdf.jar ..."
+	**************
+	NOTE : If this is an issue edit the .bat files that you will use for auto running the program to include the "Xmx1024m" argument as well.
+	**************
+
+**************************************************************************************
+Setting up Graceful Restarts
+	"wikitopdf.jar" has built in restart capabilities that allow it to start up from 
+	where it left off after it crashes or exits.
+	**************
+	NOTE: This restart process is based on the pdf files in the "output" folder, if you 
+	want it to restart properly DO NOT delete the finised volumes in the output folder.
+	**************
+	At the time of writing there was a memory leak in the "wikitopdf.jar" file that 
+	would cause it to slow down as it was running. In order to get around this we built 
+	in a graceful restart system that would cause wikitopdf.jar to exit after a time 
+	based on <time-limit> and then start up shortly after using your OS task manager 
+	system.
+	This next section will explain how to set up the restart process so that 
+	"wikitopdf.jar" will run in a reasonable amount of time.
+	**************
+	NOTE: This process should only be completed AFTER the database has finished building
+	**************
+--------------------------------------------------------------------------------------
+Using Task Scheduler on PCs for Single Threaded Version
+	If you are running the project on a PC you will want to use the program "Task 
+	Manager".
+	Included in the GitHub repository under the folder meta-and-documentation, there is 
+	a file called "graceful-restart-single.bat". Move this file into the directory you 
+	are running "wikitopdf.jar" from. 
+	Now open "Task Scheduler" (click the windows icon in the bottom left of the screen 
+	and type "Task Scheduler" to find it.
+	In the Task Scheduler window on the right side click the "Create Task..." option
+	Give your Task a name, then click on the triggers tab in the top of the Create Task 
+	window.
+	Click the "New..." button in the bottom of the Triggers menu 
+	In the "New Trigger" window select the "One time" option on the top left, and pick 
+	a Start time that is a few minutes a head of the current time.
+	Under "Advanced settings" check off the "Repeat task every:" box and set the scroll 
+	down option to 30 minutes if you are using 1620 as <time-limit>. If you are using a 
+	different <time-limit> adjust accordingly. 
+	Next click "OK"
+	Now you are back in the "Create Task" window, at the top click the tab labelled 
+	"Actions"
+	In the "Actions" tab click "New..." at the bottom of the window.
+	In the "New Action" window that opens blick the "Browse..." button the the right.
+	Navigate to where you stored "graveful-restart-single.bat", and select it. 
+	Next Click "Ok" to exit from the "New Action" window, then "Ok" to exit from the 
+	"Create Task" window.
+	To check that your task was correctly created click on the "Task Scheduler Library" 
+	option on the right side of the "Task Scheduler" window. 
+	In the middle of the screen you should see a list of tasks that your computer will 
+	preform. As you scroll through the list you should see your newly created task. 
+--------------------------------------------------------------------------------------
+TO DO : Add documentation to explain how to set up graceful restart on other OS's and 
+using multi-threading if implemented later.
+**************************************************************************************
+Congradulations printwikipedia is ready to start running on your machine. If 
+everything went properly it should begin running at the time you selected in the 
+graceful restart process. 
+You can check that it is running because a terminal window/command prompt will open 
+and display 
+" C:\Users\FMCollab\Documents\GitHub\printwikipedia\meta-and-documentation>cd c:\
+Users\FMCollab\Documents\PrintWiki
+
+c:\Users\FMCollab\Documents\PrintWiki>java -jar wikitopdf.jar  1>fulloutput.txt"
+and soon you should see pdfs being created in the "output" folder.
+The whole process will take quite some time depending on the speed of the machine you 
+are running on. You can expect atleast 2 days running time to complete the entire 
+process.  
