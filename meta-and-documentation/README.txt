@@ -73,16 +73,13 @@ Speeding up the Database
 	Now you have all the information necessary to start creating outputs, unfortunately 
 	if you try running it right now it will be horrendeously slow, inorder to fix this 
 	we will be indexing the database. 
-	Open up MySQL Workbench
-	Twirl down the schema containing the database
-	Twirl down the "Tables" tab and find the table labelled "page"
-	Right click on "page" and select "alter table"
-	In the bottom of the table alter window select "Indexes"
-	Pick a new index name and make it of type "INDEX"
-	In the middle of the window under the "Column" tab check off "page_title"
-	On the right choose "Storage Type" to be "BTREE"
-	Click "apply", then select "apply" in the popup window as well.
-	Wait for it to finish updating then select "finish"
+	Open the terminal and navigate to the folder you stored "newmaster.sql" in.
+	Type "mysql -u root" and login to the mysql client
+	Next type "\.newmaster.sql".
+	This will create a new table in the database and move the articles into it ordered by
+	article number and thus speeds up the database. The query also removes most of problem articles we 
+	were running into.
+	This process takes a long time so don't be alarmed if you have to wait a while.
   Congradulations your Database is ready to go!
 --------------------------------------------------------------------------------------
 
@@ -118,7 +115,8 @@ Building the wikitopdf.jar
 	"scala-library-2.9.1-1.jar" in the Project Problems window.
 	Next select "akka-actor-2.0.jar" from the conflicts window and once again navigate 
 	to the "lib" folder in your GitHub (it may open here by default this time)
-	"printwikipedia" repository and select the "akka-actor-2.0.jar" file. This should 	resolve all project issues. 
+	"printwikipedia" repository and select the "akka-actor-2.0.jar" file. 
+	This should resolve all project issues. 
 	Click "Close" to exit from the Project Problems window.
 	Now simply click the build button in the upper left portion of NetBeans (sybolized 
 	by a hammer). It should display "BUILD SUCCESSFUL" in green letters in the bottom 
@@ -253,7 +251,7 @@ Congradulations printwikipedia is ready to start running on your machine. If
 everything went properly it should begin running at the time you selected in the 
 graceful restart process. 
 You can check that it is running because a terminal window/command prompt will open 
-and display 
+and display a message such as:
 " C:\Users\FMCollab\Documents\GitHub\printwikipedia\meta-and-documentation>cd c:\
 Users\FMCollab\Documents\PrintWiki
 

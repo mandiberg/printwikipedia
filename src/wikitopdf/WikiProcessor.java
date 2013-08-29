@@ -44,7 +44,7 @@ public class WikiProcessor {
         String outputName = "";
         File oldFile;
         File newFile;
-        
+        System.out.println("Foo");
         //Added May 28 by CE for Graceful Restart
         /****************************************/
         FileFilter dsFilter = new FileFilter(){
@@ -99,6 +99,7 @@ public class WikiProcessor {
                         WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
+                        System.out.println("Current Article is: " + (startLimit + artWritten));
                     }
                     outputName = outputName + "-" + pages.get(artWritten - 1).getTitle();
                     outputName = outputName.replace("/", "_");

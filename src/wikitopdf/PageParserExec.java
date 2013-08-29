@@ -1,5 +1,11 @@
 package wikitopdf;
 
+/* *************************************************** */
+// Included for debuging delete after done
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+/* *************************************************** */
+
 import wikiactorprocessor.ActorProcessor; 
 import wikitopdf.pdf.PdfStamp;
 import wikitopdf.utils.ByteFormatter;
@@ -15,6 +21,16 @@ public class PageParserExec {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        /* *************************************************** */
+        // Included for debuging delete after done
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("fullOutput.txt"));
+            System.setOut(out);
+            System.setErr(out);
+        } catch (Exception ex){
+        }   
+        /* *************************************************** */
         
         int length = args.length;
         String wikiProcess = ""; 
