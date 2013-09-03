@@ -214,6 +214,54 @@ Setting up Graceful Restarts
 	NOTE: This process should only be completed AFTER the database has finished building
 	**************
 --------------------------------------------------------------------------------------
+Using Launch Agent on Macs for Single Threaded Version
+
+    Pulled from here: http://www.thesafemac.com/scheduling-recurring-tasks/
+
+	If you are running the project on a Mac, you'll use a plist and a LaunchAgent. 
+    To start, save a text file with this content:
+        #!/bin/bash
+        cd /Users/wiki/repos/printwikipedia/dist
+        java -jar -Xmx1900m "wikitopdf.jar" pdf
+    as:
+        graceful-restart-mac.sh
+    This file can be saved anywhere; we put it in printwikipedia/meta-and-documentation.
+    Note that you may need to update the path on line 2.
+    
+    Next, type the following into Terminal, changing the path to point to wherever you
+    saved graceful-restart-mac.sh:
+        chmod a+x /Users/wiki/repos/printwikipedia/meta-and-documentation/graceful-restart-mac.sh
+    
+    Next,save this text:
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+        "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+        <key>Label</key>
+        <string>net.reedcorner.test</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>/Users/wiki/repos/printwikipedia/meta-and-documentation/graceful-restart-mac.sh</string>
+        </array>
+        <key>StartInterval</key>
+        <integer>3600</integer>
+        </dict>
+        </plist>
+    to anywhere as: 
+        net.reedcorner.test.plist
+    Note that the string in the array needs to be the path to graceful-restart-mac.sh
+     
+    Next, choose Go to Folder from the Finder’s Go menu and enter:
+        ~/Library/LaunchAgents
+    If this directory does not exist, create it.
+    Move the net.reedcorner.test.plist file that you created earlier into that folder.
+    
+    Next, type the following into the Terminal:
+        launchctl load -w ~/Library/LaunchAgents/net.reedcorner.test.plist
+    You can unload this file with:
+        launchctl unload -w ~/Library/LaunchAgents/net.reedcorner.test.plist
+--------------------------------------------------------------------------------------
 Using Task Scheduler on PCs for Single Threaded Version
 	If you are running the project on a PC you will want to use the program "Task 
 	Manager".
