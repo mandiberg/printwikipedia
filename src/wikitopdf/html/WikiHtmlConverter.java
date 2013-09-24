@@ -19,6 +19,7 @@ public class WikiHtmlConverter {
         WikiPdfModel wikiModel = new WikiPdfModel();
         //txt = clearText(text);
         String output = wikiModel.render(text);
+        // The other peice of Helvetica text for double paragraph other in PDFPageWrapper
         output = headerToUppercase(output) + "<hr width='100%'/>";
 
         //System.out.println(text);

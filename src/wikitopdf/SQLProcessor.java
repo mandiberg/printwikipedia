@@ -71,8 +71,8 @@ public class SQLProcessor {
      */
     public synchronized ArrayList<WikiPage> getBunch(int start, int limit, int textID) {
         ArrayList<WikiPage> pages = new ArrayList<WikiPage>();
-
-        String query = "SELECT " +
+        // old query from before we consolidated wikipedia entries into newmaster table
+        /**String query = "SELECT " +
                 "pagesubset.page_id, " +
                 "pagesubset.page_title, " +
                 "revision.rev_user_text, " +
@@ -82,7 +82,17 @@ public class SQLProcessor {
                 "ORDER BY page.page_title LIMIT " + start + ", " + limit + ") as pagesubset " + 
                 "INNER JOIN revision ON (pagesubset.page_id = revision.rev_page) " +
                 "INNER JOIN text ON (revision.rev_id = text.old_id)";
-
+        */
+        String query = "SELECT " +
+                "page_id, " +
+                "page_title, " +
+                "rev_user_text, " +
+                "rev_comment, " +
+                "old_text " +
+                "FROM `newmaster` " +
+                "ORDER BY pkey LIMIT " + start + ", " + limit + ""; 
+              
+      
         try {
 
             //stmt.executeQuery("SET NAMES UTF8");

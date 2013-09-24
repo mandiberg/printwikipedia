@@ -6,6 +6,7 @@ import wikitopdf.utils.WikiLogger;
 import com.lowagie.text.DocumentException;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileFilter;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
@@ -28,17 +29,42 @@ public class WikiProcessor {
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
         String pageInfo = "";
         int startLimit = WikiSettings.getInstance().getStartPage();
+        int timeLimit = WikiSettings.getInstance().getTimeLimit();
         boolean isInProggress = true;
+        int totalPageNum = 0;
         int cPageNum = 0;
         int artWritten = 0;
         int numArt = 0;
         int cVolNum = 1;
         Date newTime = new Date();
         Date oldTime;
+        long lastTime;
+        long totalTime = 0;
         String tempName;
         String outputName = "";
         File oldFile;
         File newFile;
+        System.out.println("Foo");
+        //Added May 28 by CE for Graceful Restart
+        /****************************************/
+        FileFilter dsFilter = new FileFilter(){
+            public boolean accept(File file){
+                return (!(file.getName().contains("DS_Store") || file.getName().contains("output.pdf")));
+            }
+        };
+        
+        File[] listOfFiles = new File("output").listFiles(dsFilter);
+        
+        if (listOfFiles.length > 0){
+            WikiRestart restartSettings = new WikiRestart(listOfFiles);
+            startLimit = restartSettings.getRestartLimit();
+            totalPageNum = restartSettings.getRestartPage();
+            cVolNum = restartSettings.getRestartVol();
+        }
+        System.out.println("Starting from Vol: " + cVolNum + " " + "Page: " + 
+                totalPageNum + " " + "Article: " + startLimit);
+        listOfFiles = null;
+        /****************************************/
 
         SQLProcessor sqlReader = null;
         PdfPageWrapper pdfWrapper = null;
@@ -52,7 +78,7 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
 
-            while (isInProggress) {
+            while (isInProggress && totalTime < timeLimit) {
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
@@ -73,8 +99,23 @@ public class WikiProcessor {
                         WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
+                        System.out.println("Current Article is: " + (startLimit + artWritten));
                     }
                     outputName = outputName + "-" + pages.get(artWritten - 1).getTitle();
+                    outputName = outputName.replace("/", "_");
+                    outputName = outputName.replace("\\", "_");
+                    outputName = outputName.replace(":", "");
+                    outputName = outputName.replace("@", "");
+                    outputName = outputName.replace("$", "");
+                    outputName = outputName.replace("%", "");
+                    outputName = outputName.replace("^", "");
+                    outputName = outputName.replace("&", "");
+                    outputName = outputName.replace("*", "");
+                    outputName = outputName.replace("|", "");
+                    outputName = outputName.replace("?", "");
+                    outputName = outputName.replace("<", "");
+                    outputName = outputName.replace(">", "");
+                    outputName = outputName.replace("\"", "");
 
                     isInProggress = sqlReader.isInProggres(); // checks to see if there is still database entries
                     //TODO change from test value
@@ -94,32 +135,42 @@ public class WikiProcessor {
                 
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
-               
-                
+                System.out.println("trying to read " + pdfWrapper.getOutputFileName() );               
+                PdfStamp stamp = new PdfStamp();
+                //stamp.stampDir(cPageNum);
+                stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
+                totalPageNum += cPageNum;
                 
                 //Renaming Added May 24 by CE, renames outputfile
-                outputName = "./output/Vol_" + cVolNum + "-" + outputName + "-" + (cPageNum - 1) + ".pdf";
+                tempName = tempName.replace("_", "");
+                outputName = "./output/Vol-" + String.format("%05d", cVolNum) + "-" + 
+                        outputName + "-" + startLimit + "-" +  totalPageNum + ".pdf";
                 oldFile = new File(tempName);
+                //String tempNameNoUnderscore = tempName.replace("_","");
+                //File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
                 if(newFile.exists()){
                     newFile.delete();
                 }
                 if(!(oldFile.renameTo(newFile))){
-                    System.out.println("File not renamed");
+                    System.out.println("File not renamed first time");
+                    //if (!(oldFileNoUnderscore.renameTo(newFile))){
+                      //  System.out.println("File not renamed second time, matching" + tempNameNoUnderscore);
+                    //}
                 }
-                
+             
                 //Timing
                 oldTime = newTime;
                 newTime = new Date();
+                lastTime = ((newTime.getTime() - oldTime.getTime()) / 1000);
                 //Print time for last volume in seconds, as well as the number of articles used to write it.
-                System.out.println("Time for Vol_" + cVolNum + ": " + ((newTime.getTime() - oldTime.getTime()) / 1000)
-                        + ", articles written: " + numArt);
-                //Print out current time
-                //System.out.println("Current Time: " + newTime.getTime());
+                System.out.println("Time for Vol_" + cVolNum + ": " + lastTime + ", articles written: " + numArt);
+                totalTime += lastTime;
+                
                 cVolNum++;
 
                 //Info
-                pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " +
+                pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " + 
                         pdfWrapper.getCurrentTitle() + ")";
                 WikiLogger.getLogger().fine("Retrieved " + startLimit + "/" + artCount + " articles " + pageInfo);
                 WikiLogger.getLogger().info("Free memory: " + ByteFormatter.format(runtime.freeMemory()));
@@ -127,11 +178,6 @@ public class WikiProcessor {
                 pdfWrapper = null;
                 sqlReader = null;
             } //End of all volumes/PDFs
-            //Stamping all page numbers
-            PdfStamp stamp = new PdfStamp();
-            WikiLogger.getLogger().info("Stamping page numbers...");
-            stamp.stampDir(cPageNum);
-            WikiLogger.getLogger().fine("Stamping done");
 
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(ex.getMessage() + pageInfo);

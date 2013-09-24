@@ -66,6 +66,7 @@ public class PdfPageWrapper {
     public void writePage(WikiPage page) {
         currentTitle = page.getTitle();
         currentArticleID = page.getId();
+        //System.out.println("Article ID is" + currentArticleID);
         writeTitle(currentTitle);
         writeText(page.getRevision().getText());
     }
@@ -87,6 +88,7 @@ public class PdfPageWrapper {
                 pdfDocument.newPage();
             }
             if (pdfWriter.getCurrentPageNumber() > 1) {
+                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
                 mct.addElement(new Phrase("\n"));
             }
 
@@ -100,8 +102,11 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
+            // text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
+            // text is now html (This is doing iText work)
             convertHtml2Pdf(html);
+            // text has been made into pdf.
 
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());

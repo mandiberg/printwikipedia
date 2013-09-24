@@ -51,6 +51,7 @@ public class WikiSettings {
             _articleBunch = Integer.valueOf(settings.getChild("article-bunch").getTextTrim());
             _pageLimit = Integer.valueOf(settings.getChild("page-file-limit").getTextTrim());
             _startPage = Integer.valueOf(settings.getChild("start-page").getTextTrim());
+            _timeLimit = Integer.valueOf(settings.getChild("time-limit").getTextTrim());
             _threadLimit = Integer.valueOf(settings.getChild("thread-limit").getTextTrim());
             logFolder = settings.getChild("log-folder").getTextTrim();
 
@@ -208,6 +209,14 @@ public class WikiSettings {
     public int getStartPage() {
         return _startPage;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public int getTimeLimit() {
+        return _timeLimit;
+    }
 
     /**
      *
@@ -241,6 +250,7 @@ public class WikiSettings {
     private int _articleBunch = 10;
     private int _pageLimit = 0;
     private int _startPage = 0;
+    private int _timeLimit = 0;
     private int _threadLimit = 0;
     private String logFolder = "";
     private WikiFont titleFont;
