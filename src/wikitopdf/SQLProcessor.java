@@ -34,6 +34,7 @@ public class SQLProcessor {
 
         String jdbcUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?useUnicode=true&characterEncoding=utf8";
         con = DriverManager.getConnection(jdbcUrl, dbUser, dbPass);
+        System.out.println(con);
         stmt = con.createStatement();
     }
 
@@ -42,6 +43,7 @@ public class SQLProcessor {
      * @param title
      * @throws SQLException
      */
+    //this is never used
     public void saveTitle(String title) throws SQLException {
         PreparedStatement pstmt = con.prepareStatement("INSERT INTO titles (title)  VALUES (?)");
         pstmt.setString(1, title);
@@ -70,6 +72,7 @@ public class SQLProcessor {
      * @return
      */
     public synchronized ArrayList<WikiPage> getBunch(int start, int limit, int textID) {
+        //start is assigned the value of the startLimit variable from Processor.java
         ArrayList<WikiPage> pages = new ArrayList<WikiPage>();
         // old query from before we consolidated wikipedia entries into newmaster table
         /**String query = "SELECT " +
@@ -83,7 +86,7 @@ public class SQLProcessor {
                 "INNER JOIN revision ON (pagesubset.page_id = revision.rev_page) " +
                 "INNER JOIN text ON (revision.rev_id = text.old_id)";
         */
-        String query = "SELECT " +
+       /** String query = "SELECT " +
                 "page_id, " +
                 "page_title, " +
                 "rev_user_text, " +
@@ -91,7 +94,34 @@ public class SQLProcessor {
                 "old_text " +
                 "FROM `newmaster` " +
                 "ORDER BY pkey LIMIT " + start + ", " + limit + ""; 
-              
+        */
+        //old query that does not take into account the count of articles outside of bunch. 
+        String query = "SELECT  " + 
+                "page_id, page_title, rev_user_text, rev_comment, old_text FROM (Select * from newmaster WHERE pkey > " + start + " and page_title is not null limit " + limit + ") as x;"; 
+        //updated query to keep track of count of articles remaining (if<limit...)
+//        String query = "SELECT * FROM " +
+//                        "((SELECT  page_id, page_title, rev_user_text, rev_comment, old_text" +
+//                            "FROM (Select * FROM printwiki.newmaster WHERE pkey > " + start + " limit " + limit + ") as x) as main, " +
+//                //main is the main query of this two subquery statement
+//                            "(SELECT COUNT(page_id) as count FROM (SELECT page_id FROM printwiki.newmaster WHERE pkey > " + start + " limit " + limit + ")"+
+//                            " as y) as counter);";//counter is just to tell how many are left in the db;
+
+        //uncomment this countQuery and try catch function here when you get within 5000 articles of the end of wiki
+//        String countQuery = "SELECT count(pkey) as count from printwiki.newmaster where pkey > " + start + " limit " + limit + ";";
+//        try{
+//            ResultSet crs = stmt.executeQuery(countQuery);
+//        
+//            crs.last();
+//            int leftOver  = crs.getInt("count");
+//            if(leftOver < limit){
+//                lastBunch = true;
+//            }
+//
+//        }
+//        catch (SQLException ex) {
+//            WikiLogger.getLogger().severe(ex.getMessage());
+//        }
+//        String query = "SELECT  page_id, page_title, rev_user_text, rev_comment, old_text, (select count(page_id) from printwiki.newmaster where pkey >" + start + ") as count FROM (Select * from printwiki.newmaster WHERE pkey > " + start + " limit " + limit + ") as  x;";
       
         try {
 
@@ -99,6 +129,9 @@ public class SQLProcessor {
             //stmt.executeQuery("SET CHARACTER SET 'UTF8'");
 
             ResultSet rs = stmt.executeQuery(query);
+            //if count of number of results is less than getbunch limit rs.count
+            
+            //then assign a true value to a new variable "lastBunch"
             isInProggres = false;
             while (rs.next()) {
                 WikiPage page = new WikiPage();
@@ -115,6 +148,10 @@ public class SQLProcessor {
                 pages.add(page);
                 isInProggres = true;
             }
+            //if lastBunch = true then isInProggres = false;
+            if(lastBunch == true){
+                isInProggres = false;
+            }
             //stmt.close();
             //con.close();
         } catch (SQLException ex) {
@@ -128,18 +165,18 @@ public class SQLProcessor {
      *
      * @return
      */
-    public int getArticlesCount() {
-        String query = "SELECT COUNT(page.page_id) as count FROM page"; 
-        int pCount = 0;
-        try {  // pulling total number of pages from mysql db
-            ResultSet rs = stmt.executeQuery(query);
-            rs.next();
-            pCount = rs.getInt(1);
-        } //stmt.close();
-        //con.close();
-        catch (SQLException ex) {
-            WikiLogger.getLogger().severe(ex.getMessage());
-        }
+    public int getArticlesCount() {// pretty sure all you need to do here is just pass the int. no need for query.
+//        String query = "SELECT COUNT(page.page_id) as count FROM page"; 
+        int pCount = 13450538;
+//        try {  // pulling total number of pages from mysql db
+//            ResultSet rs = stmt.executeQuery(query);
+//            rs.next();
+//            pCount = rs.getInt(1);
+//        } //stmt.close();
+//        //con.close();
+//        catch (SQLException ex) {
+//            WikiLogger.getLogger().severe(ex.getMessage());
+//        }
 
         return pCount;  // returns total number of pages in db
     }
@@ -173,6 +210,7 @@ public class SQLProcessor {
     private Connection con;
     private Statement stmt;
     private boolean isInProggres = true;
+    private boolean lastBunch = false;
     private String dbUser = WikiSettings.getInstance().getDbUser();
     private String dbPass = WikiSettings.getInstance().getDbPass();
     private String dbHost = WikiSettings.getInstance().getDbHost();

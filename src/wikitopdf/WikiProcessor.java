@@ -75,7 +75,7 @@ public class WikiProcessor {
         try {
              //i want this to get built and broken down with each iteration to ensure no memory leaking in it.
             sqlReader = new SQLProcessor();
-            int artCount = sqlReader.getArticlesCount();// Counts total from database
+            int artCount = sqlReader.getArticlesCount();// Counts total from database --- is this taking a long time to query?
             sqlReader = null;
 
             while (isInProggress && totalTime < timeLimit) {
