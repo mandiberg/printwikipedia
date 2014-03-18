@@ -52,14 +52,19 @@ public class WikiProcessor {
                 return (!(file.getName().contains("DS_Store") || file.getName().contains("output.pdf")));
             }
         };
-        
         File[] listOfFiles = new File("output").listFiles(dsFilter);
-        
+        String listo = String.valueOf(listOfFiles.length);
+        System.out.println(listo);
+        System.out.println("^^this is list of files length");
+        System.out.println(listOfFiles);
+        System.out.println("^^this is list of files.");
         if (listOfFiles.length > 0){
+            System.out.println("Foo");
             WikiRestart restartSettings = new WikiRestart(listOfFiles);
             startLimit = restartSettings.getRestartLimit();
             totalPageNum = restartSettings.getRestartPage();
             cVolNum = restartSettings.getRestartVol();
+            System.out.println("Foo");
         }
         System.out.println("Starting from Vol: " + cVolNum + " " + "Page: " + 
                 totalPageNum + " " + "Article: " + startLimit);
@@ -69,14 +74,18 @@ public class WikiProcessor {
         SQLProcessor sqlReader = null;
         PdfPageWrapper pdfWrapper = null;
         Runtime runtime = Runtime.getRuntime();
+        System.out.println(runtime);
+        System.out.println("^^runtime");
 
         //while (isInProggress) {
 
         try {
              //i want this to get built and broken down with each iteration to ensure no memory leaking in it.
             sqlReader = new SQLProcessor();
+            System.out.println("make sqlprocessor");
             int artCount = sqlReader.getArticlesCount();// Counts total from database --- is this taking a long time to query?
             sqlReader = null;
+            System.out.println(artCount);
 
             while (isInProggress && totalTime < timeLimit) {
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings

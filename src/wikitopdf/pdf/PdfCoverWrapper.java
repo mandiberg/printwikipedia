@@ -50,7 +50,7 @@ public class PdfCoverWrapper {
          * NEED TO CHANGE THESE VALUES TO REFLECT COVER SPECS
          * 
          */
-        pdfDocument = new Document(new Rectangle(432, 648));
+        pdfDocument = new Document(new Rectangle(1025, 774));
 
         pdfDocument.setMargins(25, 25, -35, 25);
 
@@ -99,35 +99,42 @@ public class PdfCoverWrapper {
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
         //cb.showTextAligned(cb.ALIGN_LEFT,"Wikipedia",0,0,90);
-        
+        String[] titleArr = fileName.split("-");
+        String beginTitle = titleArr[2];
+        String endTitle = titleArr[3];
+        beginTitle = beginTitle.replaceAll("[_]"," ");
+        endTitle = endTitle.replaceAll("[_]"," ");
+        String volNumber = titleArr[1];
         cb.setFontAndSize(times, 8);
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
-        cb.showText("this should work");
+        cb.showText("Volume "+volNumber);
         
         cb.setFontAndSize(times, 12);
-        cb.setTextMatrix(pdfDocument.right() - 50, 470);
-        cb.showText(fileName);
         
+        String mainTitle = beginTitle + "\n" + endTitle;
+        String[] frontTitle = mainTitle.split("\n");
+        for (int i = 0; i < frontTitle.length; i++) {
+            cb.setTextMatrix(pdfDocument.right() - 250, 490 - (i * 10));
+            cb.showText(frontTitle[i]);
+        }
+//        int leftNess = 50;//amount of pixels to the right
+//        int titleLength = mainTitle.length();//length of title string
+//        if(titleLength > 12){//at 12 times new roman font there are 4.167 pixels per char.--double vs. int issue here.
+//            leftNess = titleLength * 5;
+            //need to do something more here because some titles are very very long. inserting
+            //inserting a "\n" character at X point would be the solution
+            //java should store strings as Arrays. Just a question of where to split.
+            
+//        }
+//        cb.setTextMatrix(pdfDocument.right() - 200, 470);
+//        cb.showText(mainTitle);
+//        
         cb.endText();
 
-       // pdfDocument.newPage();
-
-               
-        /*
-        // adding blank page - WHY ISN'T THIS WORKING???
         cb.beginText();
-        
-        cb.setFontAndSize(times, 32);
-        cb.setTextMatrix(pdfDocument.right() - 130, 500);
-        cb.showText("blank page");
-        
-        cb.endText();
-
-        pdfDocument.newPage();
-
-        
-        
-        
+        cb.setTextMatrix(0, 1, -2, 0, 300, 600);
+        cb.showText("Wikipedia");
+        cb.endText();     
         String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
                 "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
                 "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
@@ -140,10 +147,9 @@ public class PdfCoverWrapper {
 
         String[] textArr = copyrightText.split("\r\n");
         for (int i = 0; i < textArr.length; i++) {
-            cb.setTextMatrix(pdfDocument.left() - 10, 100 - (i * 10));
+            cb.setTextMatrix(pdfDocument.left() + 320, 100 - (i * 10));
             cb.showText(textArr[i]);
         }
-*/
         cb.endText();
  //       pdfDocument.newPage();
         

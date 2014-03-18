@@ -26,6 +26,7 @@ public class SQLProcessor {
     public SQLProcessor() throws SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("try makin classname^");
             
         } catch (java.lang.ClassNotFoundException e) {
             System.err.print("ClassNotFoundException: ");
@@ -33,6 +34,8 @@ public class SQLProcessor {
         }
 
         String jdbcUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?useUnicode=true&characterEncoding=utf8";
+        System.out.println(dbName);
+        System.out.println(dbPass);
         con = DriverManager.getConnection(jdbcUrl, dbUser, dbPass);
         System.out.println(con);
         stmt = con.createStatement();

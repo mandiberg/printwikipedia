@@ -14,7 +14,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
+import java.io.IOException;
 
 /**
  *
@@ -166,6 +166,13 @@ public class PdfTitleWrapper {
      *
      * @throws DocumentException
      */
+    public void newPage() throws DocumentException{
+      pdfDocument.add(new Paragraph(""));
+      pdfDocument.newPage();
+      pdfDocument.add(new Paragraph(""));
+    
+        
+    }
     public void addPrologue() throws DocumentException {
         PdfContentByte cb = pdfWriter.getDirectContent();
         BaseFont times = null;
@@ -192,9 +199,6 @@ public class PdfTitleWrapper {
         cb.showText("testing - delete me");
         
         cb.endText();
-
-        pdfDocument.newPage();
-
                
         /*
         // adding blank page - WHY ISN'T THIS WORKING???
@@ -226,9 +230,13 @@ public class PdfTitleWrapper {
             cb.setTextMatrix(pdfDocument.left() - 10, 100 - (i * 10));
             cb.showText(textArr[i]);
         }
-
-        cb.endText();
+            cb.endText();
         pdfDocument.newPage();
+        String dod= "lalallaa";
+        cb.setFontAndSize(times,8);
+        cb.setTextMatrix(pdfDocument.left()-19,100);
+        cb.showText(dod);
+        cb.endText();
         
         
         

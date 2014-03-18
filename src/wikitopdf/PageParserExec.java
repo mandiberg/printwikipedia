@@ -51,12 +51,12 @@ public class PageParserExec {
                     ActorProcessor actor = new ActorProcessor();
                     actor.act();
                 } else if(wikiProcess.equals("pdf")){
-                    System.out.println("Running " + wikiProcess);
+                    System.out.println("Running " + wikiProcess + " "+ System.getProperty("user.dir"));
                     WikiProcessor wikiProcessor = new WikiProcessor();
                     wikiProcessor.createPdf();
 
                 } else if(wikiProcess.equals("toc")){
-                    System.out.println("Running " + wikiProcess);
+                    System.out.println("Running " + wikiProcess + " "+ System.getProperty("user.dir"));
                     String fileName = "enwiki-latest-all-titles-in-ns0";
                     WikiTitleParser parser = new WikiTitleParser();
 
