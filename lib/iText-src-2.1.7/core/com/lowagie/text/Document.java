@@ -374,6 +374,7 @@ public class Document implements DocListener {
             return false;
         }
         DocListener listener;
+
 		for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
             listener = (DocListener) iterator.next();
             listener.newPage();

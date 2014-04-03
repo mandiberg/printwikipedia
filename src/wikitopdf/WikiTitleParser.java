@@ -2,12 +2,14 @@ package wikitopdf;
 
 import com.lowagie.text.DocumentException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import wikitopdf.pdf.PdfTitleWrapper;
+import wikitopdf.pdf.TitlesFooter;
 
 /**
  *
@@ -45,8 +47,11 @@ public class WikiTitleParser
 */
         int num = 1;
         int pagesCount = 0;
-        PdfTitleWrapper pdfWrapper = new PdfTitleWrapper(num, pagesCount);
+        String firstLine=bufferReader.readLine();//first line will change the title of the file at the end.
+        String lastLine="";
+        PdfTitleWrapper pdfWrapper = new PdfTitleWrapper(num, pagesCount,firstLine,"");
         pdfWrapper.addPrologue();
+        pdfWrapper.jknewPage();
         try
         {
             //while()
@@ -67,15 +72,24 @@ public class WikiTitleParser
                         pdfWrapper.close();
                         num ++;
          
-                        pdfWrapper = new PdfTitleWrapper(num, pagesCount);
+                        pdfWrapper = new PdfTitleWrapper(num, pagesCount,line,lastLine);
+                        
+                        pdfWrapper.addPrologue();
+                        pdfWrapper.jknewPage();
+                        
                         pdfWrapper.openMultiColumn(); // starts new volume (starting from vol 2)
+                       
+                        
                     }
                     
                     //while there are lines, write the line
+                    line = line.replaceAll("[_]"," ");//replace underscores with spaces for TOC pretty.
+                    
                     pdfWrapper.writeTitle(line);
+                    lastLine = line;
                 }
             }
-        } 
+        }
         catch (Exception ex)
         {
             ex.printStackTrace();

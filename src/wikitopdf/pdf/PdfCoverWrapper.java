@@ -7,6 +7,7 @@ package wikitopdf.pdf;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
@@ -16,6 +17,7 @@ import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.MultiColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.VerticalText;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -32,7 +34,8 @@ public class PdfCoverWrapper {
     private int status = 0;
     float[] right = {70, 320};
     float[] left = {300, 550};
-
+    public int width = 1025;
+    public int height = 774;
     
         /**
      *
@@ -50,7 +53,8 @@ public class PdfCoverWrapper {
          * NEED TO CHANGE THESE VALUES TO REFLECT COVER SPECS
          * 
          */
-        pdfDocument = new Document(new Rectangle(1025, 774));
+        
+        pdfDocument = new Document(new Rectangle(width, height));
 
         pdfDocument.setMargins(25, 25, -35, 25);
 
@@ -92,9 +96,13 @@ public class PdfCoverWrapper {
 
         cb.beginText();
         
-        cb.setFontAndSize(times, 32);
+        cb.setFontAndSize(times, 72);
         cb.setTextMatrix(pdfDocument.right() - 130, 500);
         cb.showText("Wikipedia");
+        
+        cb.setFontAndSize(times, 12);
+        cb.setTextMatrix(pdfDocument.right()-130, pdfDocument.bottom()+20);
+        cb.showText("March 2014 Edition");
         //Use the code below to create rotated text the first constant indicates alignment,
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
@@ -109,12 +117,15 @@ public class PdfCoverWrapper {
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
         cb.showText("Volume "+volNumber);
         
-        cb.setFontAndSize(times, 12);
+        cb.setFontAndSize(times, 24);
         
-        String mainTitle = beginTitle + "\n" + endTitle;
+        String mainTitle = beginTitle +" - "+ endTitle;
         String[] frontTitle = mainTitle.split("\n");
+        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
+                    wikiFontSelector.getCommonFont().getSize());
+        System.out.println(widthLine + " widthline");
         for (int i = 0; i < frontTitle.length; i++) {
-            cb.setTextMatrix(pdfDocument.right() - 250, 490 - (i * 10));
+            cb.setTextMatrix(pdfDocument.right()-130, pdfDocument.bottom()+350);
             cb.showText(frontTitle[i]);
         }
 //        int leftNess = 50;//amount of pixels to the right
@@ -130,17 +141,21 @@ public class PdfCoverWrapper {
 //        cb.showText(mainTitle);
 //        
         cb.endText();
-
-        cb.beginText();
-        cb.setTextMatrix(0, 1, -2, 0, 300, 600);
-        cb.showText("Wikipedia");
+        VerticalText vt = new VerticalText(pdfWriter.getDirectContent());
+         vt.setVerticalLayout(width/2, height/2, 540, 2, 0);
+         vt.addText(new Phrase("Wikipedia Table of Contents"));
+         
+         vt.go();
+          vt.setAlignment(Element.ALIGN_RIGHT);
+//        cb.showText("Wikipedia Table of Contents");
+        
         cb.endText();     
         String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
                 "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
                 "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
                 "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
                 "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
-                "in the section entitled ‚ÄúGNU Free Documentation License‚Äù.";
+                "in the section entitled ‚\"GNU Free Documentation License\".";
 
         cb.beginText();
         cb.setFontAndSize(times, 8);
@@ -158,8 +173,23 @@ public class PdfCoverWrapper {
         
     }
 
-    
-    
+     /**
+     * Converts the CIDs of the horizontal characters of a String
+     * into a String with vertical characters.
+     * @param text The String with the horizontal characters
+     * @return A String with vertical characters
+     */
+    public String convertCIDs(String text) {
+        char cid[] = text.toCharArray();
+        for (int k = 0; k < cid.length; ++k) {
+            char c = cid[k];
+            if (c == '\n')
+                cid[k] = '\uff00';
+            else
+                cid[k] = (char) (c - ' ' + 8720);
+        }
+        return new String(cid);
+    }
 
     
     

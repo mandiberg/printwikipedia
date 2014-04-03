@@ -76,8 +76,11 @@ public class TitlesFooter extends PdfPageEventHelper
         //footer doesnt print for first and second pages
         pageNum = writer.getPageNumber() + startPage;
         
-        if(pageNum < 3)
+        if(pageNum < 3){
+            System.out.println("page " + pageNum);
             return;
+
+        }
 
 
         System.out.println("page " + pageNum);
@@ -100,7 +103,7 @@ public class TitlesFooter extends PdfPageEventHelper
             //Write header
             //writeHeader(writer, document);
         }
-
+        System.out.println("hey im about to write this out.");
         writeHeader(writer, document);
 
         cb.showText(text);
@@ -134,7 +137,11 @@ public class TitlesFooter extends PdfPageEventHelper
     public void setCurrentLine(String line)
     {
         //Current line for header
+        if(line.length()>15){
+                line = line.substring(0,15)+"...";
+            }
         this.lineList.add(line);
+//        System.out.println(lineList);
     }
 
     private void writeHeader(PdfWriter writer, Document document)
@@ -145,6 +152,7 @@ public class TitlesFooter extends PdfPageEventHelper
             return;
 
         PdfContentByte cb = writer.getDirectContent();
+
         cb.saveState();
 
         String text;
@@ -152,13 +160,16 @@ public class TitlesFooter extends PdfPageEventHelper
         
         cb.beginText();
         cb.setFontAndSize(bsFont, 8);
+
+
         if ((pageNum % 2) == 1)
         {
             //Left top corner
             text = lineList.get(0);
             text = text.length() > 20 ? text.substring(0, 20) : text;
-            
             cb.setTextMatrix(document.left(), textBase);
+
+
         }
         else
         {
@@ -174,11 +185,11 @@ public class TitlesFooter extends PdfPageEventHelper
             cb.setTextMatrix(
                 document.right() - textSize - adjust, textBase);
         }
-
         cb.showText(text);
         cb.endText();
         cb.restoreState();
         lineList.clear();
+
     }
 
     /**
@@ -195,5 +206,5 @@ public class TitlesFooter extends PdfPageEventHelper
     private int pageNum = 0;
     private int pageNumber = 0;
     private int startPage = 0;
-    private ArrayList <String> lineList = new ArrayList<String>();
+    public ArrayList <String> lineList = new ArrayList<String>();
 }

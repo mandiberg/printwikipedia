@@ -40,3 +40,9 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+
+curl/Imaging-1.1.7/BUILDME
+
+*.py
+
+*.html

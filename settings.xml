@@ -21,7 +21,7 @@
 		<font-family>Cardo</font-family>
 	</contributor>
 	<db-host>
-		192.168.1.209
+		127.0.0.1
 	</db-host>
 	<db-port>
 		3306
@@ -36,16 +36,16 @@
 		
 	</db-pass>
 	<article-bunch>
-		4000
+		5000
 	</article-bunch>
 	<page-file-limit>
-		670
+		700
 	</page-file-limit>
 	<start-page>
-		6000000
+		0
 	</start-page>
 	<time-limit>
-		50
+		330
 	</time-limit>
 	<thread-limit>
 		6

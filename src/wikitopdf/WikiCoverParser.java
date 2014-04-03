@@ -35,9 +35,14 @@ public class WikiCoverParser {
         int pagesCount = 0;
         
         PdfCoverWrapper pdfWrapper = new PdfCoverWrapper(num, pagesCount);
-
+/*
+ * 
+ * CHANGE THE FOLLOWING LINES TO MAKE COVERS FOR PDF(output) VS. TOC(temp)
+ * 
+ */
         
-        File folder = new File("output");
+//        File folder = new File("output");
+        File folder = new File("temp");
         File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {

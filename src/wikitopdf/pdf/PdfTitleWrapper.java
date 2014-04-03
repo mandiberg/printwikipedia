@@ -12,6 +12,7 @@ import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.MultiColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class PdfTitleWrapper {
     private int status = 0;
     float[] right = {70, 320};
     float[] left = {300, 550};
+    public static String lastLine= "";
+    public static String firstLine ="";
+    public static int num=0;
 
     /**
      *
@@ -35,9 +39,17 @@ public class PdfTitleWrapper {
      * @throws FileNotFoundException
      * @throws DocumentException
      */
-    public PdfTitleWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
+ 
+    public PdfTitleWrapper(int num, int startPage,String firstLine, String lastLine) throws FileNotFoundException, DocumentException {
         //Read settings
-        String outputFileName = "temp/wikipedia-toc-volume" + num + ".pdf";
+        startPage = 0;
+        PdfTitleWrapper.lastLine =lastLine;
+        if(PdfTitleWrapper.lastLine!=""){
+            new File("temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+".pdf").renameTo(new File(
+                    "temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+"-"+PdfTitleWrapper.lastLine+".pdf"));
+        }
+        firstLine = firstLine.replaceAll("[_]"," ");//get rid of the _ for pretty printing :>
+        String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
 
         pdfDocument = new Document(new Rectangle(432, 648));
 
@@ -45,7 +57,7 @@ public class PdfTitleWrapper {
 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream(outputFileName));
-
+        
         headerFooter = new TitlesFooter(startPage);
         pdfWriter.setPageEvent(headerFooter);
         pdfDocument.open();
@@ -55,16 +67,23 @@ public class PdfTitleWrapper {
 
         //pdfDocument.setHeader(hf);
 
-        //addPrologue();
+
         //openMultiColumn();
-
-
+//        TitlesFooter.setCurrentLine(firstLine);
+        PdfTitleWrapper.firstLine = firstLine;
+        PdfTitleWrapper.num=num;
+        
+        
+        
+        
 
 
         PdfContentByte cb = pdfWriter.getDirectContent();
         ct = new ColumnText(cb);
         //ct.setIndent(20);
-
+        
+//        addPrologue();
+//        newPage();
     }
 
     /**
@@ -72,26 +91,104 @@ public class PdfTitleWrapper {
      * @param line
      * @throws DocumentException
      */
+       public int chopLine(String line) throws DocumentException{
+        if(line.length()<26){
+            return 0;
+        }
+        String tempLine = line.substring(21,26);
+        System.out.println(tempLine);
+        System.out.println("1c");
+        Character c = tempLine.charAt(0);
+        if(c==' '){
+          return -2; 
+        }
+        System.out.println("1c");
+        c = tempLine.charAt(1);
+        if(c==' '){
+          return -1; 
+        }
+        System.out.println("1c");
+        c = tempLine.charAt(2);
+        if(c==' '){
+          return 0; 
+        }
+        System.out.println("1c");
+        c = tempLine.charAt(3);
+        if(c==' '){
+          return 1; 
+        }
+        System.out.println("1c");
+        c = tempLine.charAt(4);
+         System.out.println("2c");
+        if(c==' '){
+          return 2; 
+        }
+       
+        return 0;
+        
+    }
+ 
+    
+    public String longTitle(String line) throws DocumentException{
+        boolean tooLong = false;
+        if(line.length()<24){
+            return line;
+        }
+        int near = chopLine(line);
+        String lastLine=line.substring(0,24+near);
+        line = line.substring(24+near);
+        int doo = 24+near;
+        System.out.println(doo + "  16near outwhile");
+        int x = 0;
+        while(line.length()>=24+near){//while line is longer than 15 characters
+            near = chopLine(line);
+            doo = 24+near;
+            System.out.println(doo + "  16near in while");
+           lastLine = lastLine+"\n  "+line.substring(0,24+near);
+           line = line.substring(24+near);
+           if(line.length()<=24){
+               break;
+            }
+           x++;
+           if(x>=5){
+               tooLong = true;
+               break;
+           }
+           else{
+               tooLong = false;
+           }
+        }
+        if(tooLong==false){
+            if(line.length()>=1){
+                lastLine = lastLine +"\n"+"  "+line;
+            }
+        }
+        else{
+            lastLine = lastLine+"...";
+        }
+            
+//        }
+        System.out.println(lastLine+ "  /finalLine" );
+        return lastLine;
+    
+    }
     public void writeTitle(String line) throws DocumentException {
         try {
-            //Chunk ch = new Chunk(line);
-            //ch.setSplitCharacter(new SplitChar());
-            //Phrase ph = new Phrase(ch);
-            Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
-            ph.setLeading(10);
-            //ph.setFontSize(20);
-
-            Paragraph pr = new Paragraph(ph);
-            //calculate width of word
             float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(line,
                     wikiFontSelector.getCommonFont().getSize());
-            pr.setKeepTogether(true);
+            if (widthLine > 60) {
+                line = longTitle(line);//do the function returning the correct string.
+            }
+                
+                Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
+                ph.setLeading(8);
+                Paragraph pr = new Paragraph(ph);
+
+                pr.setKeepTogether(true);//should this always be set to true?
 
             //if word wraps
             // this needs to be adjusted to indent wrapped words 2013
-            if (widthLine > 85) {
-            //    pr.setAlignment(Element.ALIGN_RIGHT);
-            }
+            
 
             if (mct.isOverflow()) {
                 System.out.println("page is end  :" + pdfDocument.getPageNumber() + "  " + line);
@@ -100,9 +197,15 @@ public class PdfTitleWrapper {
             }
 
             mct.addElement(pr);
+//            System.out.println(mct);
             pdfDocument.add(mct);
             headerFooter.setCurrentLine(line);
 
+            
+            //ph.setFontSize(20);
+            
+
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -166,14 +269,12 @@ public class PdfTitleWrapper {
      *
      * @throws DocumentException
      */
-    public void newPage() throws DocumentException{
+    public final void jknewPage() throws DocumentException{
       pdfDocument.add(new Paragraph(""));
       pdfDocument.newPage();
       pdfDocument.add(new Paragraph(""));
-    
-        
     }
-    public void addPrologue() throws DocumentException {
+    public final void addPrologue() throws DocumentException {
         PdfContentByte cb = pdfWriter.getDirectContent();
         BaseFont times = null;
 
@@ -194,9 +295,9 @@ public class PdfTitleWrapper {
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
         cb.showText("table of contents");
         
-        cb.setFontAndSize(times, 12);
-        cb.setTextMatrix(pdfDocument.right() - 200, 200);
-        cb.showText("testing - delete me");
+//        cb.setFontAndSize(times, 12);
+//        cb.setTextMatrix(pdfDocument.right() - 200, 200);
+//        cb.showText("testing - delete me");
         
         cb.endText();
                
@@ -220,7 +321,7 @@ public class PdfTitleWrapper {
                 "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
                 "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
                 "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
-                "in the section entitled ‚ÄúGNU Free Documentation License‚Äù.";
+                "in the section entitled ‚\"GNU Free Documentation License\".";
 
         cb.beginText();
         cb.setFontAndSize(times, 8);
