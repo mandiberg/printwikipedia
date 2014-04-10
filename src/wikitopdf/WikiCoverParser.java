@@ -31,7 +31,7 @@ public class WikiCoverParser {
     public void parseCover() throws FileNotFoundException, IOException, DocumentException, ParseException
     {
         
-        int num = 1;
+        int num = 0;
         int pagesCount = 0;
         
         PdfCoverWrapper pdfWrapper = new PdfCoverWrapper(num, pagesCount);
@@ -52,8 +52,7 @@ public class WikiCoverParser {
                 try
                 {
                 System.out.println("Trying " + listOfFiles[i].getName());
-                   
-                    pdfWrapper.addCover(listOfFiles[i].getName()); // will parse file name inside pdfWrapper
+                pdfWrapper.addCover(listOfFiles[i].getName()); // will parse file name inside pdfWrapper
                     
                 }   
                 catch (Exception ex)

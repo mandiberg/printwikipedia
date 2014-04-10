@@ -46,7 +46,7 @@ public class PdfTitleWrapper {
         PdfTitleWrapper.lastLine =lastLine;
         if(PdfTitleWrapper.lastLine!=""){
             new File("temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+".pdf").renameTo(new File(
-                    "temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+"-"+PdfTitleWrapper.lastLine+".pdf"));
+                    "temp/tocVol&&&"+PdfTitleWrapper.num+"&&&"+PdfTitleWrapper.firstLine+"&&&"+PdfTitleWrapper.lastLine+"&&&.pdf"));
         }
         firstLine = firstLine.replaceAll("[_]"," ");//get rid of the _ for pretty printing :>
         String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
@@ -91,11 +91,14 @@ public class PdfTitleWrapper {
      * @param line
      * @throws DocumentException
      */
-       public int chopLine(String line) throws DocumentException{
-        if(line.length()<26){
+       public int chopLine(String line, int sizer) throws DocumentException{
+        int chopStart = sizer - 3;
+        int chopEnd = sizer + 2;
+           
+        if(line.length()<chopEnd){
             return 0;
         }
-        String tempLine = line.substring(21,26);
+        String tempLine = line.substring(chopStart,chopEnd);
         System.out.println(tempLine);
         System.out.println("1c");
         Character c = tempLine.charAt(0);
@@ -129,30 +132,30 @@ public class PdfTitleWrapper {
     }
  
     
-    public String longTitle(String line) throws DocumentException{
+    public String longTitle(String line, int sizer) throws DocumentException{
         boolean tooLong = false;
-        if(line.length()<24){
+        if(line.length()<sizer){
             return line;
         }
-        int near = chopLine(line);
-        String lastLine=line.substring(0,24+near);
-        line = line.substring(24+near);
-        int doo = 24+near;
+        int near = chopLine(line,sizer);
+        String lastLine=line.substring(0,sizer+near);
+        line = line.substring(sizer+near);
+        int doo = sizer+near;
         System.out.println(doo + "  16near outwhile");
         int x = 0;
-        while(line.length()>=24+near){//while line is longer than 15 characters
-            near = chopLine(line);
-            doo = 24+near;
+        while(line.length()>=sizer+near){//while line is longer than 15 characters
+            near = chopLine(line,sizer);
+            doo = sizer+near;
             System.out.println(doo + "  16near in while");
-           lastLine = lastLine+"\n  "+line.substring(0,24+near);
-           line = line.substring(24+near);
-           if(line.length()<=24){
+           lastLine = lastLine+"\n  "+line.substring(0,sizer+near);
+           line = line.substring(sizer+near);
+           if(line.length()<=sizer){
                break;
             }
            x++;
            if(x>=5){
-               tooLong = true;
-               break;
+            tooLong = true;
+            break;
            }
            else{
                tooLong = false;
@@ -177,7 +180,7 @@ public class PdfTitleWrapper {
             float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(line,
                     wikiFontSelector.getCommonFont().getSize());
             if (widthLine > 60) {
-                line = longTitle(line);//do the function returning the correct string.
+                line = longTitle(line,24);//do the function returning the correct string.
             }
                 
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);

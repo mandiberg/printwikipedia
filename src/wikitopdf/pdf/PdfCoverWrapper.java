@@ -18,6 +18,7 @@ import com.lowagie.text.pdf.MultiColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.VerticalText;
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -28,13 +29,13 @@ import java.io.FileOutputStream;
  */
 public class PdfCoverWrapper {
     
-   //dunno if these are necessary 
     private ColumnText ct;
     private int column = 0;
     private int status = 0;
     float[] right = {70, 320};
     float[] left = {300, 550};
-    public int width = 1025;
+    public int width = 1109;//spine = 119 points beginning at 495 points.
+    //meaning that each page is 495 points wide.
     public int height = 774;
     
         /**
@@ -46,8 +47,9 @@ public class PdfCoverWrapper {
      */
     public PdfCoverWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
         //Read settings
+        
         String outputFileName = "covers/volume" + num + ".pdf";
-
+        
         
         /*
          * NEED TO CHANGE THESE VALUES TO REFLECT COVER SPECS
@@ -81,9 +83,66 @@ public class PdfCoverWrapper {
         //ct.setIndent(20);
 
     }
+    public int chopLine(String line, int sizer) throws DocumentException{
+        int chopStart = sizer - 3;
+        int chopEnd = sizer + 2;
+           
+        if(line.length()<chopEnd){
+            return 0;
+        }
+        String tempLine = line.substring(chopStart,chopEnd);
+        System.out.println(tempLine);
+        Character c = tempLine.charAt(0);
+        if(c==' '){
+          return -2; 
+        }
+        c = tempLine.charAt(1);
+        if(c==' '){
+          return -1; 
+        }
+        c = tempLine.charAt(2);
+        if(c==' '){
+          return 0; 
+        }
+        c = tempLine.charAt(3);
+        if(c==' '){
+          return 1; 
+        }
+        c = tempLine.charAt(4);
+        if(c==' '){
+          return 2; 
+        }
+       
+        return 0;
+        
+    }
+ 
+    
+    public String longTitle(String line, int sizer) throws DocumentException{
+        boolean tooLong = false;
+        if(line.length()<sizer){
+            return line;
+        }
+        int near = chopLine(line,sizer);
+        String lastLine=line.substring(0,sizer+near)+"\r\n";
+        line = line.substring(sizer+near);
+        while(line.length()>=sizer+near){//while line is longer than 15 characters
+           near = chopLine(line,sizer);
+           lastLine = lastLine+"\r\n"+line.substring(0,sizer+near);
+           line = line.substring(sizer+near);
+           if(line.length()<=sizer){
+               break;
+            }
+        }
+        lastLine = lastLine +"\r\n"+line;
+
+        System.out.println(lastLine+ "  /finalLine" );
+        return lastLine;
+    }
     
     
         public void addCover(String fileName) throws DocumentException {
+            
         PdfContentByte cb = pdfWriter.getDirectContent();
         BaseFont times = null;
 
@@ -97,78 +156,104 @@ public class PdfCoverWrapper {
         cb.beginText();
         
         cb.setFontAndSize(times, 72);
-        cb.setTextMatrix(pdfDocument.right() - 130, 500);
+        cb.setTextMatrix(pdfDocument.right() - 330, 370);
         cb.showText("Wikipedia");
-        
+
+        cb.showTextAligned(cb.ALIGN_LEFT,"Wikipedia",595,595,270);
         cb.setFontAndSize(times, 12);
-        cb.setTextMatrix(pdfDocument.right()-130, pdfDocument.bottom()+20);
+        cb.setTextMatrix(pdfDocument.right()-230, pdfDocument.bottom()+20);
         cb.showText("March 2014 Edition");
         //Use the code below to create rotated text the first constant indicates alignment,
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
         //cb.showTextAligned(cb.ALIGN_LEFT,"Wikipedia",0,0,90);
-        String[] titleArr = fileName.split("-");
+        String[] titleArr = fileName.split("&&&");
         String beginTitle = titleArr[2];
         String endTitle = titleArr[3];
-        beginTitle = beginTitle.replaceAll("[_]"," ");
-        endTitle = endTitle.replaceAll("[_]"," ");
         String volNumber = titleArr[1];
-        cb.setFontAndSize(times, 8);
-        cb.setTextMatrix(pdfDocument.right() - 50, 490);
+        cb.setFontAndSize(times, 11);
+        cb.setTextMatrix(pdfDocument.right() - 150, 350);
         cb.showText("Volume "+volNumber);
         
-        cb.setFontAndSize(times, 24);
+        //string formatting for titles
+        cb.setFontAndSize(times, 20);
+        cb.setTextMatrix(pdfDocument.right()-575, 230);
+        cb.showText("Volume");
+        cb.setFontAndSize(times, 20);
+        cb.setTextMatrix(pdfDocument.right()-575, 220);
+        cb.showText(volNumber);
         
-        String mainTitle = beginTitle +" - "+ endTitle;
-        String[] frontTitle = mainTitle.split("\n");
+        String mainTitle = beginTitle +" - " + endTitle;
+        String lSpineTitle = "";
+        String rSpineTitle = "";
+        if(beginTitle.length()>3){
+            lSpineTitle = beginTitle.substring(0,3);
+        }
+        else{
+            lSpineTitle=beginTitle;
+        }
+        if(endTitle.length()>4){
+            rSpineTitle = endTitle.substring(0,3);
+        }
+        else{
+            rSpineTitle = endTitle;
+        }
+        cb.setFontAndSize(times, 20);
+        cb.setTextMatrix(pdfDocument.right()-575,100);
+        cb.showText(lSpineTitle);
+        cb.setFontAndSize(times, 15);
+        cb.setTextMatrix(pdfDocument.right()-575,82);
+        cb.showText("TO");
+        cb.setFontAndSize(times, 20);
+        cb.setTextMatrix(pdfDocument.right()-575,64);
+        cb.showText(rSpineTitle);
+        
         float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
                     wikiFontSelector.getCommonFont().getSize());
-        System.out.println(widthLine + " widthline");
-        for (int i = 0; i < frontTitle.length; i++) {
-            cb.setTextMatrix(pdfDocument.right()-130, pdfDocument.bottom()+350);
-            cb.showText(frontTitle[i]);
+        String finalTitle ="";
+        if(widthLine > 101.885){
+            finalTitle = longTitle(mainTitle,32);
         }
-//        int leftNess = 50;//amount of pixels to the right
-//        int titleLength = mainTitle.length();//length of title string
-//        if(titleLength > 12){//at 12 times new roman font there are 4.167 pixels per char.--double vs. int issue here.
-//            leftNess = titleLength * 5;
-            //need to do something more here because some titles are very very long. inserting
-            //inserting a "\n" character at X point would be the solution
-            //java should store strings as Arrays. Just a question of where to split.
-            
-//        }
-//        cb.setTextMatrix(pdfDocument.right() - 200, 470);
-//        cb.showText(mainTitle);
-//        
-        cb.endText();
-        VerticalText vt = new VerticalText(pdfWriter.getDirectContent());
-         vt.setVerticalLayout(width/2, height/2, 540, 2, 0);
-         vt.addText(new Phrase("Wikipedia Table of Contents"));
-         
-         vt.go();
-          vt.setAlignment(Element.ALIGN_RIGHT);
-//        cb.showText("Wikipedia Table of Contents");
+        else{
+            finalTitle = mainTitle;
+        }
+        System.out.println(finalTitle+" ///secind FT");
         
-        cb.endText();     
-        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
-                "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
-                "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
-                "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
-                "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
-                "in the section entitled ‚\"GNU Free Documentation License\".";
-
         cb.beginText();
-        cb.setFontAndSize(times, 8);
-
-        String[] textArr = copyrightText.split("\r\n");
+        cb.setFontAndSize(times, 24);
+        String[] textArr = finalTitle.split("\r\n");
         for (int i = 0; i < textArr.length; i++) {
-            cb.setTextMatrix(pdfDocument.left() + 320, 100 - (i * 10));
+            cb.setTextMatrix(pdfDocument.right()-330, 300-(i*18));
+            System.out.println(textArr[i] + " this is line");
             cb.showText(textArr[i]);
         }
         cb.endText();
+     
+//        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
+//                "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
+//                "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
+//                "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
+//                "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
+//                "in the section entitled ‚\"GNU Free Documentation License\".";
+//
+//        cb.beginText();
+//        cb.setFontAndSize(times, 8);
+//
+//        String[] textArr = copyrightText.split("\r\n");
+//        for (int i = 0; i < textArr.length; i++) {
+//            cb.setTextMatrix(pdfDocument.left() + 520, 100 - (i * 10));
+//            cb.showText(textArr[i]);
+//        }
+//        cb.endText();
  //       pdfDocument.newPage();
         
-        
+
+// add a rectangle
+cb.rectangle(495, 0, 195, height);
+// stroke the lines
+cb.setColorStroke(Color.BLACK);
+cb.stroke();
+
         
         
     }
