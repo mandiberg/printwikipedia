@@ -6,18 +6,23 @@ package wikitopdf;
 
 import com.lowagie.text.DocumentException;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import scala.actors.threadpool.Arrays;
 import wikitopdf.pdf.PdfCoverWrapper;
+
+
 
 /**
  *
  * @author Home
  */
+
 public class WikiCoverParser {
 
     
@@ -44,15 +49,24 @@ public class WikiCoverParser {
 //        File folder = new File("output");
         File folder = new File("temp");
         File[] listOfFiles = folder.listFiles();
-
+       // Arrays.sort(listOfFiles);
+//        for(int i = 0; i<listOfFiles.length-1; i++){
+//            String[] titleArrOne = listOfFiles[i].getName().split("&&&");
+//            String[] titleArrTwo = listOfFiles[i+1].getName().split("&&&");
+//            int thisVol = Integer.parseInt(titleArrOne[0]);
+//            int nextVol = Integer.parseInt(titleArrTwo[0]);
+//            if(thisVol>nextVol){
+//                
+//            }
+//        }
         for (int i = 0; i < listOfFiles.length; i++) {
           if (listOfFiles[i].isFile()) {
               // need to filter out .ds_store and other "." files
             System.out.println("File " + listOfFiles[i].getName());
                 try
                 {
-                System.out.println("Trying " + listOfFiles[i].getName());
-                pdfWrapper.addCover(listOfFiles[i].getName()); // will parse file name inside pdfWrapper
+                    System.out.println("Trying " + listOfFiles[i].getName());
+                    pdfWrapper.addCover(listOfFiles[i].getName()); // will parse file name inside pdfWrapper
                     
                 }   
                 catch (Exception ex)
@@ -62,7 +76,9 @@ public class WikiCoverParser {
                 finally
                 {
                     pdfWrapper.close();
+                    System.out.println(num + " this is what num is now");
                     num++;
+                    System.out.println(num + " this is what num is after adding");
                     pdfWrapper = new PdfCoverWrapper(num, pagesCount);
 
                 }

@@ -103,7 +103,6 @@ public class TitlesFooter extends PdfPageEventHelper
             //Write header
             //writeHeader(writer, document);
         }
-        System.out.println("hey im about to write this out.");
         writeHeader(writer, document);
 
         cb.showText(text);

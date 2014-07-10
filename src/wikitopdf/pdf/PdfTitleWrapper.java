@@ -42,18 +42,26 @@ public class PdfTitleWrapper {
  
     public PdfTitleWrapper(int num, int startPage,String firstLine, String lastLine) throws FileNotFoundException, DocumentException {
         //Read settings
+        int curPage = startPage;
         startPage = 0;
         PdfTitleWrapper.lastLine =lastLine;
         if(PdfTitleWrapper.lastLine!=""){
             new File("temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+".pdf").renameTo(new File(
-                    "temp/tocVol&&&"+PdfTitleWrapper.num+"&&&"+PdfTitleWrapper.firstLine+"&&&"+PdfTitleWrapper.lastLine+"&&&.pdf"));
+                    "temp/"+String.format("%04d",PdfTitleWrapper.num)+"&&&"+PdfTitleWrapper.firstLine+"&&&"+PdfTitleWrapper.lastLine+"&&&.pdf"));
         }
         firstLine = firstLine.replaceAll("[_]"," ");//get rid of the _ for pretty printing :>
         String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
 
         pdfDocument = new Document(new Rectangle(432, 648));
-
-        pdfDocument.setMargins(25, 25, -35, 25);
+//        pdfDocument.setMargins(57.6f, 57.6f, -3f, 58.2f);
+//        System.out.println("startpage " + curPage);
+//        if ((curPage % 2) == 0){
+//            pdfDocument.setMargins(25.8f, 57.6f, -3f, 58.2f); //if even page then put gutter on right
+//        }
+//        else{
+//            pdfDocument.setMargins(57.6f, 25.8f, -3f, 58.2f);//else gutter left.
+//        }
+        
 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream(outputFileName));
@@ -72,10 +80,6 @@ public class PdfTitleWrapper {
 //        TitlesFooter.setCurrentLine(firstLine);
         PdfTitleWrapper.firstLine = firstLine;
         PdfTitleWrapper.num=num;
-        
-        
-        
-        
 
 
         PdfContentByte cb = pdfWriter.getDirectContent();
@@ -100,33 +104,31 @@ public class PdfTitleWrapper {
         }
         String tempLine = line.substring(chopStart,chopEnd);
         System.out.println(tempLine);
-        System.out.println("1c");
         Character c = tempLine.charAt(0);
         if(c==' '){
+          System.out.println("-2");
           return -2; 
         }
-        System.out.println("1c");
         c = tempLine.charAt(1);
         if(c==' '){
+            System.out.println("-1");
           return -1; 
         }
-        System.out.println("1c");
         c = tempLine.charAt(2);
         if(c==' '){
+            System.out.println("0/middle");
           return 0; 
         }
-        System.out.println("1c");
         c = tempLine.charAt(3);
         if(c==' '){
+            System.out.println("1");
           return 1; 
         }
-        System.out.println("1c");
         c = tempLine.charAt(4);
-         System.out.println("2c");
         if(c==' '){
+            System.out.println("2");
           return 2; 
         }
-       
         return 0;
         
     }
@@ -134,10 +136,10 @@ public class PdfTitleWrapper {
     
     public String longTitle(String line, int sizer) throws DocumentException{
         boolean tooLong = false;
-        if(line.length()<sizer){
+        if(line.length()<sizer){//sier is the size of the column...
             return line;
         }
-        int near = chopLine(line,sizer);
+        int near = chopLine(line,sizer);//determine where to cut the line at and start a new line
         String lastLine=line.substring(0,sizer+near);
         line = line.substring(sizer+near);
         int doo = sizer+near;
@@ -153,7 +155,7 @@ public class PdfTitleWrapper {
                break;
             }
            x++;
-           if(x>=5){
+           if(x>=5){//check to see if there should be an added line at the end
             tooLong = true;
             break;
            }
@@ -162,12 +164,17 @@ public class PdfTitleWrapper {
            }
         }
         if(tooLong==false){
+            System.out.println("too long == false");
             if(line.length()>=1){
+                System.out.println(lastLine+ "  /finalLine" );
                 lastLine = lastLine +"\n"+"  "+line;
+                return lastLine;
             }
         }
         else{
+            System.out.println(lastLine+ "  /finalLine" );
             lastLine = lastLine+"...";
+            return lastLine;
         }
             
 //        }
@@ -179,15 +186,15 @@ public class PdfTitleWrapper {
         try {
             float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(line,
                     wikiFontSelector.getCommonFont().getSize());
-            if (widthLine > 60) {
-                line = longTitle(line,24);//do the function returning the correct string.
+            if (widthLine > 40) {
+                line = longTitle(line,20);//do the function returning the correct string.
             }
                 
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
                 ph.setLeading(8);
                 Paragraph pr = new Paragraph(ph);
-
                 pr.setKeepTogether(true);//should this always be set to true?
+                pr.setSpacingBefore(305f);
 
             //if word wraps
             // this needs to be adjusted to indent wrapped words 2013
@@ -353,9 +360,10 @@ public class PdfTitleWrapper {
     public void openMultiColumn() {
         mct = new MultiColumnText(60);
         mct.addRegularColumns(pdfDocument.left(),
-                pdfDocument.right(), 13f, 4);
+                pdfDocument.right(), 6f, 4);
 
-        //First page hack
+        //First page hack 
+        //--jk DON'T THINK WE NEED THIS ANYMORE!
         for (int i = 0; i < 4; i++) {
             try {
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process("\n");
