@@ -1,2 +1,38 @@
-<span style="color:#AA0000">[30.05.13] 14:15:09 : wikitopdf.PageParserExec.main	null
+<span style="color:#AA0000">[15.03.14] 16:31:50 : wikitopdf.WikiProcessor.createPdf	Communications link failure due to underlying exception: 
+
+** BEGIN NESTED EXCEPTION ** 
+
+java.net.NoRouteToHostException
+MESSAGE: No route to host
+
+STACKTRACE:
+
+java.net.NoRouteToHostException: No route to host
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:382)
+	at java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:241)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:228)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:431)
+	at java.net.Socket.connect(Socket.java:527)
+	at java.net.Socket.connect(Socket.java:476)
+	at java.net.Socket.<init>(Socket.java:373)
+	at java.net.Socket.<init>(Socket.java:216)
+	at com.mysql.jdbc.StandardSocketFactory.connect(StandardSocketFactory.java:256)
+	at com.mysql.jdbc.MysqlIO.<init>(MysqlIO.java:271)
+	at com.mysql.jdbc.Connection.createNewIO(Connection.java:2771)
+	at com.mysql.jdbc.Connection.<init>(Connection.java:1555)
+	at com.mysql.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:285)
+	at java.sql.DriverManager.getConnection(DriverManager.java:582)
+	at java.sql.DriverManager.getConnection(DriverManager.java:185)
+	at wikitopdf.SQLProcessor.<init>(SQLProcessor.java:36)
+	at wikitopdf.WikiProcessor.createPdf(WikiProcessor.java:80)
+	at wikitopdf.PageParserExec.main(PageParserExec.java:56)
+
+
+** END NESTED EXCEPTION **
+
+
+
+Last packet sent to the server was 1 ms ago.
+</span><br /><span style="color:#AA0000">[15.03.14] 16:31:50 : wikitopdf.PageParserExec.main	null
 </span><br />
