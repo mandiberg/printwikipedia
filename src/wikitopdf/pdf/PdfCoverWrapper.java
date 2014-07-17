@@ -41,6 +41,7 @@ public class PdfCoverWrapper {
     private int status = 0;
     float[] right = {70, 320};
     float[] left = {300, 550};
+    //w = 1129 h = 774 for hc 670 pg book
     public int width = 1129;//spine = 119 points beginning at 495 points.
     //meaning that each page is 495 points wide.
     public int height = 774;
@@ -150,6 +151,21 @@ public class PdfCoverWrapper {
         System.out.println(lastLine+ "  /finalLine" );
         return lastLine;
     }
+    public float firstTitleResize(String beginTitle, double titleLength){//fuck with this
+        String[] tempBegin = beginTitle.split("\r\n");
+        int tb = tempBegin.length;
+        String tempFirst = "";
+        if(tb>1){
+            tempFirst = tempBegin[tb];
+        }
+        else{
+            tempFirst = beginTitle;
+        }
+        float tempFirstWidth = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(tempFirst,
+            wikiFontSelector.getCommonFont().getSize());
+        
+        return tempFirstWidth;
+    }
     
     public String breakTitle(String beginTitle, String endTitle, double titleLength){
         String finalTitle="";
@@ -157,28 +173,37 @@ public class PdfCoverWrapper {
                 wikiFontSelector.getCommonFont().getSize());
          float endWidth = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(endTitle,
                 wikiFontSelector.getCommonFont().getSize());
-        if(beginWidth>titleLength){ //if first title is very long chop it up.
+         System.out.println(beginWidth + " that's begin \n" + endWidth + " tht's end width");
+        if(beginWidth>titleLength){ //if first title has more space  than the second
             try {
-               
                 beginTitle = longTitle(beginTitle,36,false);//so you chop it up at 36
-                System.out.println(beginTitle + " this is first title in first if of breaktitle");
             }
             catch (DocumentException ex) {
                 Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(endWidth>titleLength-20){//chop it up -20 and use 32
-                try{
-                endTitle=longTitle(endTitle,27,true);//if second title is larger and it's already broken then send true
-                                                    //so that sizer is not broken 5 chars earlier
-                }
-                catch(DocumentException ex) {
-                    Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                }//end catch
-            }//end if endtitle
-            finalTitle = beginTitle+endTitle;
-            System.out.println(finalTitle + " this is finaltitle before she airs.");
-            return finalTitle;
+//            if(endWidth>titleLength){
+//                try{
+//                    endTitle=longTitle(endTitle,27,true);//if second title is larger and it's already broken then send true
+//                                                    //so that sizer is not broken 5 chars earlier
+//                }
+//                catch(DocumentException ex) {
+//                    Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
+//                }//end catch
+//            }//end if endtitle
+//            finalTitle = beginTitle+endTitle;
+//            System.out.println(finalTitle + " this is finaltitle before she airs.");
+//            return finalTitle;
         }
+        boolean nextLine = false;
+        float tempFirstWidth = firstTitleResize(beginTitle,titleLength);
+        if(tempFirstWidth>titleLength-30){
+            beginTitle=beginTitle+"\n";
+            nextLine = true;
+        }
+        if(nextLine==true){
+            titleLength = titleLength -27;
+        }
+
         if(endWidth>titleLength){//if you got this far it means that begintitle is short
                                  //and end is long so just add the two together and treat it as one.
             finalTitle = beginTitle + endTitle;
@@ -353,37 +378,36 @@ public class PdfCoverWrapper {
 //        cb.setFontAndSize(times, 20);
 //        cb.setTextMatrix(pdfDocument.right()-562,84);
 //        cb.showText(rSpineTitle.toUpperCase());
-//        beginTitle = beginTitle +" — ";
-//        
-//        String mainTitle = beginTitle  + endTitle;
-//        String finalTitle ="";
-//        
-//        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
-//                    wikiFontSelector.getCommonFont().getSize());
-//        
-//       double titleLength = 121.885;
-//        if(widthLine > titleLength){//if the whole thing is too large check to see if you can break it up
-//            finalTitle = breakTitle(beginTitle,endTitle,121.885);
-//        }
-//        else{
-//            finalTitle = mainTitle;
-//        }
-//        System.out.println(finalTitle+" ///secind FT");
-//        
-//        cb.beginText();
-//        cb.setFontAndSize(times, 24);
-//        String[] textArr = finalTitle.split("\r\n");
-//        for (int i = 0; i < textArr.length; i++) {
-//            if(i>=1){
-//                cb.setTextMatrix(pdfDocument.right()-365, 300-(i*18));
-//            }
-//            else{
-//                cb.setTextMatrix(pdfDocument.right()-415, 300-(i*18));
-//            }
-//            System.out.println(textArr[i] + " this is line");
-//            cb.showText(textArr[i]);
-//        }
-//        cb.endText();
+        beginTitle = beginTitle + " — ";
+        String mainTitle = beginTitle + endTitle;//title as it appears on the front cover
+        String finalTitle ="";
+        
+        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
+                    wikiFontSelector.getCommonFont().getSize());
+        double titleLength = 89.885;//121.885 is original
+        
+        if(widthLine > titleLength){//if the whole thing is too large check to see if you can break it up
+            finalTitle = breakTitle(beginTitle,endTitle,titleLength);
+        }
+        else{
+            finalTitle = mainTitle;
+        }
+        System.out.println(finalTitle+" ///secind FT");
+        
+        cb.beginText();
+        cb.setFontAndSize(times, 24);
+        String[] textArr = finalTitle.split("\r\n");
+        for (int i = 0; i < textArr.length; i++) {
+            if(i>=1){
+                cb.setTextMatrix(pdfDocument.right()-365, 300-(i*18));
+            }
+            else{
+                cb.setTextMatrix(pdfDocument.right()-415, 300-(i*18));
+            }
+            System.out.println(textArr[i] + " this is line");
+            cb.showText(textArr[i]);
+        }
+        cb.endText();
      
 //        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
 //                "Permission is granted to copy, distribute and/or modify this document under the \r\n" +

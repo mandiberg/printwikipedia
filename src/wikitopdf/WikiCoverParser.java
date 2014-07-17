@@ -76,9 +76,9 @@ public class WikiCoverParser {
                 finally
                 {
                     pdfWrapper.close();
-                    System.out.println(num + " this is what num is now");
+                    //System.out.println(num + " this is what num is now");
                     num++;
-                    System.out.println(num + " this is what num is after adding");
+                   // System.out.println(num + " this is what num is after adding");
                     pdfWrapper = new PdfCoverWrapper(num, pagesCount);
 
                 }

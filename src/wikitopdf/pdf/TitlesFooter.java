@@ -103,7 +103,7 @@ public class TitlesFooter extends PdfPageEventHelper
             //Write header
             //writeHeader(writer, document);
         }
-        writeHeader(writer, document);
+        //writeHeader(writer, document);
 
         cb.showText(text);
         cb.endText();
@@ -118,6 +118,7 @@ public class TitlesFooter extends PdfPageEventHelper
         total.setTextMatrix(0, 0);
         total.showText(String.valueOf(writer.getPageNumber() - 1));
         total.endText();
+        
     }
 
     /**
@@ -146,13 +147,13 @@ public class TitlesFooter extends PdfPageEventHelper
     private void writeHeader(PdfWriter writer, Document document)
     {
         pageNum = writer.getPageNumber() + startPage;
-
-        if(pageNum < 3)
+        PdfContentByte cb = writer.getDirectContent();
+        cb.saveState();
+        if(pageNum < 3){
+            cb.restoreState();
             return;
 
-        PdfContentByte cb = writer.getDirectContent();
-
-        cb.saveState();
+        }
 
         String text;
         float textBase = document.top() - 53;
@@ -167,8 +168,6 @@ public class TitlesFooter extends PdfPageEventHelper
             text = lineList.get(0);
             text = text.length() > 20 ? text.substring(0, 20) : text;
             cb.setTextMatrix(document.left(), textBase);
-
-
         }
         else
         {

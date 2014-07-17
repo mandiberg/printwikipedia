@@ -53,7 +53,8 @@ public class PdfTitleWrapper {
         String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
 
         pdfDocument = new Document(new Rectangle(432, 648));
-//        pdfDocument.setMargins(57.6f, 57.6f, -3f, 58.2f);
+        //(l,r,t,b)
+        pdfDocument.setMargins(66f, 63f, 5.5f, 62.5f);
 //        System.out.println("startpage " + curPage);
 //        if ((curPage % 2) == 0){
 //            pdfDocument.setMargins(25.8f, 57.6f, -3f, 58.2f); //if even page then put gutter on right
@@ -80,6 +81,10 @@ public class PdfTitleWrapper {
 //        TitlesFooter.setCurrentLine(firstLine);
         PdfTitleWrapper.firstLine = firstLine;
         PdfTitleWrapper.num=num;
+        
+        
+        
+        
 
 
         PdfContentByte cb = pdfWriter.getDirectContent();
@@ -193,8 +198,8 @@ public class PdfTitleWrapper {
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
                 ph.setLeading(8);
                 Paragraph pr = new Paragraph(ph);
+
                 pr.setKeepTogether(true);//should this always be set to true?
-                pr.setSpacingBefore(305f);
 
             //if word wraps
             // this needs to be adjusted to indent wrapped words 2013
@@ -341,12 +346,12 @@ public class PdfTitleWrapper {
             cb.setTextMatrix(pdfDocument.left() - 10, 100 - (i * 10));
             cb.showText(textArr[i]);
         }
-            cb.endText();
+        cb.endText();
         pdfDocument.newPage();
-        String dod= "lalallaa";
+        cb.beginText();
         cb.setFontAndSize(times,8);
         cb.setTextMatrix(pdfDocument.left()-19,100);
-        cb.showText(dod);
+        cb.showText("");
         cb.endText();
         
         
@@ -363,7 +368,7 @@ public class PdfTitleWrapper {
                 pdfDocument.right(), 6f, 4);
 
         //First page hack 
-        //--jk DON'T THINK WE NEED THIS ANYMORE!
+       
         for (int i = 0; i < 4; i++) {
             try {
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process("\n");
