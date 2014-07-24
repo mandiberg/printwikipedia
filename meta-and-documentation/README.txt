@@ -38,6 +38,7 @@ Now that we the necessary tools we can set the database up!
 --------------------------------------------------------------------------------------
 Setting up a schema
 	Open MySQL Workbench.
+	Double Click on the existing Local Instance. 
 	In the top left corner click the "create new schema button" (The symbol is the 2 
 	golden pucks stacked ontop of eachother)
 	Give the schema a name and SWITCH COLLATION TO "utf8 - default collation", then 
@@ -51,6 +52,10 @@ Structuring the schema
 	a message saying "Database changed" in your terminal window
 	Finally type "\.structure.sql" this will apply the needed structure to your schema 
 	in order for it to hold the printwikipedia database
+	
+	Alternately, do it via a query in MySQLWorkbench
+	Type "USE thenameyougaveyourschema;"
+	Then paste in the contents of structure.sql
 --------------------------------------------------------------------------------------
 Building the Database
 	**************
@@ -80,8 +85,24 @@ Speeding up the Database
 	article number and thus speeds up the database. The query also removes most of problem articles we 
 	were running into.
 	This process takes a long time so don't be alarmed if you have to wait a while.
-  Congradulations your Database is ready to go!
+	Congratulations your Database is ready to go!
 --------------------------------------------------------------------------------------
+Working with the test Database snippet
+	For testing, we have made a smaller snippet of the finished DB to work on.
+	DL the 70K entry database snippet here:
+	http://theredproject.com/foryou/misc/newmaster%20dump--%20pkey%2070000.sql
+	Dump this into the schema via command line or MySQLWorkbench
+	Don't forget to "USE thenameyougaveyourschema;"
+	**this is the sped up database**
+	  
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+Database for Table of Contents
+--------------------------------------------------------------------------------------
+
+The Table of Contents database is much smaller and easier. It is really just a list of entries. Go here: http://dumps.wikimedia.org/enwiki/latest/ and download this file: enwiki-latest-all-titles-in-ns0.gz. Unzip it (it should be called enwiki-latest-all-titles-in-ns0) and put it in the "output" directory (see below if it doesn't exist yet.
+
 
 **************************************************************************************
 Setting up the project to run
@@ -107,6 +128,8 @@ Building the wikitopdf.jar
 	Start NetBeans and open the "printwikipedia" NetBeans Project in your GitHub 
 	repository.
 	It will come up with a window about Project Problems
+
+Resolving Problems
 	Click "Resolve Problems…" then select "scala-library-2.9.1-1.jar" from the "Project
 	Problmes:" list, and click "Resolve…"
 	In the popup window navigate to the "lib" folder in the GitHub "printwikipedia"
@@ -116,8 +139,15 @@ Building the wikitopdf.jar
 	Next select "akka-actor-2.0.jar" from the conflicts window and once again navigate 
 	to the "lib" folder in your GitHub (it may open here by default this time)
 	"printwikipedia" repository and select the "akka-actor-2.0.jar" file. 
-	This should resolve all project issues. 
+	Select "junit" and click on "Resolve." Click yes to install that library.
+	You will not be able to resolve the "JAX-WS-ENDORSED" error in this interface. C
 	Click "Close" to exit from the Project Problems window.
+	
+JAX-WS-ENDORSED
+	Netbeans will create the JAX-WS-ENDORSED library when a new web service is created. Create a new throwaway project which you can call something like "JAX-delete-me".  
+Create a new file via File > New File, choose Web Service > Web Service Client. On the next screen enter the following into the WDSL URL field: http://www.w3.org/2001/04/wsws-proceedings/uche/wsdl.html That should create the required libraries. (more info here: http://stackoverflow.com/questions/6207190/how-do-i-reference-libraries-in-netbeans)
+
+Building	
 	Now simply click the build button in the upper left portion of NetBeans (sybolized 
 	by a hammer). It should display "BUILD SUCCESSFUL" in green letters in the bottom 
 	of the window.
