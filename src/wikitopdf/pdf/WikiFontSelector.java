@@ -27,21 +27,19 @@ public class WikiFontSelector {
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-        fontLatin.setSize(7f);  
-        //fontLatin.setSize(10.5f);  
-//        fontLatin.setStyle(fontLatin.BOLD);
+        fontLatin.setSize(10.5f);   
+        fontLatin.setStyle(fontLatin.BOLD);
 
         //font color is RGB, for example {255,0,0} is RED
-        //fontLatin.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
+//        fontLatin.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
 
-        //fontLatin.setColor(0,0,0);
+        fontLatin.setColor(0,0,0);
 
         Font fontGlyph = new Font(bsFontGlyph);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-       fontGlyph.setSize(7f); //was 10.5
-//         fontGlyph.setSize(10.5f); //was 10.5
-//        fontGlyph.setStyle(Font.BOLD);
+        fontGlyph.setSize(10.5f); 
+        fontGlyph.setStyle(Font.BOLD);
 
         //fontHieroglyph.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
 

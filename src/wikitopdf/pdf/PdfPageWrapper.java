@@ -72,6 +72,7 @@ public class PdfPageWrapper {
     }
 
     //Write title of article to document
+    //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
         Phrase ph;
         try {
@@ -80,7 +81,7 @@ public class PdfPageWrapper {
             ph = _wikiFontSelector.getTitleFontSelector().process(line);
             ph.setLeading(10);
             Paragraph pr = new Paragraph(ph);
-            //pr.setSpacingBefore(20);
+            pr.setSpacingBefore(20);
             pr.setSpacingAfter(9);
 
             if (mct.isOverflow()) {
