@@ -23,7 +23,7 @@ public class WikiHtmlConverter {
         output = headerToUppercase(output) + "<hr width='100%' />";
         
         output = output.replace("<hr/>", "");
-        String whitespacePattern = "(?i)(<p.*?>)(.+\\s*)(</p>)";
+        String whitespacePattern = "(<p>\\s+)(</p>)";
         output = output.replaceAll(whitespacePattern,"");
 
 //        output = output.replace("<p>\n\n</p>", "");
