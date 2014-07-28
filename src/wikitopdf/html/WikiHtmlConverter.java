@@ -20,13 +20,14 @@ public class WikiHtmlConverter {
         //txt = clearText(text);
         String output = wikiModel.render(text);
         // The other peice of Helvetica text for double paragraph other in PDFPageWrapper
-        output = headerToUppercase(output) + "<hr width='100%' />";
         
+        //replace some of these thigns to see if they are causing the problem
+        output = headerToUppercase(output) + "<br />";
         output = output.replace("<hr/>", "");
         String whitespacePattern = "(<p>\\s+)(</p>)";
         output = output.replaceAll(whitespacePattern,"");
 
-//        output = output.replace("<p>\n\n</p>", "");
+//      output = output.replace("<p>\n\n</p>", "");
         System.out.println("\n this is the text\n"+text);
         System.out.println("\n this is the output\n"+output);
 

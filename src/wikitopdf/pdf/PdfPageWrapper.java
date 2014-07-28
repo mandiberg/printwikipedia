@@ -79,10 +79,10 @@ public class PdfPageWrapper {
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
             ph = _wikiFontSelector.getTitleFontSelector().process(line);
-            ph.setLeading(10);
+//            ph.setLeading(10);
             Paragraph pr = new Paragraph(ph);
-            pr.setSpacingBefore(20);
-            pr.setSpacingAfter(9);
+//            pr.setSpacingBefore(20);
+//            pr.setSpacingAfter(9);
 
             if (mct.isOverflow()) {
                 mct.nextColumn();
@@ -90,7 +90,7 @@ public class PdfPageWrapper {
             }
             if (pdfWriter.getCurrentPageNumber() > 1) {
                 //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
-                mct.addElement(new Phrase("\n"));
+//                mct.addElement(new Phrase("\n"));
             }
 
             mct.addElement(pr);

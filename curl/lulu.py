@@ -64,20 +64,10 @@ def elemWait(waitTime,waitElement,browser): #this is a certain kind of wait (upl
 def existingText(tElement,changeTo):#this function deletes textarea or text input fields. For whatever reason .clear() was not working
 	#tElement==the text box.
 	#changeTo is the text you wish to input
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.ARROW_RIGHT)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
-	tElement.send_keys("", Keys.BACK_SPACE)
+	for n in range(0,20):
+		tElement.send_keys("", Keys.ARROW_RIGHT)
+	for n in range(0,20):
+		tElement.send_keys("", Keys.BACK_SPACE)
 	tElement.send_keys(changeTo)
 
 def luluCruise(inputFile,volumeNum,title):
@@ -98,30 +88,25 @@ def luluCruise(inputFile,volumeNum,title):
 
 	print "successfully logged in, now get to the book"
 	print "options"
-	serviceType = browser.find_element_by_xpath("//*[@id='productline_3']")
-	print "im a size"
-	bookSize = browser.find_element_by_xpath("//*[@id='preset_1037_73']")
-	binding = browser.find_element_by_xpath("//*[@id='binding_4']")
+	elemWait(200,"//*[@id='productline_3']",browser)
+	
 	pgCount = browser.find_element_by_xpath("//*[@id='pagecount']")
 	#bookSize = browser.find_element_by_xpath("//*[@id='trimSizeOption_2']")
 	# color = browser.find_element_by_xpath("//*[@id='inkColorOption_2']")
 	#paper = browser.find_element_by_xpath("//*[@id='paperCoatingOption_1']")
 	cont2 = browser.find_element_by_xpath("//*[@id='fNext']")
 	myPage = "700"
-	ActionChains(browser).move_to_element(serviceType).perform()
-	serviceType.click()
-	browser.find_element_by_xpath("/html/body/div/div[3]/div[2]/div[2]/div/div/div/div/a[3]/img").click()
-	browser.find_element_by_xpath("/html/body/div/div[3]/div[2]/div[2]/div/div/div/div/a[3]/span").click()
-	serviceType.click()
-	bookSize.click()
+	print "i click"
+	browser.find_element_by_xpath("/html/body/div/div[3]/div[2]/div[2]/div/div/div/div/a[3]/img").click()	
 	existingText(pgCount,myPage)#clear this thing and put in 700
+	binding = browser.find_element_by_xpath("//*[@id='binding_4']")
 	binding.click()
-	
-	# color.click()
+
 	cont2.click()
 	print "book stuff now!"
 	bookTitle = browser.find_element_by_xpath("//*[@id='title']")#get title
-	bookTitle.send_keys(title)#put title
+	existingText(bookTitle,title)
+# 	bookTitle.send_keys(title)#put title
 	cont1 = browser.find_element_by_xpath("//*[@id='fNext']")
 	cont1.click()
 	print "get to isbn page"

@@ -49,3 +49,5 @@ curl/pass.py
 
 *.html
 
+
+curl/barcode.png

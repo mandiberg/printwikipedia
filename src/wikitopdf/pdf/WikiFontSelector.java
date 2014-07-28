@@ -23,7 +23,7 @@ public class WikiFontSelector {
         BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo98s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         //uses for non-latin chars
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-
+        BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
@@ -40,13 +40,18 @@ public class WikiFontSelector {
         //set at 10.5  for full entries, 7 for TOC
         fontGlyph.setSize(10.5f); 
         fontGlyph.setStyle(Font.BOLD);
-
+        
+        Font helv = new Font(bsHelv);
+        helv.setSize(10f);
+        helv.setStyle(Font.BOLD);
         //fontHieroglyph.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
 
         //Font selector uses to choose proper font for different charsets
         _fontSelector = new FontSelector();
         _fontSelector.addFont(fontLatin);
         _fontSelector.addFont(fontGlyph);
+        _fontSelector.addFont(helv);
+        
 
         return _fontSelector;
     }
@@ -58,6 +63,7 @@ public class WikiFontSelector {
      * @throws IOException
      */
     public FontSelector getTitleFontSelector() throws DocumentException, IOException {
+        //the following line does nothing. variable is not used or returned?
         WikiFont titleFont = WikiSettings.getInstance().getTitleFont();
 
         return getFontSelector();
