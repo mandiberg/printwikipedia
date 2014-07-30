@@ -48,7 +48,9 @@ public class PageHeaderEvent extends PdfPageEventHelper {
            writeHeader(currentTitle, 27,
                     document.getPageSize().getHeight() - 27,
                     PdfContentByte.ALIGN_LEFT);
-       } 
+           contentPage.restoreState();
+       }
+       
     }
 
     @Override
@@ -60,12 +62,15 @@ public class PageHeaderEvent extends PdfPageEventHelper {
             writeHeader(currentTitle, 27,
                     document.getPageSize().getHeight() - 27,
                     PdfContentByte.ALIGN_LEFT);
+            contentPage.restoreState();
         }
 
         if ((pageNum % 2) == 0) {
             writeHeader(currentTitle, document.getPageSize().getWidth() - 27,
                     document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_RIGHT);
+            contentPage.restoreState();
         }
+        
     }
 
     /**

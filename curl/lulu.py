@@ -70,6 +70,37 @@ def existingText(tElement,changeTo):#this function deletes textarea or text inpu
 		tElement.send_keys("", Keys.BACK_SPACE)
 	tElement.send_keys(changeTo)
 
+def iterateFiles(inputFile, browser):
+	print "about to go through files"
+	print "get in iframe"
+	browser.switch_to_frame(browser.find_element_by_tag_name("iframe"))
+	numOfPages = browser.find_element_by_xpath("/html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/span[2]").text
+	x=0
+	#row of table with title
+	#/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr[2]/td[2]/span
+	while x<numOfPages:
+		for i in range(1,25):
+			if i == 1:
+				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr/td[2]/span"
+				print "it one"
+			else:
+				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr["+str(i)+"]/td[2]/span"
+			isFile = browser.find_element_by_xpath(xFile)
+			print isFile
+			print isFile.text
+			if isFile == inputFile:
+				print "i found him jon \n\n\n"
+				checkBox = xFile[:-8]
+				browser.find_element_by_xpath(checkBox).click()
+				break
+			i+=1
+		
+		x+=1
+		xNext = "/html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/div/a[8]"
+		browser.find_element_by_xpath(xNext).click()
+	browser.find_element_by_xpath("/html/body/div/div/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/input").click()
+	browser.switch_to_default_content()	
+
 def luluCruise(inputFile,volumeNum,title):
 	print "begin program:"
 	print "opening browser for a cool lulu cruise"
@@ -80,20 +111,17 @@ def luluCruise(inputFile,volumeNum,title):
 	#use firefox and go to the login page
 	uid = browser.find_element_by_xpath("//*[@id='loginEmail']") #id/name for logging in
 	pw = browser.find_element_by_xpath("//*[@id='loginPassword']") #password area
-	logbutt = browser.find_element_by_xpath("//*[@id='loginSubmit']") #submit button
+# 	logbutt = browser.find_element_by_xpath("//*[@id='loginSubmit']") #submit button
 	#send keys and click login to get to the home page.
 	uid.send_keys(lulu_email) 
 	pw.send_keys(lulu_pass)
-	logbutt.click() #submit by clicking (return doesn't work for some reason)
+	elemWait(120,"//*[@id='loginSubmit']",browser)
 
 	print "successfully logged in, now get to the book"
 	print "options"
 	elemWait(200,"//*[@id='productline_3']",browser)
 	
 	pgCount = browser.find_element_by_xpath("//*[@id='pagecount']")
-	#bookSize = browser.find_element_by_xpath("//*[@id='trimSizeOption_2']")
-	# color = browser.find_element_by_xpath("//*[@id='inkColorOption_2']")
-	#paper = browser.find_element_by_xpath("//*[@id='paperCoatingOption_1']")
 	cont2 = browser.find_element_by_xpath("//*[@id='fNext']")
 	myPage = "700"
 	print "i click"
@@ -106,7 +134,6 @@ def luluCruise(inputFile,volumeNum,title):
 	print "book stuff now!"
 	bookTitle = browser.find_element_by_xpath("//*[@id='title']")#get title
 	existingText(bookTitle,title)
-# 	bookTitle.send_keys(title)#put title
 	cont1 = browser.find_element_by_xpath("//*[@id='fNext']")
 	cont1.click()
 	print "get to isbn page"
@@ -133,15 +160,24 @@ def luluCruise(inputFile,volumeNum,title):
 	cont3.click()
 
 	print "tada now time for uploading."
-	uploadFile = inFolder +"/"+inputFile
-	print uploadFile
-	browser.find_element_by_xpath("//*[@id='uploadField']").send_keys(unicode(uploadFile, 'utf-8'))
-	cont4 = browser.find_element_by_xpath("//*[@id='fMegaUpload']") #click this and upload
-	cont4.click()
-	print "wait for upload"
-	uploadButt = browser.find_element_by_xpath("//*[@id='fNext']").get_attribute('class')
+	browser.find_element_by_xpath("//*[@id='ui-id-2']").click()
+	#go through rows and count 25 looking for a certain title of the file given to you from the ls in the beginning.
+	#if more than 25 go to next page and search there.
+	iterateFiles(inputFile, browser)
+	
+	# uploadFile = inFolder +"/"+inputFile
+# 	print uploadFile
+# 	tempf = unicode(uploadFile,'utf-8')
+# 	print tempf
+# 	browser.find_element_by_xpath("//*[@id='uploadField']").send_keys(unicode(uploadFile, 'utf-8'))
+# 	#injecting javascript to put in full path here. for some reason sending keys to that specific spot is not working.
+# # 	browser.execute_script('document.forms[0][5].files[0]["mozFullPath"] ='+uploadFile+' ;')
+# 	cont4 = browser.find_element_by_xpath("//*[@id='fMegaUpload']") #click this and upload
+# 	cont4.click()
+# 	print "wait for upload"
+# 	uploadButt = browser.find_element_by_xpath("//*[@id='fNext']").get_attribute('class')
+# 	print uploadButt
 	#while this button is still unclickable keep waiting. but also check to see if there are errors.
-
 
 	elemWait(350, "//*[@id='fNext']",browser)
 
@@ -170,10 +206,6 @@ def luluCruise(inputFile,volumeNum,title):
 	keywords.send_keys("poetry, reference, wiki, mandiberg")
 	description = browser.find_element_by_xpath("//*[@id='descr']")
 	description.send_keys("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx must be 50 chars long")
-	#here for language it would be funny to say it's in javanese
-	#because of java
-	#right?
-	#riight?
 	#automatically set to english
 	copyrightInfo = browser.find_element_by_xpath("//*[@id='copyright']")
 	copyrightInfo.send_keys("Michael Mandiberg")
@@ -191,6 +223,7 @@ def luluCruise(inputFile,volumeNum,title):
 	publisher.send_keys("bad boy records")
 	browser.find_element_by_xpath("//*[@id='fNext']").click()
 	print "set your price page"
+	elemWait(123,"//*[@id='userPrice_11']",browser)
 	setPrice = browser.find_element_by_xpath("//*[@id='userPrice_11']")
 	myPrice="32.97"
 	existingText(setPrice,myPrice)#clear and input new price.
