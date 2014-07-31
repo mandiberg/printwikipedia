@@ -296,6 +296,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	 */
 	public void appendExternalLink(String uriSchemeName, String link, String linkName, boolean withoutSquareBrackets) {
 		link = Utils.escapeXml(link, true, false, false);
+                String nonAlphaPattern ="([^\\d\\w\\s])";
+                linkName = linkName.replaceAll(nonAlphaPattern, "");
 		// is the given link an image?
 		// int indx = link.lastIndexOf(".");
 		// if (indx > 0 && indx < (link.length() - 3)) {
@@ -307,6 +309,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		// return;
 		// }
 		// }
+                System.out.println("\n" + link + " this is link \n");
 		TagNode aTagNode = new TagNode("a");
 		aTagNode.addAttribute("href", link, true);
 		aTagNode.addAttribute("class", "externallink", true);
@@ -317,6 +320,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 			aTagNode.addChild(new ContentToken(linkName));
 		} else {
 			String trimmedText = linkName.trim();
+                        System.out.println("iam trimtext: " + trimmedText);
 			if (trimmedText.length() > 0) {
 				pushNode(aTagNode);
 				WikipediaParser.parseRecursive(trimmedText, this, false, true);

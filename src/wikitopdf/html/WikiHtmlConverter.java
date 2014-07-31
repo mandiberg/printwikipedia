@@ -24,8 +24,10 @@ public class WikiHtmlConverter {
         //replace some of these thigns to see if they are causing the problem
         output = headerToUppercase(output) + "<br />";
         output = output.replace("<hr/>", "");
-        String whitespacePattern = "(<p>\\s+)(</p>)";
+        String whitespacePattern = "(<p>\\s+)(</p>)";//strange empty <p> tags at the end of articles.
         output = output.replaceAll(whitespacePattern,"");
+        String blankHrefPattern = "(<li class=\"toclevel-\\d+\"><a href=\"#\"></a>)";//blank unrenderable href tags in the toc of the article.
+        output = output.replaceAll(blankHrefPattern,"");
 
 //      output = output.replace("<p>\n\n</p>", "");
         System.out.println("\n this is the text\n"+text);
