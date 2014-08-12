@@ -22,16 +22,15 @@ public class WikiHtmlConverter {
         // The other peice of Helvetica text for double paragraph other in PDFPageWrapper
         
         //replace some of these thigns to see if they are causing the problem
-        output = headerToUppercase(output) + "<br />";
+        output = headerToUppercase(output) + "<b>______________________</b><br /><br />";
         output = output.replace("<hr/>", "");
         String whitespacePattern = "(<p>\\s+)(</p>)";//strange empty <p> tags at the end of articles.
         output = output.replaceAll(whitespacePattern,"");
         String blankHrefPattern = "(<li class=\"toclevel-\\d+\"><a href=\"#\"></a>)";//blank unrenderable href tags in the toc of the article.
         output = output.replaceAll(blankHrefPattern,"");
 
-//      output = output.replace("<p>\n\n</p>", "");
-        System.out.println("\n this is the text\n"+text);
-        System.out.println("\n this is the output\n"+output);
+//        System.out.println("\n this is the text\n"+text);
+//        System.out.println("\n this is the output\n"+output);
 
         return output;
     }
