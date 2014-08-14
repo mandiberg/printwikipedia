@@ -65,7 +65,7 @@ public class WikiTitleParser
                     //sqlProcessor.saveTitle(line);
                     
                     //if the pages in the current volume == 670, close current pdf, track volume/page numbers, and start new pdf
-                    if(pdfWrapper.getPagesCount() % 100 == 0 && pdfWrapper.getTitlesCount() > 95)
+                    if(pdfWrapper.getPagesCount() % 700 == 0 && pdfWrapper.getTitlesCount() > 690)
 //                    if(pdfWrapper.getPagesCount() % 670==0)
                     {
                         System.out.println("file " + num);

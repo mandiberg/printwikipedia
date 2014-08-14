@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  */
 public class TitlesFooter extends PdfPageEventHelper
 {
+    public int lineC = 0;
 
     /**
      *
@@ -44,13 +45,12 @@ public class TitlesFooter extends PdfPageEventHelper
         //header doesnt print for first and second pages
         pageNum = writer.getPageNumber() + startPage;
         
-        if(pageNum < 3)
+        if(pageNum < 4)
             return;
 
-        if ((pageNum % 2) == 1)
-        {
-            //writeHeader(writer, document);
-        }
+        
+//            writeHeader(writer, document);
+      
     }
 
     @Override
@@ -152,7 +152,6 @@ public class TitlesFooter extends PdfPageEventHelper
         if(pageNum < 3){
             cb.restoreState();
             return;
-
         }
 
         String text;
@@ -165,14 +164,22 @@ public class TitlesFooter extends PdfPageEventHelper
         if ((pageNum % 2) == 1)
         {
             //Left top corner
-            text = lineList.get(0);
+            text = lineList.get(0+lineC);
             text = text.length() > 20 ? text.substring(0, 20) : text;
             cb.setTextMatrix(document.left(), textBase);
+            cb.showText(text);
+            cb.endText();
+            cb.restoreState();
+//            lineList.clear();
+            return;
+            
         }
         else
         {
             //Right top corner
-            text = lineList.get(lineList.size() - 1);
+            lineC = lineList.size();
+            text = lineList.get(lineC - 1);
+            
 
             //Cut if title very long
             text = text.length() > 20 ? text.substring(0, 20) : text;
@@ -180,13 +187,13 @@ public class TitlesFooter extends PdfPageEventHelper
             float adjust = bsFont.getWidthPoint("0", 8);
             float textSize = bsFont.getWidthPoint(text, 8);
 
-            cb.setTextMatrix(
-                document.right() - textSize - adjust, textBase);
+            cb.setTextMatrix(document.right() - textSize - adjust, textBase);
+            cb.showText(text);
+            cb.endText();
+            cb.restoreState();
+//            lineList.clear();
+            return;
         }
-        cb.showText(text);
-        cb.endText();
-        cb.restoreState();
-        lineList.clear();
 
     }
 

@@ -27,7 +27,7 @@ public class WikiFontSelector {
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-        fontLatin.setSize(10.5f);   
+        fontLatin.setSize(7f);   
         fontLatin.setStyle(fontLatin.BOLD);
 
         //font color is RGB, for example {255,0,0} is RED
@@ -38,7 +38,7 @@ public class WikiFontSelector {
         Font fontGlyph = new Font(bsFontGlyph);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-        fontGlyph.setSize(10.5f); 
+        fontGlyph.setSize(7f); 
         fontGlyph.setStyle(Font.BOLD);
         
         Font helv = new Font(bsHelv);

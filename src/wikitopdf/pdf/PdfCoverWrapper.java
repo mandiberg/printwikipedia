@@ -42,7 +42,7 @@ public class PdfCoverWrapper {
     float[] right = {70, 320};
     float[] left = {300, 550};
     //w = 1129 h = 774 for hc 670 pg book
-    public int width = 1129;//spine = 119 points beginning at 495 points.
+    public int width = 1103;//spine = 119 points beginning at 495 points.
     //meaning that each page is 495 points wide.
     public int height = 774;
     
@@ -230,6 +230,7 @@ public class PdfCoverWrapper {
         Font spine_vol_font = null;
         Font spine_abbr_font = null;
         Font spine_to_font = null;
+        Font main_title_font = null;
         
 	
         
@@ -240,6 +241,7 @@ public class PdfCoverWrapper {
             spine_vol_font = new Font(spine_base, 40);
             spine_abbr_font = new Font(spine_base,20);
             spine_to_font = new Font(spine_base,13);
+            main_title_font = new Font(spine_base,24);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -378,35 +380,58 @@ public class PdfCoverWrapper {
 //        cb.setFontAndSize(times, 20);
 //        cb.setTextMatrix(pdfDocument.right()-562,84);
 //        cb.showText(rSpineTitle.toUpperCase());
+        
+        //printing the title underneath Wikipedia on right cover
         beginTitle = beginTitle + " — ";
         String mainTitle = beginTitle + endTitle;//title as it appears on the front cover
-        String finalTitle ="";
+        PdfPTable tableTitle = new PdfPTable(1);
+        tableTitle.setLockedWidth(false);
+        Paragraph vol_title;
+        vol_title = new Paragraph(mainTitle, main_title_font);
+//        vol_title.setFirstLineIndent(-10f);
+        PdfPCell cell_title;
+        cell_title = new PdfPCell(vol_title);
+        cell_title.setFollowingIndent(50);
+        cell_title.setBorderWidth(0f);
+//        cell_title.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell_title.setVerticalAlignment(Element.ALIGN_TOP);
+        cell_title.setColspan(1);
+        cell_title.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-220f));
+        tableTitle.addCell(cell_title);
+        ColumnText columnTitle = new ColumnText(pdfWriter.getDirectContent());
+        columnTitle.addElement(tableTitle);
+        //llx, lly,urx,ury 
+        columnTitle.setSimpleColumn (637f, pdfDocument.bottom()-170f, 1037f, pdfDocument.top()-330f);
+        columnTitle.go();
         
-        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
-                    wikiFontSelector.getCommonFont().getSize());
-        double titleLength = 89.885;//121.885 is original
         
-        if(widthLine > titleLength){//if the whole thing is too large check to see if you can break it up
-            finalTitle = breakTitle(beginTitle,endTitle,titleLength);
-        }
-        else{
-            finalTitle = mainTitle;
-        }
-        System.out.println(finalTitle+" ///secind FT");
-        
-        cb.beginText();
-        cb.setFontAndSize(times, 24);
-        String[] textArr = finalTitle.split("\r\n");
-        for (int i = 0; i < textArr.length; i++) {
-            if(i>=1){
-                cb.setTextMatrix(pdfDocument.right()-365, 300-(i*18));
-            }
-            else{
-                cb.setTextMatrix(pdfDocument.right()-415, 300-(i*18));
-            }
-            System.out.println(textArr[i] + " this is line");
-            cb.showText(textArr[i]);
-        }
+//        String finalTitle ="";
+//        
+//        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
+//                    wikiFontSelector.getCommonFont().getSize());
+//        double titleLength = 89.885;//121.885 is original
+//        
+//        if(widthLine > titleLength){//if the whole thing is too large check to see if you can break it up
+//            finalTitle = breakTitle(beginTitle,endTitle,titleLength);
+//        }
+//        else{
+//            finalTitle = mainTitle;
+//        }
+//        System.out.println(finalTitle+" ///secind FT");
+//        
+//        cb.beginText();
+//        cb.setFontAndSize(times, 24);
+//        String[] textArr = finalTitle.split("\r\n");
+//        for (int i = 0; i < textArr.length; i++) {
+//            if(i>=1){
+//                cb.setTextMatrix(pdfDocument.right()-365, 300-(i*18));
+//            }
+//            else{
+//                cb.setTextMatrix(pdfDocument.right()-415, 300-(i*18));
+//            }
+//            System.out.println(textArr[i] + " this is line");
+//            cb.showText(textArr[i]);
+//        }
         cb.endText();
      
 //        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +

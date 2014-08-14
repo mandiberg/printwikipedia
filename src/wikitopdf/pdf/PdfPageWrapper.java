@@ -74,30 +74,30 @@ public class PdfPageWrapper {
     //Write title of article to document
     //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
-        Phrase ph;
-        try {
-            line = line.replaceAll("_", " ").toUpperCase();
-            header.setCurrentTitle(line);
-            ph = _wikiFontSelector.getTitleFontSelector().process(line);
-//            ph.setLeading(10);
-            Paragraph pr = new Paragraph(ph);
-//            pr.setSpacingBefore(20);
-//            pr.setSpacingAfter(9);
-
-            if (mct.isOverflow()) {
-                mct.nextColumn();
-                pdfDocument.newPage();
-            }
-            if (pdfWriter.getCurrentPageNumber() > 1) {
-                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
-//                mct.addElement(new Phrase("\n"));
-            }
-
-            mct.addElement(pr);
-            pdfDocument.add(mct);
-        } catch (Exception ex) {
-            WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
-        }
+//        Phrase ph;
+//        try {
+//            line = line.replaceAll("_", " ").toUpperCase();
+//            header.setCurrentTitle(line);
+//            ph = _wikiFontSelector.getTitleFontSelector().process(line);
+////            ph.setLeading(10);
+//            Paragraph pr = new Paragraph(ph);
+////            pr.setSpacingBefore(20);
+////            pr.setSpacingAfter(9);
+//
+//            if (mct.isOverflow()) {
+//                mct.nextColumn();
+//                pdfDocument.newPage();
+//            }
+//            if (pdfWriter.getCurrentPageNumber() > 1) {
+//                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
+////                mct.addElement(new Phrase("\n"));
+//            }
+//
+//            mct.addElement(pr);
+//            pdfDocument.add(mct);
+//        } catch (Exception ex) {
+//            WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
+//        }
     }
 
     //Write article text using defined styles
