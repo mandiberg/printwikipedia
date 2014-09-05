@@ -45,9 +45,10 @@ public class WikiCoverParser {
  * CHANGE THE FOLLOWING LINES TO MAKE COVERS FOR PDF(output) VS. TOC(temp)
  * 
  */
-        
-//        File folder = new File("output");
-        File folder = new File("temp");
+
+//      String use_folder = "output";
+        String use_folder = "temp";
+        File folder = new File(use_folder);
         File[] listOfFiles = folder.listFiles();
        // Arrays.sort(listOfFiles);
 //        for(int i = 0; i<listOfFiles.length-1; i++){
@@ -66,7 +67,7 @@ public class WikiCoverParser {
                 try
                 {
                     System.out.println("Trying " + listOfFiles[i].getName());
-                    pdfWrapper.addCover(listOfFiles[i].getName()); // will parse file name inside pdfWrapper
+                    pdfWrapper.addCover(listOfFiles[i].getName(), use_folder); // will parse file name inside pdfWrapper
                     
                 }   
                 catch (Exception ex)

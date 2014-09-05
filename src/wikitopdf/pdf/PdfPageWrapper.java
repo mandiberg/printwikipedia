@@ -42,6 +42,7 @@ public class PdfPageWrapper {
         //pdfDocument = new Document(new Rectangle(1918, 1018)); //
 
         pdfDocument.setMargins(27, 67.5f, -551, 49.5f);
+        pdfDocument.setMarginMirroring(true);
 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
@@ -53,6 +54,9 @@ public class PdfPageWrapper {
         pdfDocument.open();
         pdfDocument.setMarginMirroring(true);
         _wikiFontSelector = new WikiFontSelector();
+        pdfDocument.add(new Paragraph(""));
+        pdfDocument.newPage();
+        
 
         //PdfContentByte cb = pdfWriter.getDirectContent();
         //ColumnText ct = new ColumnText(cb);
@@ -71,33 +75,34 @@ public class PdfPageWrapper {
         writeText(page.getRevision().getText());
     }
 
+
     //Write title of article to document
     //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
-//        Phrase ph;
-//        try {
-//            line = line.replaceAll("_", " ").toUpperCase();
-//            header.setCurrentTitle(line);
-//            ph = _wikiFontSelector.getTitleFontSelector().process(line);
-////            ph.setLeading(10);
-//            Paragraph pr = new Paragraph(ph);
-////            pr.setSpacingBefore(20);
-////            pr.setSpacingAfter(9);
-//
-//            if (mct.isOverflow()) {
-//                mct.nextColumn();
-//                pdfDocument.newPage();
-//            }
-//            if (pdfWriter.getCurrentPageNumber() > 1) {
-//                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
-////                mct.addElement(new Phrase("\n"));
-//            }
-//
-//            mct.addElement(pr);
-//            pdfDocument.add(mct);
-//        } catch (Exception ex) {
-//            WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
-//        }
+        Phrase ph;
+        try {
+            line = line.replaceAll("_", " ").toUpperCase();
+            header.setCurrentTitle(line);
+            ph = _wikiFontSelector.getTitleFontSelector().process(line);
+//            ph.setLeading(10);
+            Paragraph pr = new Paragraph(ph);
+//            pr.setSpacingBefore(20);
+//            pr.setSpacingAfter(9);
+
+            if (mct.isOverflow()) {
+                mct.nextColumn();
+                pdfDocument.newPage();
+            }
+            if (pdfWriter.getCurrentPageNumber() > 1) {
+                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
+//                mct.addElement(new Phrase("\n"));
+            }
+
+            mct.addElement(pr);
+            pdfDocument.add(mct);
+        } catch (Exception ex) {
+            WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
+        }
     }
 
     //Write article text using defined styles

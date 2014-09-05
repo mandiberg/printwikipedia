@@ -44,7 +44,7 @@ public class PdfTitleWrapper {
         //Read settings
         int curPage = startPage;
         startPage = 0;
-        PdfTitleWrapper.lastLine =lastLine;
+        PdfTitleWrapper.lastLine = lastLine;
         if(PdfTitleWrapper.lastLine!=""){
             new File("temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+".pdf").renameTo(new File(
                     "temp/"+String.format("%04d",PdfTitleWrapper.num)+"&&&"+PdfTitleWrapper.firstLine+"&&&"+PdfTitleWrapper.lastLine+"&&&.pdf"));
@@ -54,14 +54,10 @@ public class PdfTitleWrapper {
 
         pdfDocument = new Document(new Rectangle(432, 648));
         //(l,r,t,b)
-        pdfDocument.setMargins(66f, 63f, 5.5f, 62.5f);
-//        System.out.println("startpage " + curPage);
-//        if ((curPage % 2) == 0){
-//            pdfDocument.setMargins(25.8f, 57.6f, -3f, 58.2f); //if even page then put gutter on right
-//        }
-//        else{
-//            pdfDocument.setMargins(57.6f, 25.8f, -3f, 58.2f);//else gutter left.
-//        }
+        pdfDocument.setMargins(27f, 67.5f, 5.5f, 62.5f);
+        
+        
+
         
 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
@@ -70,7 +66,7 @@ public class PdfTitleWrapper {
         headerFooter = new TitlesFooter(startPage);
         pdfWriter.setPageEvent(headerFooter);
         pdfDocument.open();
-
+        pdfDocument.setMarginMirroring(true);
         wikiFontSelector = new WikiFontSelector();
         //HeaderFooter hf =  new HeaderFooter(new Phrase("head1"), new Phrase("head2"));
 
@@ -137,30 +133,37 @@ public class PdfTitleWrapper {
         return 0;
         
     }
- 
     
     public String longTitle(String line, int sizer) throws DocumentException{
         boolean tooLong = false;
-        if(line.length()<sizer){//sier is the size of the column...
+        String tempLine;
+        if(line.length()<sizer){//sizer is the size of the column...
             return line;
         }
         int near = chopLine(line,sizer);//determine where to cut the line at and start a new line
+        
         String lastLine=line.substring(0,sizer+near);
         line = line.substring(sizer+near);
-        int doo = sizer+near;
-        System.out.println(doo + "  16near outwhile");
+        System.out.println(line.length() + " length of line now");
+//        if(line.length()<5)
+//            noSingleChar(line,lastLine);
         int x = 0;
-        while(line.length()>=sizer+near){//while line is longer than 15 characters
-            near = chopLine(line,sizer);
-            doo = sizer+near;
-            System.out.println(doo + "  16near in while");
+        while(line.length()>=sizer+near){//while line is longer than 20 characters 
+                                         //IF this is the first iteration and the lines larger it'll be skipped
+           near = chopLine(line,sizer);//send off to find a whitespace and chop
            lastLine = lastLine+"\n  "+line.substring(0,sizer+near);
            line = line.substring(sizer+near);
-           if(line.length()<=sizer){
+           if(line.length()<=sizer){//if the remaining line is less than the columnwidth
+               if(line.length()<5){//check to see if there will be a single character left.
+                   //find the last whitespace. 
+                   //if that whitespace and the remining  is less than 8 chars
+                   //remove new line from end of last
+               }
                break;
             }
            x++;
            if(x>=5){//check to see if there should be an added line at the end
+                    //if not then add an elipses and call it a day
             tooLong = true;
             break;
            }
@@ -169,20 +172,16 @@ public class PdfTitleWrapper {
            }
         }
         if(tooLong==false){
-            System.out.println("too long == false");
             if(line.length()>=1){
-                System.out.println(lastLine+ "  /finalLine" );
                 lastLine = lastLine +"\n"+"  "+line;
                 return lastLine;
             }
         }
         else{
-            System.out.println(lastLine+ "  /finalLine" );
             lastLine = lastLine+"...";
             return lastLine;
         }
             
-//        }
         System.out.println(lastLine+ "  /finalLine" );
         return lastLine;
     
@@ -202,7 +201,7 @@ public class PdfTitleWrapper {
                 pr.setKeepTogether(true);//should this always be set to true?
 
             //if word wraps
-            // this needs to be adjusted to indent wrapped words 2013
+            //this needs to be adjusted to indent wrapped words 2013
             
 
             if (mct.isOverflow()) {

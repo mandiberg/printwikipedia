@@ -28,7 +28,7 @@ public class WikiFontSelector {
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
         fontLatin.setSize(7f);   
-        fontLatin.setStyle(fontLatin.BOLD);
+//        fontLatin.setStyle(fontLatin.BOLD);
 
         //font color is RGB, for example {255,0,0} is RED
 //        fontLatin.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);

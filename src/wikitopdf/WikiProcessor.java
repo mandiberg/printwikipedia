@@ -91,6 +91,7 @@ public class WikiProcessor {
                 pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
+                
                 // While still pages in database and still writing pages to this volume 
                 // This inner while loop creates a single pdf volume
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
@@ -149,7 +150,6 @@ public class WikiProcessor {
                 //stamp.stampDir(cPageNum);
                 stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
                 totalPageNum += cPageNum;
-                
                 //Renaming Added May 24 by CE, renames outputfile
                 tempName = tempName.replace("_", "");
                 outputName = "./output/Vol-" + String.format("%05d", cVolNum) + "-" + 

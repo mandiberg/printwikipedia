@@ -41,10 +41,14 @@ public class PdfCoverWrapper {
     private int status = 0;
     float[] right = {70, 320};
     float[] left = {300, 550};
+    int hc_width = 1103;
+    int hc_height = 774;
+    int sc_width = 979;
+    int sc_height = 666;
     //w = 1129 h = 774 for hc 670 pg book
-    public int width = 1103;//spine = 119 points beginning at 495 points.
+    public int width = hc_width;//spine = 119 points beginning at 495 points.
     //meaning that each page is 495 points wide.
-    public int height = 774;
+    public int height = hc_height;
     
         /**
      *
@@ -221,8 +225,8 @@ public class PdfCoverWrapper {
     }
     
     
-        public void addCover(String fileName) throws DocumentException {
-            
+        public void addCover(String fileName, String coverType) throws DocumentException {
+        
         PdfContentByte cb = pdfWriter.getDirectContent();
         //declare my fonts
         BaseFont times = null;
@@ -231,6 +235,7 @@ public class PdfCoverWrapper {
         Font spine_abbr_font = null;
         Font spine_to_font = null;
         Font main_title_font = null;
+        Font sc_main_title_font = null;
         
 	
         
@@ -242,19 +247,41 @@ public class PdfCoverWrapper {
             spine_abbr_font = new Font(spine_base,20);
             spine_to_font = new Font(spine_base,13);
             main_title_font = new Font(spine_base,24);
+            sc_main_title_font = new Font(spine_base, 20);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         cb.beginText();
-        
         cb.setFontAndSize(times, 90);
-        cb.setTextMatrix(pdfDocument.right() - 440, 600);
+        cb.setTextMatrix(pdfDocument.right() - 440, pdfDocument.top()-272);
         cb.showText("Wikipedia");
-        
-        cb.setFontAndSize(times, 40);
+         String main_spine;
+        if(coverType == "temp"){
+            main_spine = "Wikipedia Table of Contents";
+            
+            cb.setFontAndSize(times, 43);
+            cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
+            cb.showText("Table of");
+            
+            cb.setFontAndSize(times, 43);
+            cb.setTextMatrix(pdfDocument.right()-213, pdfDocument.top()-315);
+            cb.showText("Contents");
+            
+            //add other parameters that would differ here depending on pdf or temp.
+        }
+        else{
+            main_spine = "Wikipedia";
+            //again add in other parameters here.
+        }
+        int hc_title_size = 40;
+        int sc_title_size = 35;
+        cb.setFontAndSize(times,hc_title_size);
         cb.setTextMatrix(50, 595);
-        cb.showTextAligned(0,"Wikipedia Table of Contents",558,705,270);
+        //sc
+//        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
+        //hc
+        cb.showTextAligned(0,main_spine,558,705,270);
         cb.setFontAndSize(times, 12);
         cb.setTextMatrix(pdfDocument.right()-230, 70);
         cb.showText("May 2014 Edition");
@@ -268,8 +295,9 @@ public class PdfCoverWrapper {
         //****replace the leading zeroes**
         volNumber = volNumber.replaceFirst("^0+(?!$)", "");
         cb.setFontAndSize(times, 18);
-        cb.setTextMatrix(pdfDocument.right() - 150, 572);
-        cb.showText("Volume "+ volNumber);
+//        cb.setTextMatrix(pdfDocument.right() - 150, pdfDocument.top()-330);
+        cb.showTextAligned(2, "Volume "+volNumber, pdfDocument.right()-48.7f, pdfDocument.top()-336, status);
+//        cb.showText("Volume "+ volNumber);
         
 
         String lSpineTitle = "";
@@ -309,12 +337,17 @@ public class PdfCoverWrapper {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setColspan(1);
-        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-220f));
+        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-200f));
         table1.addCell(cell);
         ColumnText column = new ColumnText(pdfWriter.getDirectContent());
         column.addElement(table1);
         //llx, lly,urx,ury 
-        column.setSimpleColumn (494.64f, pdfDocument.bottom()-170f, 632.88f, pdfDocument.top()-50f);
+        float llx_hc_volnum = 513.64f;
+        float urx_hc_volnum = 623.88f;
+        float llx_sc_volnum = 391f;
+        float urx_sc_volnum = 506f;
+        float lly_sc_volnum = 830f;
+        column.setSimpleColumn (llx_hc_volnum, pdfDocument.bottom()-170, urx_hc_volnum, pdfDocument.top()-50f);
         column.go();
         
         //spine section for first abbreviated title
@@ -329,7 +362,11 @@ public class PdfCoverWrapper {
         ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
         column2.addElement(table2);
         //llx, lly,urx,ury 
-        column2.setSimpleColumn (494.64f, pdfDocument.bottom()-170f, 632.88f, pdfDocument.top()-50f);
+        float llx_hc_fa = 504.64f;
+        float urx_hc_fa = 632.88f;
+        float llx_sc_fa = 395f;
+        float urx_sc_fa  = 497f;
+        column2.setSimpleColumn (llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
         column2.go();
         
         //third table for TO
@@ -344,7 +381,7 @@ public class PdfCoverWrapper {
         ColumnText column3 = new ColumnText(pdfWriter.getDirectContent());
         column3.addElement(table3);
         //llx, lly,urx,ury 
-        column3.setSimpleColumn (494.64f, pdfDocument.bottom()-170f, 632.88f, pdfDocument.top()-50f);
+        column3.setSimpleColumn(llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
         column3.go();
         
         //4th table for second abbreviated title!
@@ -359,12 +396,8 @@ public class PdfCoverWrapper {
         ColumnText column4 = new ColumnText(pdfWriter.getDirectContent());
         column4.addElement(table4);
         //llx, lly,urx,ury 
-        column4.setSimpleColumn (494.64f, pdfDocument.bottom()-170f, 632.88f, pdfDocument.top()-50f);
+        column4.setSimpleColumn (llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
         column4.go();
-        //18 less
-        
-        
-        //all this stuff is unecessary at this piont!!!!!
         
         
         
@@ -385,23 +418,31 @@ public class PdfCoverWrapper {
         beginTitle = beginTitle + " — ";
         String mainTitle = beginTitle + endTitle;//title as it appears on the front cover
         PdfPTable tableTitle = new PdfPTable(1);
+        tableTitle.setSpacingBefore(400);
+        tableTitle.setSplitRows(true);
         tableTitle.setLockedWidth(false);
         Paragraph vol_title;
         vol_title = new Paragraph(mainTitle, main_title_font);
-//        vol_title.setFirstLineIndent(-10f);
-        PdfPCell cell_title;
-        cell_title = new PdfPCell(vol_title);
-        cell_title.setFollowingIndent(50);
+        PdfPCell cell_title = new PdfPCell(vol_title);   
+        cell_title.setPaddingRight(-30);//to force the words over a bit more subtract from right padding. -30 seems to work perfectly.
+        cell_title.setFollowingIndent(40);
         cell_title.setBorderWidth(0f);
-//        cell_title.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell_title.setLeading(20f, .3f);
+//      cell_title.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell_title.setVerticalAlignment(Element.ALIGN_TOP);
+//        cell_title.setFixedHeight(urx_sc_fa);
         cell_title.setColspan(1);
         cell_title.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-220f));
         tableTitle.addCell(cell_title);
+        
         ColumnText columnTitle = new ColumnText(pdfWriter.getDirectContent());
         columnTitle.addElement(tableTitle);
         //llx, lly,urx,ury 
-        columnTitle.setSimpleColumn (637f, pdfDocument.bottom()-170f, 1037f, pdfDocument.top()-330f);
+        float llx_hc_vol_title = 631f;
+        float urx_hc_vol_title= 1037f;
+        float urx_sc_vol_title = 937f;
+        float llx_sc_vol_title  =  531f;
+        columnTitle.setSimpleColumn (llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, pdfDocument.top()-390f);
         columnTitle.go();
         
         

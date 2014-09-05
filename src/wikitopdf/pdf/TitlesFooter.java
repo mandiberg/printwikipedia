@@ -101,9 +101,9 @@ public class TitlesFooter extends PdfPageEventHelper
             cb.setTextMatrix(
             document.right() - textSize - adjust, textBase);
             //Write header
-            //writeHeader(writer, document);
+//            writeHeader(writer, document);
         }
-        //writeHeader(writer, document);
+        writeHeader(writer, document);
 
         cb.showText(text);
         cb.endText();
