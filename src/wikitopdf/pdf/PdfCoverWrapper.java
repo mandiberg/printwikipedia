@@ -256,17 +256,20 @@ public class PdfCoverWrapper {
         cb.setFontAndSize(times, 90);
         cb.setTextMatrix(pdfDocument.right() - 440, pdfDocument.top()-272);
         cb.showText("Wikipedia");
+        cb.endText();
          String main_spine;
         if(coverType == "temp"){
             main_spine = "Wikipedia Table of Contents";
-            
+            cb.beginText();
             cb.setFontAndSize(times, 43);
             cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
             cb.showText("Table of");
-            
+            cb.endText();
+            cb.beginText();
             cb.setFontAndSize(times, 43);
             cb.setTextMatrix(pdfDocument.right()-213, pdfDocument.top()-315);
             cb.showText("Contents");
+            cb.endText();
             
             //add other parameters that would differ here depending on pdf or temp.
         }
@@ -276,6 +279,7 @@ public class PdfCoverWrapper {
         }
         int hc_title_size = 40;
         int sc_title_size = 35;
+        cb.beginText();
         cb.setFontAndSize(times,hc_title_size);
         cb.setTextMatrix(50, 595);
         //sc
@@ -285,6 +289,7 @@ public class PdfCoverWrapper {
         cb.setFontAndSize(times, 12);
         cb.setTextMatrix(pdfDocument.right()-230, 70);
         cb.showText("May 2014 Edition");
+        cb.endText();
         //Use the code below to create rotated text the first constant indicates alignment,
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
@@ -473,7 +478,7 @@ public class PdfCoverWrapper {
 //            System.out.println(textArr[i] + " this is line");
 //            cb.showText(textArr[i]);
 //        }
-        cb.endText();
+//        cb.endText();
      
 //        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
 //                "Permission is granted to copy, distribute and/or modify this document under the \r\n" +

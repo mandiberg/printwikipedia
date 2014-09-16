@@ -133,57 +133,149 @@ public class PdfTitleWrapper {
         return 0;
         
     }
-    
-    public String longTitle(String line, int sizer) throws DocumentException{
-        boolean tooLong = false;
-        String tempLine;
-        if(line.length()<sizer){//sizer is the size of the column...
-            return line;
-        }
-        int near = chopLine(line,sizer);//determine where to cut the line at and start a new line
-        
-        String lastLine=line.substring(0,sizer+near);
-        line = line.substring(sizer+near);
-        System.out.println(line.length() + " length of line now");
-//        if(line.length()<5)
-//            noSingleChar(line,lastLine);
+       
+    public int findSpace(String line, String lastLine, int sizer,boolean secondLine){
         int x = 0;
-        while(line.length()>=sizer+near){//while line is longer than 20 characters 
-                                         //IF this is the first iteration and the lines larger it'll be skipped
-           near = chopLine(line,sizer);//send off to find a whitespace and chop
-           lastLine = lastLine+"\n  "+line.substring(0,sizer+near);
-           line = line.substring(sizer+near);
-           if(line.length()<=sizer){//if the remaining line is less than the columnwidth
-               if(line.length()<5){//check to see if there will be a single character left.
-                   //find the last whitespace. 
-                   //if that whitespace and the remining  is less than 8 chars
-                   //remove new line from end of last
-               }
-               break;
-            }
-           x++;
-           if(x>=5){//check to see if there should be an added line at the end
-                    //if not then add an elipses and call it a day
-            tooLong = true;
-            break;
-           }
-           else{
-               tooLong = false;
-           }
-        }
-        if(tooLong==false){
-            if(line.length()>=1){
-                lastLine = lastLine +"\n"+"  "+line;
-                return lastLine;
+        for(x = sizer; x > 0; x--){//start the forloop going backwards from that part of the string
+            Character c;
+            c = line.charAt(x);
+            System.out.println(c + " char");
+            if(c == ' ' || c == '-')//check for last space before end
+                return x;
+            if(x <= 1){
+                break;
             }
         }
-        else{
-            lastLine = lastLine+"...";
-            return lastLine;
-        }
+        //can't find a space in the huge word so brute force cut it at 0
+        System.out.println(x + " in findspace");
+        return sizer;
+    }
+    
+    public String longTitle(String line, int sizer) throws DocumentException{//if the title is too long
+        System.out.println(line + " STARTING LINE");
+        Character c;
+        String lastLine="";
+        String tempLine="";
+        int slice_at;
+        int orig_line_len = line.length();
+        int cur_line_len = orig_line_len;
+        int x =0;
+        String separator = "\n  ";
+        boolean secondLine=false;
+        boolean inLine = false;
+        while(inLine == false){
+            System.out.println(cur_line_len + " this is current line length");
+            if(secondLine==true)//if there has been one line you want to indent so sizer is -3
+                sizer=sizer-3;
+            if(cur_line_len <= sizer && secondLine == true){
+                System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl TRUE");
+                lastLine = lastLine + separator +line;
+                inLine = true;
+                System.out.println(lastLine + " FULL DONE");
+                break;
+            }
+            if(cur_line_len <= sizer && secondLine == false){
+                System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl FALSE");
+                if(lastLine == "")
+                    separator="";
+                lastLine = lastLine + separator + line;
+                inLine = true;
+                System.out.println(lastLine + " &&&FULL DONE");
+                break;
+            }
+            if(cur_line_len > sizer){//if the current line length is larger than the width of the current column
+                if(cur_line_len < orig_line_len)//check if the current is less than original, that means we have iterated through before.
+                    secondLine = true;
+                for(int i=0;i<cur_line_len;i++){//iterate through line
+                    c = line.charAt(i);//create char at last char before break
+                    System.out.println(c);
+                    if(i>1 && (i%sizer==0)){//whenever you hit the end of the column
+                        slice_at  = findSpace(line,lastLine,sizer,secondLine);//find a space by counting backwards with the findspace function. it returns a string
+                        if(secondLine==true){//if lastline has been turned into a non empty string
+                            if(x>5)
+                                return lastLine + "...";
+                            
+                            lastLine = lastLine+"\n  "+line.substring(0,slice_at);
+                            line = line.substring(slice_at);
+                            cur_line_len = line.length();
+                            System.out.println(lastLine + " this is lastLine after chopping & secondline is TRUE");
+                            break;
+                        }
+                        else{
+                            lastLine=line.substring(0,slice_at);
+                            line=line.substring(slice_at);
+                            cur_line_len = line.length();
+                            System.out.println(lastLine + " this is lastLine after chopping & secondline is FALSE");
+                            break;
+                        }
+                    }
+                    lastLine=lastLine+tempLine;
+                    if(i==line.length()){
+                        inLine = true;
+                        break;
+                    }
+                }
+            }
             
-        System.out.println(lastLine+ "  /finalLine" );
+            x++;
+            
+            
+        }
+
+        System.out.println(lastLine + " lastLine just before return");
+        System.out.println(line + " line before return");
+        
         return lastLine;
+        
+//        boolean tooLong = false;
+//        String tempLine;
+//        if(line.length()<sizer){//sizer is the size of the column...
+//            return line;
+//        }
+//        int near = chopLine(line,sizer);//determine where to cut the line at and start a new line
+//        
+//        lastLine=line.substring(0,sizer+near);
+//        line = line.substring(sizer+near);
+//        System.out.println(line.length() + " length of line now");
+////        if(line.length()<5)
+////            noSingleChar(line,lastLine);
+//        int x = 0;
+//        while(line.length()>=sizer+near){//while line is longer than 20 characters 
+//                                         //IF this is the first iteration and the lines larger it'll be skipped
+//           near = chopLine(line,sizer);//send off to find a whitespace and chop
+//           lastLine = lastLine+"\n  "+line.substring(0,sizer+near);
+//           line = line.substring(sizer+near);
+//           if(line.length()<=sizer){//if the remaining line is less than the columnwidth
+//               if(line.length()<5){//check to see if there will be a single character left.
+//                   //find the last whitespace. 
+//                   //if that whitespace and the remining  is less than 8 chars
+//                   //remove new line from end of last
+//               }
+//               break;
+//            }
+//           x++;
+//           if(x>=5){//check to see if there should be an added line at the end
+//                    //if not then add an elipses and call it a day
+//            tooLong = true;
+//            break;
+//           }
+//           else{
+//               tooLong = false;
+//           }
+//        }
+//        if(tooLong==false){
+//            if(line.length()>=1){
+//                lastLine = lastLine +"\n"+"  "+line;
+//                return lastLine;
+//            }
+//        }
+//        else{
+//            lastLine = lastLine+"...";
+//            return lastLine;
+//        }
+//            
+        
+//        return lastLine;
     
     }
     public void writeTitle(String line) throws DocumentException {
@@ -193,7 +285,6 @@ public class PdfTitleWrapper {
             if (widthLine > 40) {
                 line = longTitle(line,20);//do the function returning the correct string.
             }
-                
                 Phrase ph = wikiFontSelector.getTitleFontSelector().process(line);
                 ph.setLeading(8);
                 Paragraph pr = new Paragraph(ph);
