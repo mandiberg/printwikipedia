@@ -185,18 +185,6 @@ public class PdfCoverWrapper {
             catch (DocumentException ex) {
                 Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
-//            if(endWidth>titleLength){
-//                try{
-//                    endTitle=longTitle(endTitle,27,true);//if second title is larger and it's already broken then send true
-//                                                    //so that sizer is not broken 5 chars earlier
-//                }
-//                catch(DocumentException ex) {
-//                    Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
-//                }//end catch
-//            }//end if endtitle
-//            finalTitle = beginTitle+endTitle;
-//            System.out.println(finalTitle + " this is finaltitle before she airs.");
-//            return finalTitle;
         }
         boolean nextLine = false;
         float tempFirstWidth = firstTitleResize(beginTitle,titleLength);
@@ -246,30 +234,30 @@ public class PdfCoverWrapper {
             spine_vol_font = new Font(spine_base, 40);
             spine_abbr_font = new Font(spine_base,20);
             spine_to_font = new Font(spine_base,13);
-            main_title_font = new Font(spine_base,24);
+            main_title_font = new Font(spine_base,17);
             sc_main_title_font = new Font(spine_base, 20);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         cb.beginText();
-        cb.setFontAndSize(times, 90);
-        cb.setTextMatrix(pdfDocument.right() - 440, pdfDocument.top()-272);
+        cb.setFontAndSize(times, 76.93f);
+        cb.setTextMatrix(697f, pdfDocument.top()-280);
         cb.showText("Wikipedia");
         cb.endText();
          String main_spine;
         if(coverType == "temp"){
             main_spine = "Wikipedia Table of Contents";
-            cb.beginText();
-            cb.setFontAndSize(times, 43);
-            cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
-            cb.showText("Table of");
-            cb.endText();
-            cb.beginText();
-            cb.setFontAndSize(times, 43);
-            cb.setTextMatrix(pdfDocument.right()-213, pdfDocument.top()-315);
-            cb.showText("Contents");
-            cb.endText();
+//            cb.beginText();
+//            cb.setFontAndSize(times, 43);
+//            cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
+//            cb.showText("Table of");
+//            cb.endText();
+//            cb.beginText();
+//            cb.setFontAndSize(times, 43);
+//            cb.setTextMatrix(pdfDocument.right()-213, pdfDocument.top()-315);
+//            cb.showText("Contents");
+//            cb.endText();
             
             //add other parameters that would differ here depending on pdf or temp.
         }
@@ -286,10 +274,12 @@ public class PdfCoverWrapper {
 //        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
         //hc
         cb.showTextAligned(0,main_spine,558,705,270);
-        cb.setFontAndSize(times, 12);
-        cb.setTextMatrix(pdfDocument.right()-230, 70);
-        cb.showText("May 2014 Edition");
         cb.endText();
+//        cb.beginText();
+//        cb.setFontAndSize(times, 12);
+//        cb.setTextMatrix(pdfDocument.right()-230, 70);
+//        cb.showText("May 2014 Edition");
+//        cb.endText();
         //Use the code below to create rotated text the first constant indicates alignment,
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
@@ -342,7 +332,7 @@ public class PdfCoverWrapper {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setColspan(1);
-        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-200f));
+        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-223f));
         table1.addCell(cell);
         ColumnText column = new ColumnText(pdfWriter.getDirectContent());
         column.addElement(table1);
@@ -362,7 +352,7 @@ public class PdfCoverWrapper {
         cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell2.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell2.setColspan(1);
-        cell2.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-180f));
+        cell2.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-176f));
         table2.addCell(cell2);
         ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
         column2.addElement(table2);
@@ -404,21 +394,6 @@ public class PdfCoverWrapper {
         column4.setSimpleColumn (llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
         column4.go();
         
-        
-        
-        
-        
-        
-//        cb.setFontAndSize(times, 20);
-//        cb.setTextMatrix(pdfDocument.right()-562,120);
-//        cb.showText(lSpineTitle.toUpperCase());
-//        cb.setFontAndSize(times, 13);
-//        cb.setTextMatrix(pdfDocument.right()-549,102);
-//        cb.showText("TO");
-//        cb.setFontAndSize(times, 20);
-//        cb.setTextMatrix(pdfDocument.right()-562,84);
-//        cb.showText(rSpineTitle.toUpperCase());
-        
         //printing the title underneath Wikipedia on right cover
         beginTitle = beginTitle + " — ";
         String mainTitle = beginTitle + endTitle;//title as it appears on the front cover
@@ -429,83 +404,26 @@ public class PdfCoverWrapper {
         Paragraph vol_title;
         vol_title = new Paragraph(mainTitle, main_title_font);
         PdfPCell cell_title = new PdfPCell(vol_title);   
-        cell_title.setPaddingRight(-30);//to force the words over a bit more subtract from right padding. -30 seems to work perfectly.
+//        cell_title.setPaddingRight(-30);//to force the words over a bit more subtract from right padding. -30 seems to work perfectly.
         cell_title.setFollowingIndent(40);
         cell_title.setBorderWidth(0f);
         cell_title.setLeading(20f, .3f);
-//      cell_title.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell_title.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell_title.setVerticalAlignment(Element.ALIGN_TOP);
 //        cell_title.setFixedHeight(urx_sc_fa);
         cell_title.setColspan(1);
-        cell_title.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-220f));
+        cell_title.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-144f));
         tableTitle.addCell(cell_title);
         
         ColumnText columnTitle = new ColumnText(pdfWriter.getDirectContent());
         columnTitle.addElement(tableTitle);
         //llx, lly,urx,ury 
         float llx_hc_vol_title = 631f;
-        float urx_hc_vol_title= 1037f;
+        float urx_hc_vol_title= 1073.5f;
         float urx_sc_vol_title = 937f;
         float llx_sc_vol_title  =  531f;
-        columnTitle.setSimpleColumn (llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, pdfDocument.top()-390f);
+        columnTitle.setSimpleColumn (llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, 144f);
         columnTitle.go();
-        
-        
-//        String finalTitle ="";
-//        
-//        float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(mainTitle,
-//                    wikiFontSelector.getCommonFont().getSize());
-//        double titleLength = 89.885;//121.885 is original
-//        
-//        if(widthLine > titleLength){//if the whole thing is too large check to see if you can break it up
-//            finalTitle = breakTitle(beginTitle,endTitle,titleLength);
-//        }
-//        else{
-//            finalTitle = mainTitle;
-//        }
-//        System.out.println(finalTitle+" ///secind FT");
-//        
-//        cb.beginText();
-//        cb.setFontAndSize(times, 24);
-//        String[] textArr = finalTitle.split("\r\n");
-//        for (int i = 0; i < textArr.length; i++) {
-//            if(i>=1){
-//                cb.setTextMatrix(pdfDocument.right()-365, 300-(i*18));
-//            }
-//            else{
-//                cb.setTextMatrix(pdfDocument.right()-415, 300-(i*18));
-//            }
-//            System.out.println(textArr[i] + " this is line");
-//            cb.showText(textArr[i]);
-//        }
-//        cb.endText();
-     
-//        String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +
-//                "Permission is granted to copy, distribute and/or modify this document under the \r\n" +
-//                "terms of the GNU Free Documentation License, Version 1.2 or any later version \r\n" +
-//                "published by the Free Software Foundation; with no Invariant Sections, no \r\n" +
-//                "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included \r\n" +
-//                "in the section entitled ‚\"GNU Free Documentation License\".";
-//
-//        cb.beginText();
-//        cb.setFontAndSize(times, 8);
-//
-//        String[] textArr = copyrightText.split("\r\n");
-//        for (int i = 0; i < textArr.length; i++) {
-//            cb.setTextMatrix(pdfDocument.left() + 520, 100 - (i * 10));
-//            cb.showText(textArr[i]);
-//        }
-//        cb.endText();
- //       pdfDocument.newPage();
-        
-
-// add a rectangle
-//cb.rectangle(495, 0, 195, height);
-//// stroke the lines
-//cb.setColorStroke(Color.BLACK);
-//cb.stroke();
-
-        
         
     }
 
