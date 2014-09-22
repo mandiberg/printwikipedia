@@ -226,57 +226,6 @@ public class PdfTitleWrapper {
         System.out.println(line + " line before return");
         
         return lastLine;
-        
-//        boolean tooLong = false;
-//        String tempLine;
-//        if(line.length()<sizer){//sizer is the size of the column...
-//            return line;
-//        }
-//        int near = chopLine(line,sizer);//determine where to cut the line at and start a new line
-//        
-//        lastLine=line.substring(0,sizer+near);
-//        line = line.substring(sizer+near);
-//        System.out.println(line.length() + " length of line now");
-////        if(line.length()<5)
-////            noSingleChar(line,lastLine);
-//        int x = 0;
-//        while(line.length()>=sizer+near){//while line is longer than 20 characters 
-//                                         //IF this is the first iteration and the lines larger it'll be skipped
-//           near = chopLine(line,sizer);//send off to find a whitespace and chop
-//           lastLine = lastLine+"\n  "+line.substring(0,sizer+near);
-//           line = line.substring(sizer+near);
-//           if(line.length()<=sizer){//if the remaining line is less than the columnwidth
-//               if(line.length()<5){//check to see if there will be a single character left.
-//                   //find the last whitespace. 
-//                   //if that whitespace and the remining  is less than 8 chars
-//                   //remove new line from end of last
-//               }
-//               break;
-//            }
-//           x++;
-//           if(x>=5){//check to see if there should be an added line at the end
-//                    //if not then add an elipses and call it a day
-//            tooLong = true;
-//            break;
-//           }
-//           else{
-//               tooLong = false;
-//           }
-//        }
-//        if(tooLong==false){
-//            if(line.length()>=1){
-//                lastLine = lastLine +"\n"+"  "+line;
-//                return lastLine;
-//            }
-//        }
-//        else{
-//            lastLine = lastLine+"...";
-//            return lastLine;
-//        }
-//            
-        
-//        return lastLine;
-    
     }
     public void writeTitle(String line) throws DocumentException {
         try {
@@ -395,30 +344,14 @@ public class PdfTitleWrapper {
         cb.setFontAndSize(times, 32);
         cb.setTextMatrix(pdfDocument.right() - 130, 500);
         cb.showText("Wikipedia");
-        
+        cb.endText();
+        cb.beginText();
         cb.setFontAndSize(times, 8);
         cb.setTextMatrix(pdfDocument.right() - 50, 490);
         cb.showText("table of contents");
         
-//        cb.setFontAndSize(times, 12);
-//        cb.setTextMatrix(pdfDocument.right() - 200, 200);
-//        cb.showText("testing - delete me");
-        
-        cb.endText();
-               
-        /*
-        // adding blank page - WHY ISN'T THIS WORKING???
-        cb.beginText();
-        
-        cb.setFontAndSize(times, 32);
-        cb.setTextMatrix(pdfDocument.right() - 130, 500);
-        cb.showText("blank page");
-        
         cb.endText();
 
-        pdfDocument.newPage();
-*/
-        
         
         
         String copyrightText = "Copyright (c) 2013 WIKIMEDIA FOUNDATION. \r\n" +

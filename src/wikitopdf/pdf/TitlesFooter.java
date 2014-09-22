@@ -86,26 +86,28 @@ public class TitlesFooter extends PdfPageEventHelper
         System.out.println("page " + pageNum);
         PdfContentByte cb = writer.getDirectContent();
         cb.saveState();
-        String text = String.valueOf(pageNum);
+        String pNumString = String.valueOf(pageNum);
         float textBase = document.bottom() - 9;
-        float textSize = bsFont.getWidthPoint(text, 8);
+        float textSize = bsFont.getWidthPoint(pNumString, 8);
         cb.beginText();
         cb.setFontAndSize(bsFont, 8);
         if ((pageNum % 2) == 1)
         {
             cb.setTextMatrix(document.left(), textBase);
+            cb.showText(pNumString);
         }
         else
         {
             float adjust = bsFont.getWidthPoint("0", 8);
             cb.setTextMatrix(
             document.right() - textSize - adjust, textBase);
+            cb.showText(pNumString);
             //Write header
 //            writeHeader(writer, document);
         }
         writeHeader(writer, document);
 
-        cb.showText(text);
+        
         cb.endText();
         cb.restoreState();
     }
@@ -148,28 +150,29 @@ public class TitlesFooter extends PdfPageEventHelper
     {
         pageNum = writer.getPageNumber() + startPage;
         PdfContentByte cb = writer.getDirectContent();
-        cb.saveState();
+//        cb.saveState();
         if(pageNum < 3){
-            cb.restoreState();
+//            cb.restoreState();
             return;
         }
 
         String text;
         float textBase = document.top() - 53;
         
-        cb.beginText();
-        cb.setFontAndSize(bsFont, 8);
+        
 
 
         if ((pageNum % 2) == 1)
         {
             //Left top corner
+//            cb.beginText();
+            cb.setFontAndSize(bsFont, 8);
             text = lineList.get(0+lineC);
             text = text.length() > 20 ? text.substring(0, 20) : text;
             cb.setTextMatrix(document.left(), textBase);
             cb.showText(text);
-            cb.endText();
-            cb.restoreState();
+//            cb.endText();
+//            cb.restoreState();
 //            lineList.clear();
             return;
             
@@ -177,6 +180,8 @@ public class TitlesFooter extends PdfPageEventHelper
         else
         {
             //Right top corner
+//            cb.beginText();
+            cb.setFontAndSize(bsFont, 8);
             lineC = lineList.size();
             text = lineList.get(lineC - 1);
             
@@ -189,13 +194,14 @@ public class TitlesFooter extends PdfPageEventHelper
 
             cb.setTextMatrix(document.right() - textSize - adjust, textBase);
             cb.showText(text);
-            cb.endText();
-            cb.restoreState();
+//            cb.endText();
+//            cb.restoreState();
 //            lineList.clear();
             return;
         }
 
     }
+    
 
     /**
      *
@@ -205,7 +211,7 @@ public class TitlesFooter extends PdfPageEventHelper
     {
         return this.lineList.size();
     }
-
+    private PdfContentByte contentPage;
     private PdfTemplate total;
     private BaseFont bsFont;
     private int pageNum = 0;

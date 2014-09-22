@@ -242,7 +242,7 @@ public class PdfCoverWrapper {
 
         cb.beginText();
         cb.setFontAndSize(times, 76.93f);
-        cb.setTextMatrix(697f, pdfDocument.top()-280);
+        cb.setTextMatrix(695f, pdfDocument.top()-280);
         cb.showText("Wikipedia");
         cb.endText();
          String main_spine;
@@ -273,7 +273,7 @@ public class PdfCoverWrapper {
         //sc
 //        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
         //hc
-        cb.showTextAligned(0,main_spine,558,705,270);
+        cb.showTextAligned(0,main_spine,555,705,270);
         cb.endText();
 //        cb.beginText();
 //        cb.setFontAndSize(times, 12);
@@ -289,9 +289,9 @@ public class PdfCoverWrapper {
         String volNumber = titleArr[0];
         //****replace the leading zeroes**
         volNumber = volNumber.replaceFirst("^0+(?!$)", "");
-        cb.setFontAndSize(times, 18);
+//        cb.setFontAndSize(times, 18);
 //        cb.setTextMatrix(pdfDocument.right() - 150, pdfDocument.top()-330);
-        cb.showTextAligned(2, "Volume "+volNumber, pdfDocument.right()-48.7f, pdfDocument.top()-336, status);
+//        cb.showTextAligned(2, "Volume "+volNumber, pdfDocument.right()-48.7f, pdfDocument.top()-336, status);
 //        cb.showText("Volume "+ volNumber);
         
 
@@ -337,8 +337,8 @@ public class PdfCoverWrapper {
         ColumnText column = new ColumnText(pdfWriter.getDirectContent());
         column.addElement(table1);
         //llx, lly,urx,ury 
-        float llx_hc_volnum = 513.64f;
-        float urx_hc_volnum = 623.88f;
+        float llx_hc_volnum = 510.64f;
+        float urx_hc_volnum = 620.88f;
         float llx_sc_volnum = 391f;
         float urx_sc_volnum = 506f;
         float lly_sc_volnum = 830f;
@@ -357,8 +357,8 @@ public class PdfCoverWrapper {
         ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
         column2.addElement(table2);
         //llx, lly,urx,ury 
-        float llx_hc_fa = 504.64f;
-        float urx_hc_fa = 632.88f;
+        float llx_hc_fa = 501.64f;
+        float urx_hc_fa = 629.88f;
         float llx_sc_fa = 395f;
         float urx_sc_fa  = 497f;
         column2.setSimpleColumn (llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
