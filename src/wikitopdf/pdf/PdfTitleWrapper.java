@@ -49,7 +49,8 @@ public class PdfTitleWrapper {
             new File("temp/tocVol-"+PdfTitleWrapper.num+"-"+PdfTitleWrapper.firstLine+".pdf").renameTo(new File(
                     "temp/"+String.format("%04d",PdfTitleWrapper.num)+"&&&"+PdfTitleWrapper.firstLine+"&&&"+PdfTitleWrapper.lastLine+"&&&.pdf"));
         }
-        firstLine = firstLine.replaceAll("[_]"," ");//get rid of the _ for pretty printing :>
+        firstLine = firstLine.replaceAll("[_]"," ");
+        firstLine = firstLine.replace("/","\\");//gets confused on filenames with / as is supposed to be directory separator
         String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
 
         pdfDocument = new Document(new Rectangle(432, 648));

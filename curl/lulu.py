@@ -6,6 +6,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from PIL import Image
+from pyPdf import PdfFileWriter, PdfFileReader
+from reportlab.pdfgen import canvas
+from StringIO import StringIO
 
 import selenium
 import os
@@ -18,13 +21,15 @@ global pwd
 global outFolder
 global inFolder
 global browser
+global cFolder
 pwd = os.path.abspath(os.getcwd())
 outFolder= pwd+"/out"
 inFolder= pwd+"/in"
+cFolder = pwd+"/covers"
 #open file and read what last char is. if 0 not finished so find last entry in line and then use that one
 #other chars mean different things but for right now we'll do this
 
-def immigration(volumeNum,inputFile,browser):
+def immigration(volumeNum,inputFile,browser):#move file from one folder to another. give next file over.
 	browser.quit()
 	print "immigration office. moving volume "+ volumeNum
 	for i in os.listdir(inFolder):
@@ -38,9 +43,9 @@ def immigration(volumeNum,inputFile,browser):
 		if i == '.DS_Store':
 			print "ignore .ds_store"
 			continue
-		splitFile = i.split('-')
+		splitFile = i.split('&&&')
 		print splitFile
-		nextDest = int(splitFile[1])#also change that to an int to compare with nextcheck
+		nextDest = int(splitFile[0])#also change that to an int to compare with nextcheck
 		print nextDest
 		print nextCheck
 		if nextCheck == nextDest:
@@ -49,7 +54,7 @@ def immigration(volumeNum,inputFile,browser):
 			travelAgent(i)
 			break
 
-def elemWait(waitTime,waitElement,browser): #this is a certain kind of wait (uploads and flash loading screens lulu likes)
+def elemWait(waitTime,waitElement,browser): #this is a certain kind of wait (upload buttons and loading screens)
 	try:
 		WebDriverWait(browser, waitTime).until(EC.presence_of_element_located((By.XPATH, waitElement)))
 		return True
@@ -69,25 +74,29 @@ def execution(browser,waitElement,waitTime,ex_type):#called whenever interacting
 	else:
 		print "something went wrong here"
 		return False
-def iterateFiles(inputFile, browser, encoding="utf-8"):
+def iterateFiles(inputFile, browser, encoding="utf-8"):#go through fileslist to upload pdf doc. 
 	print "about to go through files"
 	print "get in iframe"
 	browser.switch_to_frame(browser.find_element_by_tag_name("iframe"))
-	numXpath = "/html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/span[2]"
-	submitButton = "/html/body/div/div/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/input"
+	numXpath = "//*[@id='pageCount']" #explicit == /html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/span[2]
+	#"/html/body/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr[1]/td[1]/input"
+	submitButton = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/table/tbody/tr/td[1]/input"
 	r_numOfPages = execution(browser,numXpath,10,"text")
 	numOfPages = r_numOfPages.text
 	x=0
+	
 	exitLoop = False
 	#row of table with title
 	#/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr[2]/td[2]/span
 	while x<numOfPages and exitLoop is False:
+		if x > 1:
+			xNext = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/div/div/div/a[8]"
+			execution(browser,xNext,300,"click")
 		for i in range(0,24):
 			if i == 0:
 				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr/td[2]/span"
-				"/html/body/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr[1]/td[1]/input"
 			else:
-				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr["+str(i)+"]/td[2]/span"
+				xFile = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr["+str(i)+"]/td[2]/span"
 				r_isFile = execution(browser,xFile,3,"text")
 				isFile = r_isFile.text
 				print i
@@ -99,17 +108,13 @@ def iterateFiles(inputFile, browser, encoding="utf-8"):
 				# isFile = isFile.decode('utf-8')
 				if isFile == inputFile:
 					print "~found your file~"
-					checkBox = xFile[:-8] #this is the checkbox which is just one td over so we chop off the end of the xfile path
-					print checkBox
-					checkBox = checkBox + "[1]/input"
-					execution(browser,checkBox,3,"click")
 					exitLoop = True
 					break
 					
 			i+=1
-		x+=1
-		xNext = "/html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/div/a[8]"
-		execution(browser,xNext,300,"click")
+		x+=1		
+	checkBox = xFile[:-8] + "[1]/input"#this is the checkbox which is just one td over so we chop off the end of the xfile path	
+	execution(browser,checkBox,3,"click")
 	execution(browser,submitButton,400,"click")#click submit
 	browser.switch_to_default_content()#get out of iframe
 	# WebDriverWait(browser, 3500).until(EC.presence_of_element_located((By.XPATH, "//*[@id='fNext' and not (@disabled)]")))
@@ -125,7 +130,45 @@ def existingText(tElement,changeTo):#this function deletes textarea or text inpu
 	for n in range(0,20):
 		tElement.send_keys("", Keys.BACK_SPACE)
 	tElement.send_keys(changeTo)
+	
+	
+def applyBarcode(browser,volumeNum):
+	bcImage = browser.find_element_by_xpath("/html/body/div/div[3]/div[2]/div[2]/div/div[2]/div[4]/a/img")
+	location = bcImage.location
+	size = bcImage.size
+	print "taking screenshot"
+	browser.save_screenshot('barcode.png')
+	print "croping screen screenshot"
+	im = Image.open('barcode.png')
+	left = location['x']
+	top = location['y']
+	right = location['x'] + size['width']
+	bottom = location['y'] + size['height']
+	im = im.crop((left, top, right, bottom)) # defines crop points
+	im.save('barcode.png') # saves new cropped image
+	imgWidth = (im.size[0])*.4
+	imgHeight = (im.size[1])*.4
+	
+	# Using ReportLab to insert image into PDF
+	imgTemp = StringIO()
+	imgDoc = canvas.Canvas(imgTemp)
 
+	# Draw image on Canvas and save PDF in buffer
+	imgPath = pwd+"/barcode.png"
+	imgDoc.drawImage(imgPath, 303, 67, imgWidth, imgHeight)    ## at (399,760) with size 160x160
+	imgDoc.save()
+
+	# Use PyPDF to merge the image-PDF into the template
+	page = PdfFileReader(file(cFolder+"/volume&&&"+volumeNum+".pdf","rb")).getPage(0)
+	overlay = PdfFileReader(StringIO(imgTemp.getvalue())).getPage(0)
+	page.mergePage(overlay)
+
+	#Save the result
+	output = PdfFileWriter()
+	output.addPage(page)
+	output.write(file(cFolder+"volume&&&"+volumeNum+".pdf","w"))
+	
+	
 def luluCruise(inputFile,volumeNum,title):
 	print "opening browser for a cool lulu cruise with: " + title + " on Firefox"
 	browser = webdriver.Firefox()
@@ -166,20 +209,8 @@ def luluCruise(inputFile,volumeNum,title):
 	getISBN = browser.find_element_by_xpath("//*[@id='fNext']")#should be set to default by browser on isbn page to get a new one
 	getISBN.click()
 	print "dl pdf on this page"
-	# pdfLink = browser.find_element_by_xpath("//*[@id='BarcodeImage']").get_attribute('href')
-	bcImage = browser.find_element_by_xpath("/html/body/div/div[3]/div[2]/div[2]/div/div[2]/div[4]/a/img")
-	location = bcImage.location
-	size = bcImage.size
-	print "taking screenshot"
-	browser.save_screenshot('barcode.png')
-	print "croping screen screenshot"
-	im = Image.open('barcode.png')
-	left = location['x']
-	top = location['y']
-	right = location['x'] + size['width']
-	bottom = location['y'] + size['height']
-	im = im.crop((left, top, right, bottom)) # defines crop points
-	im.save('barcode.png') # saves new cropped image
+	applyBarcode(browser,volumeNum)
+	
 	print "all done it's in barcode.png"
 
 	cont3 = browser.find_element_by_xpath("//*[@id='fNext']")
@@ -190,18 +221,6 @@ def luluCruise(inputFile,volumeNum,title):
 	execution(browser,myFiles,10,"click")#access the other part here with the list of files that you should have FTP'd in
 	iterateFiles(inputFile, browser)
 	print "file selected and found soundly"
-	# browser.find_element_by_xpath("//*[@id='ui-id-2']").click()
-	# uploadFile = inFolder +"/"+inputFile
-	# print uploadFile
-	# browser.find_element_by_xpath("//*[@id='uploadField']").send_keys(unicode(uploadFile, 'utf-8'))
-	# cont4 = browser.find_element_by_xpath("//*[@id='fMegaUpload']") #click this and upload
-	# cont4.click()
-	# print "wait for upload"
-	# uploadButt = browser.find_element_by_xpath("//*[@id='fNext']").get_attribute('class')
-	# #while this button is still unclickable keep waiting. but also check to see if there are errors.
-	print "i'm clicking this to go next"
-	
-	# elemWait(350, "//*[@id='fNext']",browser)
 
 	print "wait for animation and unecessary cover upload page to load..."
 	execution(browser,cont2,350,"click")
@@ -215,7 +234,7 @@ def luluCruise(inputFile,volumeNum,title):
 	print "uploading cover"
 	coverUpload = "//*[@id='fOnePieceCoverFile']"
 	r_coverUpload = execution(browser,coverUpload,350,"text")
-	r_coverUpload.send_keys(pwd +"/"+"newCover.jpg")
+	r_coverUpload.send_keys(cFolder +"/"+"volume&&&"+volumeNum+".pdf")
 	browser.find_element_by_xpath("//*[@id='fMegaUpload']").click()
 	print "wait for upload to complete"
 	execution(browser,"//*[@id='fNext' and not (@disabled)]",350,"click")
@@ -267,11 +286,11 @@ def luluCruise(inputFile,volumeNum,title):
 
 def travelAgent(inputFile):
 	print "travel agent: splitting strings, encoding for unicode, sending off on your cruise for file " + inputFile
-	splitInput = inputFile.split('-')#split on the dash symbol. to make a nice buncha strings
-	volumeNum = splitInput[1]#this is the volume number we are currently on. 
-	title = splitInput[2]+" --- "+splitInput[3]
+	splitInput = inputFile.split('&&&')#split on the dash symbol. to make a nice buncha strings
+	volumeNum = splitInput[0]#this is the volume number we are currently on. 
+	title = splitInput[1]+" --- "+splitInput[2]
 	title=unicode(title, 'utf-8')#encode that real nice for lulu
 	luluCruise(inputFile,volumeNum,title)
 
 
-travelAgent("Vol-00001-bb-symbol-10215110-4374729 (copy).pdf")
+travelAgent("0001&&&!&&&1970s (LDS)&&&.pdf")

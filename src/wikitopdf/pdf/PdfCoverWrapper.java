@@ -60,7 +60,7 @@ public class PdfCoverWrapper {
     public PdfCoverWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
         //Read settings
         
-        String outputFileName = "covers/volume" + num + ".pdf";
+        String outputFileName = "covers/volume&&&" + String.format("%04d",num) + ".pdf";
         
         
         /*
