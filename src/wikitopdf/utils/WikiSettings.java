@@ -66,13 +66,13 @@ public class WikiSettings {
     private void parseFonts() {
         Element root = _docXml.getRootElement();
         String fonts[] = {"title", "text", "comment", "contributor"};
-
+        System.out.println(root + " root");
         for (String fontStr : fonts) {
             //If node doesnt exists, retrieve default value
             Element fontXml = root.getChild(fontStr);
             float fontSize = Float.valueOf(fontXml.getChild("font-size").getTextTrim());
             String fontFamily = fontXml.getChild("font-family").getTextTrim();
-
+            System.out.println(fontFamily + " font fam");
 
             int fontColorsInt[] = {0, 0, 0};
             String[] fontColors = fontXml.getChild("font-color").getTextTrim().split(",");

@@ -231,7 +231,7 @@ public class PdfCoverWrapper {
             wikiFontSelector.getTitleFontSelector().process("");
             times = wikiFontSelector.getCommonFont().getBaseFont();
             BaseFont spine_base = BaseFont.createFont("/Users/wiki/Library/Fonts/Cardo-Regular.ttf", BaseFont.CP1252, BaseFont.EMBEDDED);
-            spine_vol_font = new Font(spine_base, 40);
+            spine_vol_font = new Font(spine_base, 35);
             spine_abbr_font = new Font(spine_base,20);
             spine_to_font = new Font(spine_base,13);
             main_title_font = new Font(spine_base,17);
@@ -241,8 +241,8 @@ public class PdfCoverWrapper {
         }
 
         cb.beginText();
-        cb.setFontAndSize(times, 76.93f);
-        cb.setTextMatrix(695f, pdfDocument.top()-280);
+        cb.setFontAndSize(times, 71f);
+        cb.setTextMatrix(720.667f, pdfDocument.top()-280);
         cb.showText("Wikipedia");
         cb.endText();
          String main_spine;
@@ -273,7 +273,7 @@ public class PdfCoverWrapper {
         //sc
 //        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
         //hc
-        cb.showTextAligned(0,main_spine,555,705,270);
+        cb.showTextAligned(0,main_spine,555.03f,698,270);
         cb.endText();
 //        cb.beginText();
 //        cb.setFontAndSize(times, 12);
@@ -332,7 +332,7 @@ public class PdfCoverWrapper {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setColspan(1);
-        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-223f));
+        cell.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-229.5f));
         table1.addCell(cell);
         ColumnText column = new ColumnText(pdfWriter.getDirectContent());
         column.addElement(table1);
@@ -352,7 +352,7 @@ public class PdfCoverWrapper {
         cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell2.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell2.setColspan(1);
-        cell2.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-176f));
+        cell2.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-182.5f));
         table2.addCell(cell2);
         ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
         column2.addElement(table2);
@@ -371,7 +371,7 @@ public class PdfCoverWrapper {
         cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell3.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell3.setColspan(1);
-        cell3.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-162f));
+        cell3.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-168.5f));
         table3.addCell(cell3);
         ColumnText column3 = new ColumnText(pdfWriter.getDirectContent());
         column3.addElement(table3);
@@ -386,7 +386,7 @@ public class PdfCoverWrapper {
         cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell4.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell4.setColspan(1);
-        cell4.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-144f));
+        cell4.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-150.5f));
         table4.addCell(cell4);
         ColumnText column4 = new ColumnText(pdfWriter.getDirectContent());
         column4.addElement(table4);

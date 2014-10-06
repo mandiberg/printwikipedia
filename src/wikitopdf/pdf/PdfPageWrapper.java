@@ -21,7 +21,6 @@ import wikitopdf.html.WikiStyles;
 import wikitopdf.wiki.WikiPage;
 
 /**
- *
  * @author Denis Lunev <den.lunev@gmail.com>
  */
 public class PdfPageWrapper {
@@ -84,10 +83,10 @@ public class PdfPageWrapper {
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
             ph = _wikiFontSelector.getTitleFontSelector().process(line);
-//            ph.setLeading(10);
+            ph.setLeading(8);
             Paragraph pr = new Paragraph(ph);
-//            pr.setSpacingBefore(20);
-//            pr.setSpacingAfter(9);
+            pr.setSpacingBefore(2);
+            pr.setSpacingAfter(30);
 
             if (mct.isOverflow()) {
                 mct.nextColumn();

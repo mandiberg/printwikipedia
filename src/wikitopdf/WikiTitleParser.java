@@ -55,10 +55,11 @@ public class WikiTitleParser
         try
         {
             //while()
-            {   
+               
                 //start writing the first volume
                 pdfWrapper.openMultiColumn();
-                
+                if(num==1)
+                    pdfWrapper.writeTitle(firstLine);
                 
                 while ((line = bufferReader.readLine()) != null)
                 {
@@ -72,24 +73,19 @@ public class WikiTitleParser
                         pagesCount += pdfWrapper.getPagesCount();
                         pdfWrapper.close();
                         num ++;
-         
                         pdfWrapper = new PdfTitleWrapper(num, pagesCount,line,lastLine);
-                        
                         pdfWrapper.addPrologue();
                         pdfWrapper.jknewPage();
-                        
                         pdfWrapper.openMultiColumn(); // starts new volume (starting from vol 2)
-                       
+                        
+                        
                         
                     }
-                    
-                    //while there are lines, write the line
                     line = line.replaceAll("[_]"," ");//replace underscores with spaces for TOC pretty.
-                    
                     pdfWrapper.writeTitle(line);
                     lastLine = line;
                 }
-            }
+            
             pdfWrapper.closeMultiColumn();
         }
         catch (Exception ex)

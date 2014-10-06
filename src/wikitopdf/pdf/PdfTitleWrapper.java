@@ -42,6 +42,7 @@ public class PdfTitleWrapper {
  
     public PdfTitleWrapper(int num, int startPage,String firstLine, String lastLine) throws FileNotFoundException, DocumentException {
         //Read settings
+        System.out.println("line in pdftitlewrap  "+firstLine);
         int curPage = startPage;
         startPage = 0;
         PdfTitleWrapper.lastLine = lastLine;
@@ -55,7 +56,9 @@ public class PdfTitleWrapper {
 
         pdfDocument = new Document(new Rectangle(432, 648));
         //(l,r,t,b)
-        pdfDocument.setMargins(27f, 67.5f, 5.5f, 62.5f);
+        //going to switch the margins here because in the lulu printout it seems to have the margins going the opposite sides
+        //originally 27f, 67.5f
+        pdfDocument.setMargins(67.5f, 27f, 5.5f, 62.5f);
         
         
 
@@ -67,7 +70,7 @@ public class PdfTitleWrapper {
         headerFooter = new TitlesFooter(startPage);
         pdfWriter.setPageEvent(headerFooter);
         pdfDocument.open();
-        pdfDocument.setMarginMirroring(true);
+        pdfDocument.setMarginMirroring(false);
         wikiFontSelector = new WikiFontSelector();
         //HeaderFooter hf =  new HeaderFooter(new Phrase("head1"), new Phrase("head2"));
 
@@ -82,14 +85,14 @@ public class PdfTitleWrapper {
         
         
         
-
-
+        
         PdfContentByte cb = pdfWriter.getDirectContent();
         ct = new ColumnText(cb);
         //ct.setIndent(20);
         
 //        addPrologue();
 //        newPage();
+        
     }
 
     /**
@@ -165,9 +168,11 @@ public class PdfTitleWrapper {
         boolean secondLine=false;
         boolean inLine = false;
         while(inLine == false){
-            System.out.println(cur_line_len + " this is current line length");
-            if(secondLine==true)//if there has been one line you want to indent so sizer is -3
+            
+            if(secondLine==true && x<=1){//if there has been one line you want to indent so sizer is -3
                 sizer=sizer-3;
+                System.out.println(cur_line_len + " this is current line length..and this is sizer -> " + sizer);
+            }
             if(cur_line_len <= sizer && secondLine == true){
                 System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl TRUE");
                 lastLine = lastLine + separator +line;
@@ -230,6 +235,7 @@ public class PdfTitleWrapper {
     }
     public void writeTitle(String line) throws DocumentException {
         try {
+            System.out.println("line " + line);
             float widthLine = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(line,
                     wikiFontSelector.getCommonFont().getSize());
             if (widthLine > 40) {

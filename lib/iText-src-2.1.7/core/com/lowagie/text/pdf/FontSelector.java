@@ -70,6 +70,7 @@ public class FontSelector {
      * @param font the <CODE>Font</CODE>
      */    
     public void addFont(Font font) {
+        System.out.println("i'm add font inside woowoo");
         if (font.getBaseFont() != null) {
             fonts.add(font);
             return;

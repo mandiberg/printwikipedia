@@ -10,6 +10,7 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.FontSelector;
 import java.io.IOException;
 import wikitopdf.utils.WikiSettings;
+import wikitopdf.pdf.WikiFont;
 
 /**
  *
@@ -20,14 +21,17 @@ public class WikiFontSelector {
     @SuppressWarnings("static-access")
     private FontSelector getFontSelector() throws DocumentException, IOException {
         //General font, uses for latin chars
-        BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo98s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         //uses for non-latin chars
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+        BaseFont bsArab1 = BaseFont.createFont("fonts/Amiri-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        BaseFont bsArab2 = BaseFont.createFont("fonts/DroidKufi-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-        fontLatin.setSize(7f);   
+        fontLatin.setSize(7f);
 //        fontLatin.setStyle(fontLatin.BOLD);
 
         //font color is RGB, for example {255,0,0} is RED
@@ -45,12 +49,16 @@ public class WikiFontSelector {
         helv.setSize(10f);
         helv.setStyle(Font.BOLD);
         //fontHieroglyph.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
-
+        Font arab1 = new Font(bsArab1);
+        Font arab2 = new Font(bsArab2);
         //Font selector uses to choose proper font for different charsets
         _fontSelector = new FontSelector();
         _fontSelector.addFont(fontLatin);
         _fontSelector.addFont(fontGlyph);
         _fontSelector.addFont(helv);
+        _fontSelector.addFont(arab1);
+        _fontSelector.addFont(arab2);
+        
         
 
         return _fontSelector;
@@ -65,7 +73,6 @@ public class WikiFontSelector {
     public FontSelector getTitleFontSelector() throws DocumentException, IOException {
         //the following line does nothing. variable is not used or returned?
         WikiFont titleFont = WikiSettings.getInstance().getTitleFont();
-
         return getFontSelector();
     }
     
@@ -89,7 +96,7 @@ public class WikiFontSelector {
      * @throws IOException
      */
     public FontSelector getTextFontSelector() throws DocumentException, IOException {
-        WikiFont textFont = WikiSettings.getInstance().getTextFont();
+        //WikiFont textFont = WikiSettings.getInstance().getTextFont();
         return getFontSelector();
     }
 

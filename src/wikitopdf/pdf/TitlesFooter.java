@@ -93,14 +93,14 @@ public class TitlesFooter extends PdfPageEventHelper
         cb.setFontAndSize(bsFont, 8);
         if ((pageNum % 2) == 1)
         {
-            cb.setTextMatrix(document.left(), textBase);
+            cb.setTextMatrix(document.right(), textBase);
             cb.showText(pNumString);
         }
         else
         {
             float adjust = bsFont.getWidthPoint("0", 8);
             cb.setTextMatrix(
-            document.right() - textSize - adjust, textBase);
+            document.left() - textSize - adjust, textBase);
             cb.showText(pNumString);
             //Write header
 //            writeHeader(writer, document);

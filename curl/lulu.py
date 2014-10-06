@@ -29,7 +29,7 @@ cFolder = pwd+"/covers"
 #open file and read what last char is. if 0 not finished so find last entry in line and then use that one
 #other chars mean different things but for right now we'll do this
 
-def immigration(volumeNum,inputFile,browser):#move file from one folder to another. give next file over.
+def immigration(volumeNum,inputFile,browser):#move file from one folder to another. give next file over. This is done so there isn't such a long read for the 6k file run through.
 	browser.quit()
 	print "immigration office. moving volume "+ volumeNum
 	for i in os.listdir(inFolder):
@@ -74,12 +74,11 @@ def execution(browser,waitElement,waitTime,ex_type):#called whenever interacting
 	else:
 		print "something went wrong here"
 		return False
-def iterateFiles(inputFile, browser, encoding="utf-8"):#go through fileslist to upload pdf doc. 
+def iterateFiles(volumeNum, browser, encoding="utf-8"):#go through fileslist to upload pdf doc. 
 	print "about to go through files"
 	print "get in iframe"
 	browser.switch_to_frame(browser.find_element_by_tag_name("iframe"))
 	numXpath = "//*[@id='pageCount']" #explicit == /html/body/div/div/table/tbody/tr/td[2]/div/div/div/div/span[2]
-	#"/html/body/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr[1]/td[1]/input"
 	submitButton = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/table/tbody/tr/td[1]/input"
 	r_numOfPages = execution(browser,numXpath,10,"text")
 	numOfPages = r_numOfPages.text
@@ -92,26 +91,31 @@ def iterateFiles(inputFile, browser, encoding="utf-8"):#go through fileslist to 
 		if x > 1:
 			xNext = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/div/div/div/a[8]"
 			execution(browser,xNext,300,"click")
-		for i in range(0,24):
+		for i in range(0,26):
 			if i == 0:
 				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr/td[2]/span"
 			else:
 				xFile = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr["+str(i)+"]/td[2]/span"
-				r_isFile = execution(browser,xFile,3,"text")
+				r_isFile = execution(browser,xFile,30,"text")
 				isFile = r_isFile.text
-				print i
-				print isFile
-				# isFile = isFile.decode('utf-8', "ignore")
-				inputFile = inputFile.decode('utf-8', 'ignore')
-				print "input "+str(type(inputFile)) + " isfile " + str(type(isFile))
+				
+				
+				# print i
+# 				print isFile
+# 				# isFile = isFile.decode('utf-8', "ignore")
+# 				print str(type(inputFile))
+# 				inputFile = inputFile.decode('utf-8', 'ignore')
+# 				print "input "+str(type(inputFile)) + " isfile " + str(type(isFile))
 
 				# isFile = isFile.decode('utf-8')
-				if isFile == inputFile:
+				if str(volumeNum)==isFile[:4]:
+# 				if isFile == inputFile:
 					print "~found your file~"
 					exitLoop = True
 					break
 					
 			i+=1
+		print "going to next"
 		x+=1		
 	checkBox = xFile[:-8] + "[1]/input"#this is the checkbox which is just one td over so we chop off the end of the xfile path	
 	execution(browser,checkBox,3,"click")
@@ -155,7 +159,7 @@ def applyBarcode(browser,volumeNum):
 
 	# Draw image on Canvas and save PDF in buffer
 	imgPath = pwd+"/barcode.png"
-	imgDoc.drawImage(imgPath, 303, 67, imgWidth, imgHeight)    ## at (399,760) with size 160x160
+	imgDoc.drawImage(imgPath, 303, 115, imgWidth, imgHeight)    ## at (399,760) with size 160x160
 	imgDoc.save()
 
 	# Use PyPDF to merge the image-PDF into the template
@@ -166,7 +170,8 @@ def applyBarcode(browser,volumeNum):
 	#Save the result
 	output = PdfFileWriter()
 	output.addPage(page)
-	output.write(file(cFolder+"volume&&&"+volumeNum+".pdf","w"))
+	output.write(file(cFolder+"/bcVolume&&&"+volumeNum+".pdf","w"))
+	print cFolder + "volume&&&"
 	
 	
 def luluCruise(inputFile,volumeNum,title):
@@ -219,7 +224,7 @@ def luluCruise(inputFile,volumeNum,title):
 	print "tada now time for uploading."
 	myFiles = "//*[@id='ui-id-2']"
 	execution(browser,myFiles,10,"click")#access the other part here with the list of files that you should have FTP'd in
-	iterateFiles(inputFile, browser)
+	iterateFiles(volumeNum, browser)
 	print "file selected and found soundly"
 
 	print "wait for animation and unecessary cover upload page to load..."
@@ -234,7 +239,7 @@ def luluCruise(inputFile,volumeNum,title):
 	print "uploading cover"
 	coverUpload = "//*[@id='fOnePieceCoverFile']"
 	r_coverUpload = execution(browser,coverUpload,350,"text")
-	r_coverUpload.send_keys(cFolder +"/"+"volume&&&"+volumeNum+".pdf")
+	r_coverUpload.send_keys(cFolder +"/"+"bcVolume&&&"+volumeNum+".pdf")
 	browser.find_element_by_xpath("//*[@id='fMegaUpload']").click()
 	print "wait for upload to complete"
 	execution(browser,"//*[@id='fNext' and not (@disabled)]",350,"click")
@@ -290,7 +295,8 @@ def travelAgent(inputFile):
 	volumeNum = splitInput[0]#this is the volume number we are currently on. 
 	title = splitInput[1]+" --- "+splitInput[2]
 	title=unicode(title, 'utf-8')#encode that real nice for lulu
+	inputFile=unicode(inputFile,'utf-8')
 	luluCruise(inputFile,volumeNum,title)
 
 
-travelAgent("0001&&&!&&&1970s (LDS)&&&.pdf")
+travelAgent("0009&&&Aníbal Nazoa&&&Associated fiber bundle&&&.pdf")
