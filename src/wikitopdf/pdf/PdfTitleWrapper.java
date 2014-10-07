@@ -143,7 +143,7 @@ public class PdfTitleWrapper {
         for(x = sizer; x > 0; x--){//start the forloop going backwards from that part of the string
             Character c;
             c = line.charAt(x);
-            System.out.println(c + " char");
+            System.out.println(c + " sizer: " +sizer );
             if(c == ' ' || c == '-')//check for last space before end
                 return x;
             if(x <= 1){
@@ -155,6 +155,25 @@ public class PdfTitleWrapper {
         return sizer;
     }
     
+    public boolean dblCheckCaps(String line, int sizer){
+        boolean many_caps = false;
+        int cur_line_len = line.length();
+        int num_of_up = 0;
+        Character c;
+        for(int i=0;i<cur_line_len;i++){//iterate through line
+            c = line.charAt(i);//create char at last char before break
+            System.out.println(c);
+            if(Character.isUpperCase(c)==true)
+                num_of_up+=1;
+                System.out.println("ding " + num_of_up);
+            if(num_of_up >= 5){
+                return many_caps = true;
+            }
+        }
+        System.out.println("is it still? " + many_caps);
+        return many_caps;
+    }
+    
     public String longTitle(String line, int sizer) throws DocumentException{//if the title is too long
         System.out.println(line + " STARTING LINE");
         Character c;
@@ -164,30 +183,46 @@ public class PdfTitleWrapper {
         int orig_line_len = line.length();
         int cur_line_len = orig_line_len;
         int x =0;
+        int num_of_up = 0;
         String separator = "\n  ";
+        boolean dblCheck = false;
         boolean secondLine=false;
         boolean inLine = false;
+        
         while(inLine == false){
-            
+            num_of_up=0;
             if(secondLine==true && x<=1){//if there has been one line you want to indent so sizer is -3
                 sizer=sizer-3;
                 System.out.println(cur_line_len + " this is current line length..and this is sizer -> " + sizer);
             }
+            if(num_of_up >= 5 && secondLine == true)
+                sizer = 10;
+            if(num_of_up >= 5 && secondLine == false)
+                sizer = 13;   
             if(cur_line_len <= sizer && secondLine == true){
-                System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl TRUE");
+                System.out.println(lastLine + " <--lastLine " + line + " <--line short n scndl TRUE\n" +cur_line_len + " <cur line|| sizer>" +sizer);
                 lastLine = lastLine + separator +line;
                 inLine = true;
                 System.out.println(lastLine + " FULL DONE");
                 break;
             }
             if(cur_line_len <= sizer && secondLine == false){
-                System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl FALSE");
-                if(lastLine == "")
-                    separator="";
-                lastLine = lastLine + separator + line;
-                inLine = true;
-                System.out.println(lastLine + " &&&FULL DONE");
-                break;
+                System.out.println(lastLine + " <--lastLine " + line + " <--line short n scndl FALSE\n" +cur_line_len + " <cur line|| sizer>" +sizer +" doublecheck is: " +dblCheck);
+                if(dblCheck==false){
+                    if(dblCheckCaps(line,sizer)==true){
+                        dblCheck = true;
+                        sizer=10;
+                    }
+                    dblCheck=true;
+                }
+                else{
+                    if(lastLine == "")
+                        separator="";
+                    lastLine = lastLine + separator + line;
+                    inLine = true;
+                    System.out.println(lastLine + " &&&FULL DONE");
+                    break;
+                }
             }
             if(cur_line_len > sizer){//if the current line length is larger than the width of the current column
                 if(cur_line_len < orig_line_len)//check if the current is less than original, that means we have iterated through before.
@@ -195,6 +230,12 @@ public class PdfTitleWrapper {
                 for(int i=0;i<cur_line_len;i++){//iterate through line
                     c = line.charAt(i);//create char at last char before break
                     System.out.println(c);
+                    if(Character.isUpperCase(c)==true)
+                        num_of_up+=1;
+                    if(num_of_up >= 5 && secondLine == true)
+                        sizer = 10;
+                    if(num_of_up >= 5 && secondLine == false)
+                        sizer = 13;
                     if(i>1 && (i%sizer==0)){//whenever you hit the end of the column
                         slice_at  = findSpace(line,lastLine,sizer,secondLine);//find a space by counting backwards with the findspace function. it returns a string
                         if(secondLine==true){//if lastline has been turned into a non empty string

@@ -25,8 +25,8 @@ public class WikiFontSelector {
         //uses for non-latin chars
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
-        BaseFont bsArab1 = BaseFont.createFont("fonts/Amiri-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        BaseFont bsArab2 = BaseFont.createFont("fonts/DroidKufi-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+//        BaseFont bsArab1 = BaseFont.createFont("fonts/Amiri-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+//        BaseFont bsArab2 = BaseFont.createFont("fonts/DroidKufi-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
@@ -49,16 +49,16 @@ public class WikiFontSelector {
         helv.setSize(10f);
         helv.setStyle(Font.BOLD);
         //fontHieroglyph.setColor(wikiFont.getFontColor()[0], wikiFont.getFontColor()[1], wikiFont.getFontColor()[2]);
-        Font arab1 = new Font(bsArab1);
-        Font arab2 = new Font(bsArab2);
+//        Font arab1 = new Font(bsArab1);
+//        Font arab2 = new Font(bsArab2);
         //Font selector uses to choose proper font for different charsets
         _fontSelector = new FontSelector();
         _fontSelector.addFont(fontLatin);
         _fontSelector.addFont(fontGlyph);
         _fontSelector.addFont(helv);
-        _fontSelector.addFont(arab1);
-        _fontSelector.addFont(arab2);
-        
+//        _fontSelector.addFont(arab1);
+//        _fontSelector.addFont(arab2);
+//        
         
 
         return _fontSelector;

@@ -1,0 +1,10 @@
+Default is pdf. Options are: pdf, threaded, toc, pagenumbers, covers. e.g.: java -jar "wikitopdf.jar" pdf
+Running pdf /Users/wiki/repos/printwikipedia
+[Element: <settings/>] root
+Cardo font fam
+Cardo font fam
+Cardo font fam
+Cardo font fam
+Foo
+Oct 7, 2014 5:31:51 PM wikitopdf.PageParserExec main
+SEVERE: null
