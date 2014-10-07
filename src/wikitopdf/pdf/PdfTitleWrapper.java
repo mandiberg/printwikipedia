@@ -164,15 +164,14 @@ public class PdfTitleWrapper {
         int orig_line_len = line.length();
         int cur_line_len = orig_line_len;
         int x =0;
+        int num_up = 0;
         String separator = "\n  ";
         boolean secondLine=false;
         boolean inLine = false;
         while(inLine == false){
             
-            if(secondLine==true && x<=1){//if there has been one line you want to indent so sizer is -3
+            if(secondLine==true && x<=1)//indent and account sizer for indent
                 sizer=sizer-3;
-                System.out.println(cur_line_len + " this is current line length..and this is sizer -> " + sizer);
-            }
             if(cur_line_len <= sizer && secondLine == true){
                 System.out.println(lastLine + " <--lastLine " + line + " <--line  short n scndl TRUE");
                 lastLine = lastLine + separator +line;
@@ -190,12 +189,20 @@ public class PdfTitleWrapper {
                 break;
             }
             if(cur_line_len > sizer){//if the current line length is larger than the width of the current column
+                num_up = 0;//make this zero for each line.
                 if(cur_line_len < orig_line_len)//check if the current is less than original, that means we have iterated through before.
                     secondLine = true;
                 for(int i=0;i<cur_line_len;i++){//iterate through line
                     c = line.charAt(i);//create char at last char before break
-                    System.out.println(c);
-                    if(i>1 && (i%sizer==0)){//whenever you hit the end of the column
+                    if(Character.isUpperCase(c)==true)//make sure there aren't too many uppercase characters
+                        num_up +=1;
+                    
+                    if(num_up >= 5 && secondLine==true)//indent and account for too many caps.
+                        sizer = 11;
+                    if(num_up >= 5 && secondLine==false)
+                        sizer = 14;
+                    System.out.println(c + " //num of up: " + num_up + " //sizer: " + sizer);
+                    if(i>1 && (i%sizer==0 || i>=sizer)){//whenever you hit the end of the column
                         slice_at  = findSpace(line,lastLine,sizer,secondLine);//find a space by counting backwards with the findspace function. it returns a string
                         if(secondLine==true){//if lastline has been turned into a non empty string
                             if(x>5)
