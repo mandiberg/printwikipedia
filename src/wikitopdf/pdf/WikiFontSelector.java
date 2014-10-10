@@ -23,11 +23,12 @@ public class WikiFontSelector {
         //General font, uses for latin chars
         BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         //uses for non-latin chars
-        BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        //BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+        BaseFont bsChinese = BaseFont.createFont("fonts/cwTeXFangSong-zhonly.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        
 //        BaseFont bsArab1 = BaseFont.createFont("fonts/Amiri-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 //        BaseFont bsArab2 = BaseFont.createFont("fonts/DroidKufi-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        
         fontLatin = new Font(bsFontLatin);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
@@ -39,11 +40,14 @@ public class WikiFontSelector {
 
         fontLatin.setColor(0,0,0);
 
-        Font fontGlyph = new Font(bsFontGlyph);
+        //Font fontGlyph = new Font(bsFontGlyph);
+        Font chinese = new Font(bsChinese);
         //this is where TOC font is set, as well as the H1 font for the full entries
         //set at 10.5  for full entries, 7 for TOC
-        fontGlyph.setSize(7f); 
-        fontGlyph.setStyle(Font.BOLD);
+        chinese.setSize(7f);
+        chinese.setStyle(Font.BOLD);
+        //fontGlyph.setSize(7f); 
+        //fontGlyph.setStyle(Font.NORMAL);
         
         Font helv = new Font(bsHelv);
         helv.setSize(10f);
@@ -54,9 +58,10 @@ public class WikiFontSelector {
         //Font selector uses to choose proper font for different charsets
         _fontSelector = new FontSelector();
         _fontSelector.addFont(fontLatin);
-        _fontSelector.addFont(fontGlyph);
+       // _fontSelector.addFont(fontGlyph);
         _fontSelector.addFont(helv);
-//        _fontSelector.addFont(arab1);
+        _fontSelector.addFont(chinese);
+        //        _fontSelector.addFont(arab1);
 //        _fontSelector.addFont(arab2);
 //        
         
@@ -72,7 +77,7 @@ public class WikiFontSelector {
      */
     public FontSelector getTitleFontSelector() throws DocumentException, IOException {
         //the following line does nothing. variable is not used or returned?
-        WikiFont titleFont = WikiSettings.getInstance().getTitleFont();
+//        WikiFont titleFont = WikiSettings.getInstance().getTitleFont();
         return getFontSelector();
     }
     
@@ -85,7 +90,7 @@ public class WikiFontSelector {
      * @throws IOException
      */
     public FontSelector getCommentFontSelector() throws DocumentException, IOException {
-        WikiFont commentFont = WikiSettings.getInstance().getCommentFont();
+//        WikiFont commentFont = WikiSettings.getInstance().getCommentFont();
         return getFontSelector();
     }
 
@@ -107,7 +112,7 @@ public class WikiFontSelector {
      * @throws IOException
      */
     public FontSelector getContributorFontSelector() throws DocumentException, IOException {
-        WikiFont contributorFont = WikiSettings.getInstance().getContributorFont();
+//        WikiFont contributorFont = WikiSettings.getInstance().getContributorFont();
         return getFontSelector();
     }
 

@@ -83,6 +83,7 @@ def iterateFiles(volumeNum, browser, encoding="utf-8"):#go through fileslist to 
 	r_numOfPages = execution(browser,numXpath,10,"text")
 	numOfPages = r_numOfPages.text
 	x=0
+	i=0
 	
 	exitLoop = False
 	#row of table with title
@@ -91,13 +92,16 @@ def iterateFiles(volumeNum, browser, encoding="utf-8"):#go through fileslist to 
 		if x > 1:
 			xNext = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/div/div/div/a[8]"
 			execution(browser,xNext,300,"click")
-		for i in range(0,26):
+		while i<26:
 			if i == 0:
 				xFile = "/html/body/div/div/table/tbody/tr/td[2]/div/div[3]/div/form/div/div/div[2]/table/tbody/tr/td[2]/span"
 			else:
 				xFile = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[3]/div[1]/form/div/div/div[2]/table/tbody/tr["+str(i)+"]/td[2]/span"
 				r_isFile = execution(browser,xFile,30,"text")
-				isFile = r_isFile.text
+				try:
+					isFile = r_isFile.text
+				except StaleElementReferenceException:
+					i=0#so try again because it's probably there.
 				
 				
 				# print i
@@ -208,6 +212,9 @@ def luluCruise(inputFile,volumeNum,title):
 	print "title and author page"
 	bookTitle = "//*[@id='title']"#get and put title
 	existingText(execution(browser,bookTitle,10,"text"),title)
+	existingText(execution(browser,"//*[@id='firstName']",10,"text"),"Printwikipedia")
+	existingText(execution(browser,"//*[@id='lastName']",10,"text"),"Table of Contents")
+	
 	cont1 = browser.find_element_by_xpath("//*[@id='fNext']")
 	cont1.click()
 	print "get to isbn page"
@@ -299,4 +306,4 @@ def travelAgent(inputFile):
 	luluCruise(inputFile,volumeNum,title)
 
 
-travelAgent("0009&&&Aníbal Nazoa&&&Associated fiber bundle&&&.pdf")
+travelAgent("0001&&&!&&&1969 in Canadian television&&&.pdf")
