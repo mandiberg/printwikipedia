@@ -184,6 +184,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	}
 
 	public void startElement(String tag, HashMap h) {
+            System.out.println(tag + " THIS IS TAG");
 		if (!tagsSupported.containsKey(tag))
 			return;
 		try {
@@ -381,6 +382,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					list.setAutoindent(true);
 				}
 				list.setListSymbol("\u2022");
+                                list.add("\n");
 				stack.push(list);
 				return;
 			}

@@ -58,8 +58,8 @@ public class PageParserExec {
                 } else if(wikiProcess.equals("toc")){
                     System.out.println("Running " + wikiProcess + " "+ System.getProperty("user.dir"));
                     String fileName = "enwiki-latest-all-titles-in-ns0";
+//                    String fileName = "testing.txt";
                     WikiTitleParser parser = new WikiTitleParser();
-
                     try {
                         parser.parseTxt(fileName);
                     } catch (Exception ex) {

@@ -4,7 +4,6 @@
  */
 package wikitopdf.utils;
 
-import wikitopdf.utils.WikiLogger;
 import java.io.File;
 import java.util.List;
 import org.jdom.Document;

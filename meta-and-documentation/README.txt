@@ -224,6 +224,20 @@ Possible Problems:
 	**************
 	NOTE : If this is an issue edit the .bat files that you will use for auto running the program to include the "Xmx1024m" argument as well.
 	**************
+	2. When trying to run mwdumper.jar if an error appears saying: "ERROR 1366 (HY000) at line 54: Incorrect string value: '\xF0\x90\xA1\x80\x0A|...' for column 'old_text' at row 2" it will not add the mediawiki data to the database because the sql connection has just closed on that error. This error means that there is a piece of string data that is too large for the mysql character set in the text table.
+	To fix this drop your schema and start over again and edit the structure.sql file from line 757 to 764 to:
+		DROP TABLE IF EXISTS `text`;
+		/*!40101 SET @saved_cs_client     = @@character_set_client */;
+		/*!40101 SET character_set_client = utf8mb4 */;
+		CREATE TABLE `text` (
+		  `old_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `old_text` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+		  `old_flags` tinyblob NOT NULL,
+		  PRIMARY KEY (`old_id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=349963463 DEFAULT CHARSET=utf8 MAX_ROWS=10000000 AVG_ROW_LENGTH=10240;
+		/*!40101 SET character_set_client = @saved_cs_client */;
+	run the structure.sql code against your schema and then in your regular terminal
+	run: "java -jar -Xmx6024m mwdumper.jar --format=sql:1.5 enwiki-late-pages-articles.xml.bz2 --filter=latest --filter=notalk | mysql -u root --default-character-set=utf8mb4 NAMEOFYOURSCHEMA" without quotes.
 
 **************************************************************************************
 Setting up Graceful Restarts

@@ -17,7 +17,7 @@ public class WikiStyles {
      */
     public static StyleSheet getStyles(){
 
-        FontFactory.register("fonts/Cardo98s.ttf");
+        FontFactory.register("fonts/Cardo104s.ttf");
         //FontFactory.register("fonts/Verdana.ttf");
         //FontFactory.register("fonts/Junicode-Regular.ttf");
         //FontFactory.register("fonts/msgothic.ttc");
@@ -38,6 +38,7 @@ public class WikiStyles {
         styles.loadTagStyle("body", defaultStyle);
         styles.loadTagStyle("p", defaultStyle);
         styles.loadTagStyle("li", defaultStyle);
+        styles.loadTagStyle("ul", defaultStyle);       
         styles.loadTagStyle("a", defaultStyle);
         styles.loadTagStyle("dt", defaultStyle);
         styles.loadTagStyle("dl", defaultStyle);
@@ -50,22 +51,23 @@ public class WikiStyles {
         styles.loadTagStyle("i", defaultStyle);
         styles.loadTagStyle("h1", defaultFont);
         styles.loadTagStyle("h1", "size", getPointSize(10));
-        styles.loadTagStyle("h1", "before", "10");
+        styles.loadTagStyle("h1", "before", "110");
         styles.loadTagStyle("h1", "after", "10");
-        styles.loadTagStyle("h2", defaultFont);
-        styles.loadTagStyle("h2", "size", getPointSize(8));
-        styles.loadTagStyle("h2", "before", "10");
-        //styles.loadTagStyle("h2", "after", "10");
-        //styles.loadTagStyle("h2", "font-weight", "bold");
-
+        styles.loadTagStyle("h1", "font-weight", "bold");
+        styles.loadTagStyle("H2", defaultFont);
+        styles.loadTagStyle("H2", "size", getPointSize(8));
+        styles.loadTagStyle("H2", "before", "120");
+        styles.loadTagStyle("H2", "after", "10");
+        styles.loadTagStyle("H2", "font-weight", "bold");
         styles.loadTagStyle("h3", defaultFont);
         styles.loadTagStyle("h3", "size", getPointSize(6));
-        styles.loadTagStyle("h3", "before", "6");
+        styles.loadTagStyle("h3", "before", "126");
         styles.loadTagStyle("h3", "after", "6");
         styles.loadTagStyle("h4", defaultFont);
         styles.loadTagStyle("h4", "size", getPointSize(6));
-        styles.loadTagStyle("h4", "before", "6");
+        styles.loadTagStyle("h4", "before", "126");
         styles.loadTagStyle("h4", "after", "6");
+        
 
         return styles;
     }

@@ -643,51 +643,51 @@ public class WikipediaParser extends AbstractParser implements IParser {
 	 *         models configuration..
 	 */
 	private boolean parseURIScheme() {
-		if (fCurrentCharacter == 'm' || fCurrentCharacter == 'M') {
-			// mailto ?
-			if (parseMailtoLinks()) {
-				return true;
-			}
-		}
-		int urlStartPosition = fCurrentPosition;
-		int tempPosition = fCurrentPosition;
-		String uriSchemeName = "";
-		int index = -1;
-		boolean foundUrl = false;
-		try {
-			index = fStringSource.indexOf(':', fCurrentPosition);
-			if (index > 0) {
-				uriSchemeName = fStringSource.substring(fCurrentPosition - 1, index).toLowerCase();
-
-				if (fWikiModel.isValidUriScheme(uriSchemeName)) {
-					// found something like "ftp", "http", "https"
-					tempPosition += uriSchemeName.length() + 1;
-					fCurrentCharacter = fSource[tempPosition++];
-
-					createContentToken(fWhiteStart, fWhiteStartPosition, 1);
-					fWhiteStart = false;
-					foundUrl = true;
-					while (Encoder.isUrlIdentifierPart(fSource[tempPosition++])) {
-					}
-
-				}
-			}
-		} catch (IndexOutOfBoundsException e) {
-		}
-		if (foundUrl) {
-			String restString = fStringSource.substring(urlStartPosition - 1, tempPosition - 1);
-			String uriSchemeSpecificPart = fStringSource.substring(index + 1, tempPosition - 1);
-			if (fWikiModel.isValidUriSchemeSpecificPart(uriSchemeName, uriSchemeSpecificPart)) {
-				fWhiteStart = false;
-				fCurrentPosition = tempPosition;
-				fCurrentPosition--;
-				fWikiModel.appendExternalLink(uriSchemeName, restString, restString, true);
-				return true;
-			}
-
-		}
-		// rollback work :-)
-		fCurrentPosition = urlStartPosition;
+//		if (fCurrentCharacter == 'm' || fCurrentCharacter == 'M') {
+//			// mailto ?
+//			if (parseMailtoLinks()) {
+//				return true;
+//			}
+//		}
+//		int urlStartPosition = fCurrentPosition;
+//		int tempPosition = fCurrentPosition;
+//		String uriSchemeName = "";
+//		int index = -1;
+//		boolean foundUrl = false;
+//		try {
+//			index = fStringSource.indexOf(':', fCurrentPosition);
+//			if (index > 0) {
+//				uriSchemeName = fStringSource.substring(fCurrentPosition - 1, index).toLowerCase();
+//
+//				if (fWikiModel.isValidUriScheme(uriSchemeName)) {
+//					// found something like "ftp", "http", "https"
+//					tempPosition += uriSchemeName.length() + 1;
+//					fCurrentCharacter = fSource[tempPosition++];
+//
+//					createContentToken(fWhiteStart, fWhiteStartPosition, 1);
+//					fWhiteStart = false;
+//					foundUrl = true;
+//					while (Encoder.isUrlIdentifierPart(fSource[tempPosition++])) {
+//					}
+//
+//				}
+//			}
+//		} catch (IndexOutOfBoundsException e) {
+//		}
+//		if (foundUrl) {
+//			String restString = fStringSource.substring(urlStartPosition - 1, tempPosition - 1);
+//			String uriSchemeSpecificPart = fStringSource.substring(index + 1, tempPosition - 1);
+//			if (fWikiModel.isValidUriSchemeSpecificPart(uriSchemeName, uriSchemeSpecificPart)) {
+//				fWhiteStart = false;
+//				fCurrentPosition = tempPosition;
+//				fCurrentPosition--;
+//				fWikiModel.appendExternalLink(uriSchemeName, restString, restString, true);
+//				return true;
+//			}
+//
+//		}
+//		// rollback work :-)
+//		fCurrentPosition = urlStartPosition;
 		return false;
 	}
 
@@ -1447,7 +1447,6 @@ public class WikipediaParser extends AbstractParser implements IParser {
 	 */
 	public static void parse(String rawWikiText, IWikiModel wikiModel, boolean parseTemplates, Appendable templateParserBuffer) {
 		try {
-			// initialize the wiki model
 			wikiModel.setUp();
 
 			Appendable buf;
