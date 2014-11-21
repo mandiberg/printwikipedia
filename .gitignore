@@ -2,6 +2,9 @@
 /dist/
 /nbproject/private/
 /logs/
+/curl/covers/
+/curl/in/
+/curl/out/
 
 # Compiled source #
 ###################
