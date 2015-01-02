@@ -55,10 +55,10 @@ public class WikiStyles {
         styles.loadTagStyle("h1", "after", "10");
         styles.loadTagStyle("h1", "font-weight", "bold");
         styles.loadTagStyle("H2", defaultFont);
-        styles.loadTagStyle("H2", "size", getPointSize(8));
-        styles.loadTagStyle("H2", "before", "120");
-        styles.loadTagStyle("H2", "after", "10");
-        styles.loadTagStyle("H2", "font-weight", "bold");
+        styles.loadTagStyle("h2", "size", getPointSize(8));
+        styles.loadTagStyle("h2", "before", "20");
+        styles.loadTagStyle("h2", "after", "120");
+        styles.loadTagStyle("h2", "font-weight", "bold");
         styles.loadTagStyle("h3", defaultFont);
         styles.loadTagStyle("h3", "size", getPointSize(6));
         styles.loadTagStyle("h3", "before", "126");

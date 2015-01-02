@@ -47,7 +47,6 @@ public class PdfTitleWrapper {
  
     public PdfTitleWrapper(int num, int startPage,String firstLine, String lastLine) throws FileNotFoundException, DocumentException {
         //Read settings
-        System.out.println("line in pdftitlewrap  "+firstLine);
         int curPage = startPage;
         pageFull = false;
         startPage = 0;
@@ -66,7 +65,8 @@ public class PdfTitleWrapper {
         //going to switch the margins here because in the lulu printout it seems to have the margins going the opposite sides
         //originally 27f, 67.5f
         
-        pdfDocument.setMargins(74.3f, 27f, 5.5f, 62.5f);
+//        pdfDocument.setMargins(74.3f, 27f, 5.5f, 62.5f);
+        pdfDocument.setMargins(66.3f, 47f, 5.5f, 62.5f);
         
         
 
@@ -112,7 +112,7 @@ public class PdfTitleWrapper {
     public void writeTitle(String line,FontSelector fs) throws DocumentException {
         
         try {
-                System.out.println(line + " begin writetitle");
+//                System.out.println(line + " begin writetitle");
                 if(line.length()>100){
                     line = line.substring(0, 96)+"...";
                 }
@@ -147,7 +147,7 @@ public class PdfTitleWrapper {
 
    
     public void close() {
-        System.out.println("you are closed");
+//        System.out.println("you are closed");
         try {
             pdfDocument.close();
             return;
@@ -155,8 +155,7 @@ public class PdfTitleWrapper {
             ex.printStackTrace();
         }
     }
-    public String coverChad(){
-        System.out.println("hi welcome to chad");
+    public String coverChad(){//meant to just cover the hanging last title with rect
         PdfContentByte canvas = pdfWriter.getDirectContent();
         Rectangle rect = new Rectangle(pdfDocument.right(), pdfDocument.top());
         rect.setBorder(Rectangle.BOX);
@@ -165,7 +164,6 @@ public class PdfTitleWrapper {
         canvas.rectangle(rect);
         int lc = headerFooter.getLineCount();
         String newLastLine = headerFooter.lineList.get(lc-2);
-        System.out.println(newLastLine + " this is ll");
         return newLastLine;
         
     }

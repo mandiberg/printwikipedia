@@ -142,7 +142,7 @@ public class FactoryProperties {
 			} catch (Exception e) {
 			}
 		}
-		value = props.getProperty("extraparaspace");
+		value = props.getProperty("extraparaspace");//this could be important for styling!
 		if (value != null) {
 			try {
 				p.setExtraParagraphSpace(Float.parseFloat(value));

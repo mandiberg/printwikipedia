@@ -328,7 +328,7 @@ public final class SimpleXMLParser {
                 if(character != '>')
                     throwException("Expected > for tag: <"+tag+"/>");
 				doTag();
-                processTag(true);
+                processTag(true);//wtf is this
                 processTag(false);
                 initTag();
                 if(!html && nested==0) {
@@ -385,6 +385,7 @@ public final class SimpleXMLParser {
                     state = restoreState();
                     previousCharacter = character;
                     text.append('&').append(entity.toString());
+                    System.out.println(entity.toString() + " entity that is turned to string after ");
                     entity.setLength(0);
                 }
                 else {
@@ -582,7 +583,8 @@ public final class SimpleXMLParser {
      * @param doc the document handler
      * @param in the document. The encoding is deduced from the stream. The stream is not closed
      * @throws IOException on error
-     */    
+     */
+    
     public static void parse(SimpleXMLDocHandler doc, InputStream in) throws IOException {
         byte b4[] = new byte[4];
         int count = in.read(b4);

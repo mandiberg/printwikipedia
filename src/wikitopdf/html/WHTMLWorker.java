@@ -10,6 +10,8 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.ElementTags;
 import com.lowagie.text.ExceptionConverter;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
 import com.lowagie.text.FontFactoryImp;
 import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.Image;
@@ -28,10 +30,13 @@ import com.lowagie.text.html.simpleparser.Img;
 import com.lowagie.text.html.simpleparser.IncCell;
 import com.lowagie.text.html.simpleparser.IncTable;
 import com.lowagie.text.html.simpleparser.StyleSheet;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.xml.simpleparser.SimpleXMLDocHandler;
 import com.lowagie.text.xml.simpleparser.SimpleXMLParser;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -39,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import wikitopdf.pdf.PdfPageWrapper;
 
 /**
  *
@@ -54,7 +60,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
     /**
      *
      */
-    protected DocListener document;
+    private DocListener document;
 
 	private Paragraph currentParagraph;
 
@@ -77,9 +83,11 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	private boolean skipText = false;
 
 	private HashMap interfaceProps;
+        
+        private FontSelector whtmlfs = new FontSelector();
 
 	private FactoryProperties factoryProperties = new FactoryProperties();
-
+        
 	/** Creates a new instance of WHTMLWorker
 	 * @param document A class that implements <CODE>DocListener</CODE>
 	 * */
@@ -115,6 +123,11 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		if (ff != null)
 			factoryProperties.setFontImp(ff);
 	}
+        /**
+         *
+         * @return
+         */
+
 
         /**
          *
@@ -154,7 +167,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
          * @throws IOException
          */
         public static ArrayList parseToList(Reader reader, StyleSheet style,
-			HashMap interfaceProps) throws IOException {
+                                            HashMap interfaceProps) throws IOException {
+                
 		WHTMLWorker worker = new WHTMLWorker(null);
 		if (style != null)
 			worker.style = style;
@@ -169,8 +183,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		try {
 			for (int k = 0; k < stack.size(); ++k)
 				document.add((Element) stack.elementAt(k));
-			if (currentParagraph != null)
-				document.add(currentParagraph);
+			if (currentParagraph != null){
+                            document.add(currentParagraph);
+                        }
 			currentParagraph = null;
 		} catch (Exception e) {
 			throw new ExceptionConverter(e);
@@ -184,7 +199,11 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	}
 
 	public void startElement(String tag, HashMap h) {
-            System.out.println(tag + " THIS IS TAG");
+            //seeing how long this takes.
+//            System.out.println(System.currentTimeMillis() + " before fontget");
+//            fontGet();
+              whtmlfs = PdfPageWrapper.fs;
+//            System.out.println(System.currentTimeMillis() + " afterfontget");
 		if (!tagsSupported.containsKey(tag))
 			return;
 		try {
@@ -366,6 +385,15 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					int v = 7 - Integer.parseInt(tag.substring(1));
 					h.put(ElementTags.SIZE, Integer.toString(v));
 				}
+                                if(tag.equals("h2")||tag.equals("H2")){
+                                    //I SET THE HEADERS TO DO SOME DIFFERENT STUFF IN HERE!!!
+                                    Phrase space_after_header = new Phrase(" ");
+                                    space_after_header.setLeading(15);
+                                    document.add(space_after_header);
+                                }
+                                
+                                
+//                                img.setSpacingBefore(Float.parseFloat(before));
 				cprops.addToChain(tag, h);
 
                                 return;
@@ -378,11 +406,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				com.lowagie.text.List list = new com.lowagie.text.List(false);
 				try{
 					list.setIndentationLeft(new Float(cprops.getProperty("indent")).floatValue());
+                                        
 				}catch (Exception e) {
-					list.setAutoindent(true);
+					list.setAutoindent(false);
+                                        list.setSymbolIndent(7f);
 				}
 				list.setListSymbol("\u2022");
-                                list.add("\n");
+                                
 				stack.push(list);
 				return;
 			}
@@ -395,7 +425,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				try{
 					list.setIndentationLeft(new Float(cprops.getProperty("indent")).floatValue());
 				}catch (Exception e) {
-					list.setAutoindent(true);
+					list.setAutoindent(false);
+                                        list.setSymbolIndent(14f);
 				}
 				stack.push(list);
 				return;
@@ -517,15 +548,19 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					endElement(HtmlTags.LISTITEM);
 				skipText = false;
 				cprops.removeChain(tag);
-				if (stack.empty())
-					return;
+//				if (stack.empty()){//here i should add on the last ul.
+//                                    return;
+//                                }
 				Object obj = stack.pop();
 				if (!(obj instanceof com.lowagie.text.List)) {
 					stack.push(obj);
 					return;
 				}
-				if (stack.empty())
+				if (stack.empty()){
 					document.add((Element) obj);
+                                        
+//                                        document.add((Element) new Chunk("\n"));
+                                }
 				else
 					((TextElementArray) stack.peek()).add(obj);
 				return;
@@ -555,7 +590,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				ArrayList cks = item.getChunks();
 				if (!cks.isEmpty())
 					item.getListSymbol()
-							.setFont(((Chunk) cks.get(0)).getFont());
+                                                    .setFont(((Chunk) cks.get(0)).getFont());
 				stack.push(list);
 				return;
 			}
@@ -674,6 +709,10 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 			currentParagraph = FactoryProperties.createParagraph(cprops);
 		}
 		Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
+                System.out.println("indv string  " + buf.toString());
+                Phrase ph = whtmlfs.process(buf.toString());
+                ph.setLeading(5);
+                
 		currentParagraph.add(chunk);
 	}
 
@@ -757,4 +796,5 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		while (tok.hasMoreTokens())
 			tagsSupported.put(tok.nextToken(), null);
 	}
+        
 }

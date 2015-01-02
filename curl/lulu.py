@@ -370,6 +370,6 @@ def travelAgent(inputFile):
 	inputFile=unicode(inputFile,'utf-8')
 	luluCruise(inputFile,volumeNum,title)
 
-travelAgent("0001&&&!&&&1976 Benson & Hedges Championships&&&.pdf")
+travelAgent("0001&&&!&&&1971 in Australia&&&.pdf")
 # browser = webdriver.Firefox()
 # immigration(0007,"0007&&&Aminabad, Qorveh&&&Arame, Maranhão&&&.pdf","Aminabad, Qorveh --- Arame, Maranhão",321,browser)

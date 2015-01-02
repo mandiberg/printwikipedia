@@ -1,5 +1,6 @@
 package info.bliki.wiki.filter;
 
+import com.lowagie.text.Phrase;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.EndTagToken;
 import info.bliki.htmlcleaner.TagNode;
