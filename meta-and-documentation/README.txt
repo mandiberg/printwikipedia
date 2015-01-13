@@ -36,6 +36,12 @@ You now have everything you need in order to get the database set up
 --------------------------------------------------------------------------------------
 Now that we the necessary tools we can set the database up!
 --------------------------------------------------------------------------------------
+Increasing buffer size
+	Open my.cnf -- on linux machines it is in /etc/my.cnf on Mac it is in /usr/local/mysql/support-files/
+	uncomment the line that reads "innodb_buffer_pool_size" and make it about =70% of your total RAM
+	I.E. if you have 16GB of RAM, innodb_buffer_pool_size=11G
+	Restart mysql (http://coolestguidesontheplanet.com/start-stop-mysql-from-the-command-line-terminal-osx-linux/)
+--------------------------------------------------------------------------------------
 Setting up a schema
 	Open MySQL Workbench.
 	Double Click on the existing Local Instance. 

@@ -37,8 +37,8 @@ public class WikiStyles {
         StyleSheet styles = new StyleSheet();
         styles.loadTagStyle("body", defaultStyle);
         styles.loadTagStyle("p", defaultStyle);
-        styles.loadTagStyle("li", defaultStyle);
-        styles.loadTagStyle("ul", defaultStyle);       
+        styles.loadTagStyle("li", "after", "-6");
+        styles.loadTagStyle("ul", defaultStyle);
         styles.loadTagStyle("a", defaultStyle);
         styles.loadTagStyle("dt", defaultStyle);
         styles.loadTagStyle("dl", defaultStyle);

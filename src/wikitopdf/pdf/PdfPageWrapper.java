@@ -229,7 +229,7 @@ public class PdfPageWrapper {
 
 
 
-        int font_size = 10;
+        int font_size = 8;
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
@@ -417,7 +417,6 @@ public class PdfPageWrapper {
         for (int i = 0; i < 38; i++) {
             try {
                 Phrase ph = _wikiFontSelector.getTitleFontSelector().process("\n");
-
                 mct.addElement(ph);
                 pdfDocument.add(mct);
             } catch (Exception ex) {
