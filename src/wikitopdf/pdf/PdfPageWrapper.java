@@ -17,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import wikitopdf.utils.WikiLogger;
 import wikitopdf.utils.WikiSettings;
 import wikitopdf.html.WHTMLWorker;
@@ -189,7 +187,7 @@ public class PdfPageWrapper {
         tfs.addFont(oriya);
         tfs.addFont(fser);
     }
-            public void fontGet(){
+            public void fontGet() throws DocumentException, IOException{
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
         FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
         FontFactory.register(path_to_fonts+"msgothic.tcc.0","fontGlyph");
@@ -230,6 +228,10 @@ public class PdfPageWrapper {
 
 
         int font_size = 8;
+        
+        
+        BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+        Font helv = new Font(bsHelv);
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
@@ -292,7 +294,7 @@ public class PdfPageWrapper {
         fs.addFont(thai);
         fs.addFont(tamil);
         fs.addFont(ops);
-//        fs.addFont(helv);
+        fs.addFont(helv);
         fs.addFont(roboto);
         fs.addFont(sinhala);
         fs.addFont(bengali);
@@ -344,18 +346,29 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
+            
+//            if(text.toLowerCase().contains("{{Infobox".toLowerCase())){//check if there's an infobox
+//                System.out.println(text + " text test"); 
+//                if(text.toLowerCase().contains("<ref".toLowerCase())){//if there is a reference inside the infobox
+//                    text.replaceAll("(<ref).+?(?:(</ref>)", "");//take care of references first.
+//                }
+//            }
+                    
             // text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
+            System.out.println(html + " $$$$");
             //<a id="References" name="References"></a><H2>REFERENCES</H2>
+            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#References\">References</a>\n</li>", ""); // JK needs to fix - we think it is ending on a unescaped foreward slash in file title
             html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#External_links\">External links</a>\n</li>", "");
-            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
+//            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
             html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#See_also\">See also</a>\n</li>","");
+            //html = html.replaceAll("(\\s+<a id).+?(?:(</a>))","");//removes anchor tags before H2 sections
             // text is now html (This is doing iText work)
             convertHtml2Pdf(html);
             // text has been made into pdf.
-
+            
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
         }

@@ -30,6 +30,7 @@ import com.lowagie.text.html.simpleparser.Img;
 import com.lowagie.text.html.simpleparser.IncCell;
 import com.lowagie.text.html.simpleparser.IncTable;
 import com.lowagie.text.html.simpleparser.StyleSheet;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.LineSeparator;
@@ -203,10 +204,14 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 
 	public void startElement(String tag, HashMap h) {
 //              System.out.println(tag + " this is taggy");
-              whtmlfs = PdfPageWrapper.fs;
+              
 		if (!tagsSupported.containsKey(tag))
 			return;
 		try {
+                    whtmlfs = PdfPageWrapper.fs;
+                    BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font cardo = new Font(bsCardo);
+                    cardo.setSize(10f);
 			style.applyStyle(tag, h);
 			String follow = (String) FactoryProperties.followTags.get(tag);
                         
@@ -223,7 +228,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					currentParagraph = new Paragraph();
 				}
 				stack.push(currentParagraph);
-                                System.out.println(currentParagraph.toString() + " pppppppp inside startelement anchor.htjmltags");
 				currentParagraph = new Paragraph();
 				return;
 			}
@@ -386,14 +390,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				if (!h.containsKey(ElementTags.SIZE)) {
 					int v = 7 - Integer.parseInt(tag.substring(1));
 					h.put(ElementTags.SIZE, Integer.toString(v));
-				}
-                                if(tag.equals("h2")||tag.equals("H2")){
-//I SET THE HEADERS TO DO SOME DIFFERENT STUFF IN HERE!!!
-                                    Phrase space_after_header = new Phrase(" ");
-                                    space_after_header.setLeading(15);
-                                    document.add(space_after_header);
-                                }
-                                
+				}                                
                                 
 //                                img.setSpacingBefore(Float.parseFloat(before));
 				cprops.addToChain(tag, h);
@@ -413,7 +410,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					list.setAutoindent(false);
                                         list.setSymbolIndent(7f);
 				}
-				list.setListSymbol("\u2022");
+                                Chunk lSymbol = new Chunk("\u2022",cardo);
+				list.setListSymbol(lSymbol);
 				stack.push(list);
 				return;
 			}
@@ -427,8 +425,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					list.setIndentationLeft(new Float(cprops.getProperty("indent")).floatValue());
 				}catch (Exception e) {
 					list.setAutoindent(false);
-                                        list.setSymbolIndent(14f);
+                                        list.setSymbolIndent(5f);
 				}
+                                Chunk lSymbol = new Chunk("");
+                                cardo.setSize(8f);
+                                lSymbol.setFont(cardo);
+                                list.setListSymbol(lSymbol);
+                                list.setSymbolIndent(12f);
 				stack.push(list);
 				return;
 			}
@@ -521,7 +524,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					}
 				}
 				Paragraph tmp = (Paragraph) stack.pop();
-                                System.out.println(tmp.toString() + "in a tag end element");
 				Phrase tmp2 = new Phrase();//what's going on here?
 				tmp2.add(currentParagraph);
 				tmp.add(tmp2);
@@ -560,7 +562,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 					return;
 				}
 				if (stack.empty()){
-                                    System.out.println("what is this: " + obj.toString());
 					document.add((Element) obj);
                                         if(obj instanceof com.lowagie.text.List){
                                             com.lowagie.text.List l = (com.lowagie.text.List) obj;
@@ -598,33 +599,26 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				ListItem item = (ListItem) obj;
 
 				ArrayList cks = item.getChunks();
-//                                Phrase lph = new Phrase("");
                                 Phrase lph = new Phrase();
                                 Phrase tempph = new Phrase();
                                 for(int i = 0; i < (cks.size()-1);i++){
                                     String tmp = cks.get(i).toString();
                                     System.out.println(tmp);
                                     tempph = whtmlfs.process(tmp);
-                                    lph.add(tempph);
-//                                    item.set(i, lph);//cast as string for processing
-                                    //^^you are now an arraylist of phrase objects.
-                                    System.out.println(item.toString() + " this is item in the loop");
+                                    lph.add(tempph);//add temp phrase to larger phrase to set leading outside and add to listitem
+
                                     
                                 }
-                                System.out.println("can i see my phrase please???? "  + lph);
                                 
                                 lph.setLeading(-3f);
-                                System.out.println(lph.getLeading()+"== leading");
+                                
                                 ListItem li = new ListItem();
                                 li.add(lph);
                                 li.setLeading(10f);
                                 ((com.lowagie.text.List) list).add(li);
-                                System.out.println(item.toString() + " out of the loop");
-				if (!cks.isEmpty()){//if the list is not empty. style the itemlist
-//                                    Phrase ph = whtmlfs.process(cks.get(0));
-                                    li.getListSymbol();//.setFont(((Chunk) cks.get(0)).getFont());//setting symbol for list dependent upon font.
-                                }
+                                
 				stack.push(list);
+                                System.out.println("pushed");
 				return;
 			}
 			if (tag.equals("div") || tag.equals("body")) {
