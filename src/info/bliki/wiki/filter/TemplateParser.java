@@ -453,8 +453,12 @@ public class TemplateParser extends AbstractParser {
 		if (fSource[fCurrentPosition] == '{') {
 			appendContent(writer, fWhiteStart, fWhiteStartPosition, 1);
 			int startTemplatePosition = ++fCurrentPosition;
-			if (fSource[fCurrentPosition] != '{') {
+			if (fSource[fCurrentPosition] != '{') {//checks for double nested
 				int templateEndPosition = findNestedTemplateEnd(fSource, fCurrentPosition);
+                                if(is_infobox==true){
+                                    System.out.println(writer.toString() + "  infobox is true");
+                                    startTemplatePosition = templateEndPosition;
+                                }
 				if (templateEndPosition < 0) {
 					fCurrentPosition--;
 				} else {
