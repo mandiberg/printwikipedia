@@ -7,14 +7,21 @@ import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.util.NodeAttribute;
 import info.bliki.wiki.tags.util.WikiTagNode;
+import java.sql.Array;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class WikipediaScanner {
 
 	public final static String TAG_NAME = "$TAG_NAME";
+        
+        public static boolean is_infobox = false;
+        public static List<String> unwanted = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
+        public static List<String> unwanted2 = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
+//        public static String[] holding = new String[unwanted.size()];
 
 	/**
 	 * Return value when the source is exhausted. Has a value of <code>-1</code>.
@@ -33,7 +40,7 @@ public class WikipediaScanner {
 	/**
 	 * The corresponding <code>char[]</code> array for the string source
 	 */
-	protected final char[] fSource;
+	protected char[] fSource;
 
 	public WikipediaScanner(String src) {
 		this(src, 0);
@@ -870,55 +877,50 @@ public class WikipediaScanner {
 	}
 
 	public static final int findNestedTemplateEnd(final char[] sourceArray, int startPosition) {
-		char ch;
-		// int len = sourceArray.length;
-		int countSingleOpenBraces = 0;
-		int position = startPosition;
-		try {
-			while (true) {
-				ch = sourceArray[position++];
-				if (ch == '{') {
-					// if (sourceArray[position] == '{') {
-					// position++;
-					// if ((len > position) && sourceArray[position] == '{') {
-					// // template parameter beginning
-					// position++;
-					// int[] temp = findNestedParamEnd(sourceArray, position);
-					// if (temp[0] < 0) {
-					// position--;
-					// temp[0] = findNestedTemplateEnd(sourceArray, position);
-					// if (temp[0] < 0) {
-					// return -1;
-					// }
-					// }
-					// position = temp[0];
-					// } else {
-					// // template beginning
-					// int temp = findNestedTemplateEnd(sourceArray, position);
-					// if (temp < 0) {
-					// return -1;
-					// }
-					// position = temp;
-					// }
-					// } else {
-					countSingleOpenBraces++;
-					// }
-				} else if (ch == '}') {
-					if (countSingleOpenBraces > 0) {
-						countSingleOpenBraces--;
-					} else {
-						if (sourceArray[position] == '}') {
-							// template ending
-							position++;
-							break;
-						}
-					}
-				}
-			}
-			return position;
-		} catch (IndexOutOfBoundsException e) {
-			return -1;
-		}
+            is_infobox = true;
+            Character ch;
+            int countSingleOpenBraces = 0;
+            int position = startPosition;
+            int x = 0;
+            String temp = "";
+            try {
+                System.out.println("here i am");
+                    while (true) {//while not at the end.
+                            ch = Character.toLowerCase(sourceArray[position++]);//take a lower char
+                            for(int i= 0; i<unwanted.size(); i++){//go through the of unwanted things
+                                System.out.println("iteration"+i);
+                                System.out.println(unwanted.toString());
+                                if( x <= unwanted.get(i).length()-1){//so long as we haven't gone over the length of this particular string.
+                                    if(ch != unwanted.get(i).charAt(x++)){//compare chars.
+                                        unwanted.remove(i);
+                                    }
+                                    if(unwanted.isEmpty())
+                                        is_infobox = false;
+                                    else
+                                        is_infobox = true;
+                                }
+                                
+                            }
+
+                            if (ch == '{') {
+                                countSingleOpenBraces++;
+                            } else if (ch == '}') {
+                                if (countSingleOpenBraces > 0) {
+                                    countSingleOpenBraces--;
+                                } else {
+                                    if (sourceArray[position] == '}') {
+                                        // template ending
+                                        position++;
+                                        break;
+                                    }
+                                }
+                            }
+                    }
+                    unwanted = unwanted2;
+                    return position;
+            } catch (IndexOutOfBoundsException e) {
+                    return -1;
+            }
 	}
 
 	public static final int[] findNestedParamEnd(final char[] sourceArray, int startPosition) {
