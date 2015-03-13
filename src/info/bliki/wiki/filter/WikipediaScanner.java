@@ -21,6 +21,7 @@ public class WikipediaScanner {
         public static boolean is_infobox = false;
         public static List<String> unwanted = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
         public static List<String> unwanted2 = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
+        public static int unwanted_len = unwanted.size();
 //        public static String[] holding = new String[unwanted.size()];
 
 	/**
@@ -875,36 +876,84 @@ public class WikipediaScanner {
 			return -1;
 		}
 	}
-
+        public static void repopulateUnwanted(){
+            boolean no_template = true;
+            if(unwanted.isEmpty()){
+                for(int n=0; n < unwanted2.size(); n++)
+                    unwanted.add(unwanted2.get(n));
+                return;
+            }
+            else{
+                for(int n=0; n < unwanted2.size(); n++){
+                    if(unwanted.contains(unwanted2.get(n))==false)
+                        unwanted.add(unwanted2.get(n));
+                }
+                return;
+            }
+        }
+//        public static boolean testInfobox(char[] sourceArray){
+//            Character ch;
+//            for(int x = 0; x < unwanted_len; x++){//loop through all of unwanted templates
+//                for(int i=0; i<unwanted.get(x).length(); i++){//loop through chars in unwanted templates
+//                    ch = Character.toLowerCase(sourceArray[i]);//make lowercase
+//                    System.out.println(ch + "<ch charat>"+ unwanted.get(x).charAt(i) + "");
+//                    if(ch!=unwanted.get(x).charAt(i)){
+////                        unwanted.remove(x);
+//                        System.out.println("removing: " + unwanted.get(x));
+//                        break;
+//                    }
+//                    if(x==unwanted.get(x).length())
+//                        return true;
+//                }
+//            }
+//            return false;
+//        }
 	public static final int findNestedTemplateEnd(final char[] sourceArray, int startPosition) {
             is_infobox = true;
+            boolean once = false;
             Character ch;
             int countSingleOpenBraces = 0;
             int position = startPosition;
             int x = 0;
             String temp = "";
+//            System.out.println("dealing with:");
+//            System.out.println(new String(sourceArray).substring(startPosition, sourceArray.length));
+            
+//            is_infobox = testInfobox(sourceArray);
             try {
-                System.out.println("here i am");
                     while (true) {//while not at the end.
                             ch = Character.toLowerCase(sourceArray[position++]);//take a lower char
-                            for(int i= 0; i<unwanted.size(); i++){//go through the of unwanted things
-                                System.out.println("iteration"+i);
-                                System.out.println(unwanted.toString());
-                                if( x <= unwanted.get(i).length()-1){//so long as we haven't gone over the length of this particular string.
-                                    if(ch != unwanted.get(i).charAt(x++)){//compare chars.
-                                        unwanted.remove(i);
-                                    }
-                                    if(unwanted.isEmpty())
-                                        is_infobox = false;
-                                    else
-                                        is_infobox = true;
-                                }
+                            for(int i= 0; i < unwanted.size(); i++){//go through the of unwanted things
+                                if(!is_infobox||once)
+                                    break;
+//                                System.out.println("iteration"+i);
+//                                System.out.println(unwanted.toString());
+//                                System.out.println(ch +" <ch x:"+x+" i:"+i+" unwantedch> " + unwanted.get(i).charAt(x));
+                                if(x > unwanted.get(i).length() && is_infobox)
+                                    continue;
                                 
-                            }
+                                if(ch != unwanted.get(i).charAt(x)){
+//                                    System.out.println("cur unwanted lists. removing: " + unwanted.get(i) );
+                                    unwanted.remove(i);
+                                    System.out.println(unwanted);
+                                }
+                                if(unwanted.isEmpty()){
+                                    is_infobox=false;
+                                    break;
+                                }
+                                else{
+                                    is_infobox=true;
+                                    once=true;
+                                }
+//                                System.out.println(is_infobox + " << infobox");
 
+                            }
+                            x++;
                             if (ch == '{') {
+                                repopulateUnwanted();
                                 countSingleOpenBraces++;
                             } else if (ch == '}') {
+                              
                                 if (countSingleOpenBraces > 0) {
                                     countSingleOpenBraces--;
                                 } else {
@@ -916,7 +965,10 @@ public class WikipediaScanner {
                                 }
                             }
                     }
-                    unwanted = unwanted2;
+                    System.out.println("finished looping");
+                    if(unwanted.size() != unwanted_len)//if it's missing some strings.
+                        repopulateUnwanted();
+                    System.out.println(unwanted);
                     return position;
             } catch (IndexOutOfBoundsException e) {
                     return -1;
