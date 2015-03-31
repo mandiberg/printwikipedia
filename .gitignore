@@ -54,3 +54,5 @@ curl/pass.py
 
 
 curl/barcode.png
+*.pdf
+*.txt
