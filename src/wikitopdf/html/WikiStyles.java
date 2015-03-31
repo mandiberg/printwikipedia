@@ -97,7 +97,8 @@ public class WikiStyles {
 
         StyleSheet styles = new StyleSheet();
         styles.loadTagStyle("body", defaultStyle);
-        styles.loadTagStyle("p", defaultStyle);
+        styles.loadTagStyle("p", "before","3");
+        styles.loadTagStyle("p", "after","3");
         styles.loadTagStyle("li", defaultStyle);
         styles.loadTagStyle("a", defaultStyle);
         styles.loadTagStyle("dt", defaultStyle);
@@ -116,8 +117,8 @@ public class WikiStyles {
         styles.loadTagStyle("h2", defaultFont);
         styles.loadTagStyle("h2", "size", getPointSize(18));
         styles.loadTagStyle("h2", "before", "10");
-        //styles.loadTagStyle("h2", "after", "10");
-        //styles.loadTagStyle("h2", "font-weight", "bold");
+        styles.loadTagStyle("h2", "after", "10");
+        styles.loadTagStyle("h2", "font-weight", "bold");
 
         styles.loadTagStyle("h3", defaultFont);
         styles.loadTagStyle("h3", "size", getPointSize(12));
