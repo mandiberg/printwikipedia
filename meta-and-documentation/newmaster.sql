@@ -1,5 +1,5 @@
-USE printwiki;
- CREATE  TABLE `printwiki`.`newmaster` (
+USE oob_test;
+ CREATE  TABLE `oob_test`.`newmaster` (
    `pkey` INT NOT NULL AUTO_INCREMENT ,
    `page_id` INT(10) NULL ,
    `page_title` VARCHAR(255) NULL ,
@@ -8,7 +8,7 @@ USE printwiki;
    `old_text` LONGTEXT NULL ,
    PRIMARY KEY (`pkey`) )
  ENGINE = MyISAM
- DEFAULT CHARACTER SET = utf8;
+ DEFAULT CHARACTER SET = utf8mb4;
 
 INSERT INTO newmaster (page_id, page_title, rev_user_text, rev_comment, old_text)
 SELECT page.page_id, page.page_title, revision.rev_user_text, revision.rev_comment, text.old_text
