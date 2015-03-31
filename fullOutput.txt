@@ -1,9 +1,0 @@
-Running pdf /Users/wiki/repos/printwikipedia
-[Element: <settings/>] root
-Cardo font fam
-Cardo font fam
-Cardo font fam
-Cardo font fam
-Foo
-Nov 21, 2014 11:09:05 AM wikitopdf.PageParserExec main
-SEVERE: null
