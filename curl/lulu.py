@@ -32,24 +32,27 @@ cFolder = pwd+"/covers"
 #open file and read what last char is. if 0 not finished so find last entry in line and then use that one
 #other chars mean different things but for right now we'll do this
 
-def immigration(volumeNum,inputFile,title,lulu_id,browser):#move file from one folder to another. give next file over. This is done so there isn't such a long read for the 6k file run through.
+def immigration(volumeNum,inputFile,title,lulu_id, sku, browser):#move file from one folder to another. give next file over. This is done so there isn't such a long read for the 6k file run through.
 	print "get luluid to be put into json string and added to file."
 	browser.quit()
 	print "make string and append to json1.txt"
-	json_s = "{'lulu_id':"+str(lulu_id)+",'volume':"+str(volumeNum)+",'name':\""+str(title)+"\"},"
+	json_s = "{'lulu_id':"+str(lulu_id)+",'sku':"+str(sku)+",'volume':"+str(volumeNum)+",'name':\""+str(title)+"\"},"
 	print json_s
-	json_f = open("json1.txt","a")
+	json_f = open("json4Ben2.txt","a")
 	json_f.write(json_s)
 	json_f.close()
 	print "moving volume "+ volumeNum+" to clear out folder and make listing and search faster."
-	for i in os.listdir(inFolder):
+	folder_name = roundDown(int(volumeNum),20)
+	if folder_name=="0000":
+		folder_name="0001"
+	for i in os.listdir(inFolder+"/"+folder_name):
 		if inputFile == i:
 			#move that file to out and then find the next one using volumeNum
-			os.rename(inFolder+"/"+inputFile, outFolder+"/"+inputFile)
+			os.rename(inFolder+"/"+folder_name+"/"+inputFile, outFolder+"/"+inputFile)
 			break
 	nextCheck=int(volumeNum)+1#convert to int and add one to find next volume
 	#make list and then use .sort() to get through all of them save it elsewhere. and keep pulling the last one out.
-	for i in os.listdir(inFolder):#find the next inputFile
+	for i in os.listdir(inFolder+"/"+folder_name):#find the next inputFile
 		if i == '.DS_Store':
 			print "ignore .ds_store"
 			continue
@@ -102,15 +105,34 @@ def findNext(browser,numOfPages,inc_type):
 			return isNext
 		else: 
 			x+=1
+def roundDown(num,divisor=20):#returns a string of closest rounded down with 4 leading zeros if possible.
+	return '{0:04d}'.format(num - (num%divisor))
 
 def iterateFiles(volumeNum, browser, encoding="utf-8"):#go through fileslist to upload pdf doc. 
 	print "about to go through files"
 	print "get in iframe"
+	folder_name = roundDown(int(volumeNum),20)
+	if(folder_name=="0000"):
+		folder_name="0001"#first folder is 0001 not 0000
 	browser.switch_to_frame(browser.find_element_by_tag_name("iframe"))
 	sleep(2)
+	x_folders_option = "//*[@id='labelFilter']"
+	execution(browser,x_folders_option,20,"click")#clickin the folders
+	n = 1
+	while(1):#this is dangerous and should probably be changed....
+		t_folder = execution(browser,"/html/body/div[1]/div[1]/div/table/tbody/tr/td[1]/div/div[2]/ul[2]/li["+str(n)+"]/a",10,"text")
+		print t_folder.text + " this is text of folder! n is at " + str(n) + " folder_name" + folder_name
+		if(folder_name == t_folder.text):
+			execution(browser,"/html/body/div[1]/div[1]/div/table/tbody/tr/td[1]/div/div[2]/ul[2]/li["+str(n)+"]/a",30,"click")
+			sleep(2)
+			break
+		else:
+			n+=1
+
 	numXpath = "//*[@id='pageCount']"
 	submitButton = "/html/body/div[1]/div[1]/div/table/tbody/tr/td[2]/div/div[1]/table/tbody/tr/td[1]/input"
 	r_numOfPages = execution(browser,numXpath,10,"text")
+	print r_numOfPages
 	numOfPages = r_numOfPages.text
 	print "there are a total of " + numOfPages + " pages."
 	numOfPages = int(numOfPages)
@@ -355,17 +377,30 @@ def luluCruise(inputFile,volumeNum,title):
 	print "almost there. just lemme review the order here"
 	browser.find_element_by_xpath("//*[@id='fNext']").click()
 	print "book " +title+ " pushed to lulu okay."
-	x_lulu_id = "//*[@id='projectInformationSection']/div[2]/table/tbody/tr[1]/td"
+	x_lulu_isbn = "//*[@id='projectInformationSection']/div[2]/table/tbody/tr[1]/td"
+	x_lulu_id = "/html/body/div[1]/div[3]/div[3]/div[2]/div/div[2]/form/div[1]/div[2]/div/div[2]/div[2]/table/tbody/tr[1]/td"
+	lulu_isbn = execution(browser,x_lulu_isbn,20,"text")
 	lulu_id = execution(browser,x_lulu_id,20,"text")
+	lulu_isbn = lulu_isbn.text
 	lulu_id = lulu_id.text
 	browser.find_element_by_xpath("//*[@id='fNext']").click()
+	print "go to the sale page to grab the SKU code."
+	x_sell = "/html/body/div[1]/div[3]/div[2]/div[2]/div/div[1]/div/h3/a"
+	execution(browser,x_sell,20,"click")
+	sku_x = "/html/body/div[1]/div[2]/div[2]/div[1]/div[2]/div[2]/form/input[1]"
+	#^^straight up sku code in a hidden input
+	# x_buy_url = "/html/body/div/div/div/table/tbody/tr/td[1]/div/form/input[5]"
+	#^^straight up url to the thing
+	sku = browser.find_element_by_xpath(sku_x).get_attribute("value")
+	print sku +  " sku"
+
 	print "begin next book at vol #"+volumeNum
-	immigration(volumeNum, inputFile, title, lulu_id, browser)
+	immigration(volumeNum, inputFile, title, lulu_id, sku, browser)
 
 def travelAgent(inputFile):
 	print "splitting strings, encoding for unicode to make firefox happy. sending off file: " + inputFile
 	splitInput = inputFile.split('&&&')#split on the dash symbol. to make a nice buncha strings
-	volumeNum = splitInput[0]#this is the volume number we are currently on. 
+	volumeNum = splitInput[0]#this is the volume number we are currently on. it is a string!
 	title = splitInput[1]+" --- "+splitInput[2]
 	inputFile=unicode(inputFile,'utf-8')
 	luluCruise(inputFile,volumeNum,title)
