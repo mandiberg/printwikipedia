@@ -43,6 +43,7 @@ public class PdfPageWrapper {
 //        WHTMLWorker.fontGet();//start font thing for the new page.
         tFontGet();
         fontGet();
+        preFontGet();
         //72 pixels per inch
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
         //pdfDocument = new Document(new Rectangle(1918, 1018)); //
@@ -421,8 +422,8 @@ public class PdfPageWrapper {
     public void writePage(WikiPage page) {
         currentTitle = page.getTitle();
         currentArticleID = page.getId();
-        String x = page.getRevision().getText();
-        if(x.contains("wiktionary redirect"))
+        String x = page.getRevision().getText().toLowerCase();
+        if(x.contains("wiktionary redirect"))//breaks on wiktionary redirect. just ommit it.
             return;
         //System.out.println("Article ID is" + currentArticleID);
         writeTitle(currentTitle);
@@ -434,7 +435,6 @@ public class PdfPageWrapper {
     //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
         Phrase ph;
-        
         try {
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
@@ -464,19 +464,26 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
-//            text = text.replaceAll("(\\{\\{Orphan\\|date).+(\\}\\})","");
+            System.out.println("77777" + text );
+            text = text.replaceAll("<gallery[\\s\\S]*?</gallery>","");
 //            text = text.replaceAll("(official_name\\s+\\=).+?(\\|)","");
 //            text = text.replaceAll("(name\\s+\\=).+?(\\|)","");
-            System.out.println("77777" + text );
-            // text is in BBCode (This is bliki)
+            
+//             text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
             System.out.println(html);
             //<a id="References" name="References"></a><H2>REFERENCES</H2>
             html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#References\">References</a>\n</li>", ""); // JK needs to fix - we think it is ending on a unescaped foreward slash in file title
+            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H2>GALLERY</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Bibliography\">Bibliography</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Footnotes\">Footnotes</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#References\">References</a>\n</li>", "");
             html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#External_links\">External links</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
 //            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
             html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#See_also\">See also</a>\n</li>","");
             //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
