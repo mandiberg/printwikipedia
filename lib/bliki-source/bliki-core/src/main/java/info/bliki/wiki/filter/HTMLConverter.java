@@ -156,9 +156,9 @@ public class HTMLConverter implements ITextConverter {
 		}
 		String href = map.get("href");
 		if (href != null) {
-			resultBuffer.append("<a class=\"internal\" href=\"");
+			resultBuffer.append("");
 			resultBuffer.append(map.get("href"));
-			resultBuffer.append("\" ");
+			resultBuffer.append("");
 
 			if (caption != null && caption.length() > 0) {
 				resultBuffer.append("title=\"");
@@ -167,7 +167,7 @@ public class HTMLConverter implements ITextConverter {
 				} else {
 					resultBuffer.append(alt);
 				}
-				resultBuffer.append('\"');
+				resultBuffer.append("");
 			}
 			resultBuffer.append('>');
 		}
