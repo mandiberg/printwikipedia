@@ -36,7 +36,7 @@ public class WikiCoverParser {
     public void parseCover() throws FileNotFoundException, IOException, DocumentException, ParseException
     {
         
-        int num = 0;
+        int num = 1;
         int pagesCount = 0;
         
         PdfCoverWrapper pdfWrapper = new PdfCoverWrapper(num, pagesCount);

@@ -100,7 +100,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
         contentPage.showTextAligned(align, text, x, y, 0);
         
         contentPage.endText();
-        contentPage.restoreState();
+//        contentPage.restoreState();
 
         //13.5f - space to left or right page border
         contentPage.moveTo(x + 13.5f * sign, y + 10);

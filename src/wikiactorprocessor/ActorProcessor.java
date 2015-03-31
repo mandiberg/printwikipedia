@@ -7,7 +7,8 @@ package wikiactorprocessor;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
-import wikitopdf.Processor; //we think this was not used
+
+import wikitopdf.Processor;
 import wikitopdf.SQLProcessor;
 import wikitopdf.WikiProcessor;
 import wikitopdf.utils.WikiSettings;
@@ -92,8 +93,10 @@ public class ActorProcessor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		// removed 5/21 rebuild b/c wikiprocessor.java not importing correctly
                         Processor processor = new Processor(start, sqlReader); //this is where it uses the wikiprocessor.java?
+
 			processor.run();
 			return 1;
 		}
