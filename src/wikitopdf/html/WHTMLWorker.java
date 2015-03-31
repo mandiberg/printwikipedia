@@ -32,10 +32,13 @@ import com.lowagie.text.html.simpleparser.IncTable;
 import com.lowagie.text.html.simpleparser.StyleSheet;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.FontSelector;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.xml.simpleparser.SimpleXMLDocHandler;
 import com.lowagie.text.xml.simpleparser.SimpleXMLParser;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -72,10 +75,14 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	private boolean pendingTD = false;
 
 	private boolean pendingLI = false;
+        private  boolean is_cell = false;
 
 	private StyleSheet style = new StyleSheet();
 
 	private boolean isPRE = false;
+        private boolean isH3 = false;
+        private boolean isTD = false;
+        private boolean isLI = false;
 
 	private Stack tableState = new Stack();
 
@@ -84,6 +91,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	private HashMap interfaceProps;
         
         private FontSelector whtmlfs = new FontSelector();
+        private FontSelector whtmlprefs = new FontSelector();
 
 	private FactoryProperties factoryProperties = new FactoryProperties();
         
@@ -129,7 +137,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
         public Phrase createPhrase(String str, ChainedProperties cprops){
             Phrase ph = whtmlfs.process(str);
             ph.setHyphenation(factoryProperties.getHyphenation(cprops));
-            return new Phrase();
+            return ph;
         }
 
         /**
@@ -202,13 +210,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		cprops.addToChain("body", h);
 	}
 
-	public void startElement(String tag, HashMap h) {
-//              System.out.println(tag + " this is taggy");
-              
+    @Override
+	public void startElement(String tag, HashMap h) {              
 		if (!tagsSupported.containsKey(tag))
 			return;
 		try {
                     whtmlfs = PdfPageWrapper.fs;
+                    whtmlprefs = PdfPageWrapper.pfs;
                     BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font cardo = new Font(bsCardo);
                     cardo.setSize(10f);
@@ -311,8 +319,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 								String baseurl = (String) interfaceProps
 										.get("img_baseurl");
 								if (baseurl != null) {
-									src = baseurl + src;
-									img = Image.getInstance(src);
+                                                                    src = baseurl + src;
+                                                                    img = Image.getInstance(src);
 								}
 							}
 						}
@@ -385,15 +393,21 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				return;
 			}
 			endElement("p");
-			if (tag.equals("h1") || tag.equals("h2") || tag.equals("h3")
+			if (tag.equals("h1") || tag.equals("h2") || tag.equals("h3") 
 					|| tag.equals("h4") || tag.equals("h5") || tag.equals("h6")) {
+                            if(tag.equals("h3") || tag.equals("H3")){
+                                isH3 = true;
+                            }
 				if (!h.containsKey(ElementTags.SIZE)) {
-					int v = 7 - Integer.parseInt(tag.substring(1));
-					h.put(ElementTags.SIZE, Integer.toString(v));
-				}                                
-                                
-//                                img.setSpacingBefore(Float.parseFloat(before));
-				cprops.addToChain(tag, h);
+					int v = 7 - Integer.parseInt( tag.substring(1));
+//                                    int v = 10;
+					h.put(ElementTags.SIZE, Integer.toString(v));                                        
+				}
+                            String s_space = "\n";
+                            Phrase space = whtmlfs.process(s_space);
+                            space.setLeading(4f);//add spacing before the Htags.
+                            document.add(space);
+                            cprops.addToChain(tag, h);
 
                                 return;
 			}
@@ -401,6 +415,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				if (pendingLI)
 					endElement(HtmlTags.LISTITEM);
 				skipText = true;
+
 				cprops.addToChain(tag, h);
 				com.lowagie.text.List list = new com.lowagie.text.List(false);
 				try{
@@ -416,34 +431,36 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				return;
 			}
 			if (tag.equals(HtmlTags.ORDEREDLIST)) {
-				if (pendingLI)
-					endElement(HtmlTags.LISTITEM);
-				skipText = true;
-				cprops.addToChain(tag, h);
-				com.lowagie.text.List list = new com.lowagie.text.List(true);
-				try{
-					list.setIndentationLeft(new Float(cprops.getProperty("indent")).floatValue());
-				}catch (Exception e) {
-					list.setAutoindent(false);
-                                        list.setSymbolIndent(5f);
-				}
-                                Chunk lSymbol = new Chunk("");
-                                cardo.setSize(8f);
-                                lSymbol.setFont(cardo);
-                                list.setListSymbol(lSymbol);
-                                list.setSymbolIndent(12f);
-				stack.push(list);
-				return;
+                            if (pendingLI)
+                                    endElement(HtmlTags.LISTITEM);
+                            skipText = true;
+
+                            cprops.addToChain(tag, h);
+                            com.lowagie.text.List list = new com.lowagie.text.List(true);
+                            try{
+                                    list.setIndentationLeft(new Float(cprops.getProperty("indent")).floatValue());
+                            }catch (Exception e) {
+                                    list.setAutoindent(false);
+                                    list.setSymbolIndent(5f);
+                            }
+                            Chunk lSymbol = new Chunk("");
+                            cardo.setSize(8f);
+                            lSymbol.setFont(cardo);
+                            list.setListSymbol(lSymbol);
+                            list.setSymbolIndent(12f);
+                            stack.push(list);
+                            return;
 			}
 			if (tag.equals(HtmlTags.LISTITEM)) {
-				if (pendingLI)
-					endElement(HtmlTags.LISTITEM);
-				skipText = false;
-				pendingLI = true;
-				cprops.addToChain(tag, h);
-				ListItem item = FactoryProperties.createListItem(cprops);
-				stack.push(item);
-				return;
+                            if (pendingLI)
+                                    endElement(HtmlTags.LISTITEM);
+                            skipText = false;
+                            pendingLI = true;
+
+                            cprops.addToChain(tag, h);
+                            ListItem item = FactoryProperties.createListItem(cprops);
+                            stack.push(item);
+                            return;
 			}
 			if (tag.equals(HtmlTags.DIV) || tag.equals(HtmlTags.BODY) || tag.equals("p")) {
 				cprops.addToChain(tag, h);
@@ -471,10 +488,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				skipText = false;
 				pendingTD = true;
 				cprops.addToChain("td", h);
+                                IncCell k = new IncCell(tag, cprops);
+                                PdfPCell x = k.getCell();
 				stack.push(new IncCell(tag, cprops));
 				return;
 			}
 			if (tag.equals("table")) {
+                            isTD = true;
 				cprops.addToChain("table", h);
 				IncTable table = new IncTable(h);
 				stack.push(table);
@@ -513,20 +533,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				}
 				if (!skip) {
 					String href = cprops.getProperty("href");
-                                        System.out.println(href  + " href pring");
-					if (href != null) {
-						ArrayList chunks = currentParagraph.getChunks();
-						int size = chunks.size();
-						for (int k = 0; k < size; ++k) {
-							Chunk ck = (Chunk) chunks.get(k);
-							ck.setAnchor(href);
-						}
-					}
 				}
 				Paragraph tmp = (Paragraph) stack.pop();
+                                tmp.setLeading(12f);
 				Phrase tmp2 = new Phrase();//what's going on here?
 				tmp2.add(currentParagraph);
-				tmp.add(tmp2);
+				tmp.add(tmp2);//^^formats whole paragraph....
+                                
 				currentParagraph = tmp;
 				cprops.removeChain("a");
 				return;
@@ -603,11 +616,12 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 Phrase tempph = new Phrase();
                                 for(int i = 0; i < (cks.size()-1);i++){
                                     String tmp = cks.get(i).toString();
-                                    System.out.println(tmp);
-                                    tempph = whtmlfs.process(tmp);
+                                    if(isTD)
+                                        tempph = whtmlprefs.process(tmp);
+                                    else
+                                        tempph = whtmlfs.process(tmp);
                                     lph.add(tempph);//add temp phrase to larger phrase to set leading outside and add to listitem
 
-                                    
                                 }
                                 
                                 lph.setLeading(-3f);
@@ -618,7 +632,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 ((com.lowagie.text.List) list).add(li);
                                 
 				stack.push(list);
-                                System.out.println("pushed");
 				return;
 			}
 			if (tag.equals("div") || tag.equals("body")) {
@@ -636,27 +649,43 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 			}
 			if (tag.equals("h1") || tag.equals("h2") || tag.equals("h3")
 					|| tag.equals("h4") || tag.equals("h5") || tag.equals("h6")) {
-				cprops.removeChain(tag);
+                            if(tag.equals("h3")||tag.equals("H3")){
+                                isH3 = false;
+                            }
+                            cprops.removeChain(tag);
 				return;
 			}
 			if (tag.equals("table")) {
-				if (pendingTR)
-					endElement("tr");
-				cprops.removeChain("table");
-				IncTable table = (IncTable) stack.pop();
-				PdfPTable tb = table.buildTable();
-				tb.setSplitRows(true);
-				if (stack.empty())
-					document.add(tb);
-				else
-					((TextElementArray) stack.peek()).add(tb);
-				boolean state[] = (boolean[]) tableState.pop();
-				pendingTR = state[0];
-				pendingTD = state[1];
-				skipText = false;
-				return;
+                            if (pendingTR)
+                                    endElement("tr");
+                            isTD = false;
+                            cprops.removeChain("table");
+                            IncTable table = (IncTable) stack.pop();
+                            
+                            PdfPTable tb = table.buildTable();
+                            tb.setWidthPercentage(100);
+                            tb.setSpacingBefore(20f);
+                            tb.setSplitRows(true);
+                            if (stack.empty()){
+                                String s_space = "\n";
+                                Phrase space = whtmlfs.process(s_space);
+                                space.setLeading(4f);//add spacing before the Htags.
+                                document.add(space);
+                                document.add(tb);
+                            }
+                            else{
+                             TextElementArray tea = ((TextElementArray) stack.peek());
+                             ArrayList x = tea.getChunks();
+                             tea.add(tb);
+                            }
+                            boolean state[] = (boolean[]) tableState.pop();
+                            pendingTR = state[0];
+                            pendingTD = state[1];
+                            skipText = false;
+                            return;
 			}
 			if (tag.equals("tr")) {
+                           
 				if (pendingTD)
 					endElement("td");
 				pendingTR = false;
@@ -665,14 +694,19 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				IncTable table = null;
 				while (true) {
 					Object obj = stack.pop();
-					if (obj instanceof IncCell) {
-						cells.add(((IncCell) obj).getCell());
+					if (obj instanceof IncCell) { 
+                                            IncCell cur_cell = (IncCell) obj;
+                                            PdfPCell p_cell = cur_cell.getCell();
+                                            p_cell.setBorderWidth(.5f);
+                                            p_cell.setBorderColor(Color.BLACK);
+                                            is_cell = true;
+                                            cells.add(p_cell);
 					}
 					if (obj instanceof IncTable) {
 						table = (IncTable) obj;
 						break;
 					}
-				}
+                                }
 				table.addCols(cells);
 				table.endRow();
 				stack.push(table);
@@ -692,18 +726,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 
     @Override
 	public void text(String str) {
-//            System.out.println("hey i'm in whtmlworker text and am about to write:" + str);
 		if (skipText)
 			return;
 		String content = str;
-		if (isPRE) {
-			if (currentParagraph == null) {
-				currentParagraph = FactoryProperties.createParagraph(cprops);
-			}
-			Phrase ph = createPhrase(content, cprops);
-			currentParagraph.add(ph);
-			return;
-		}
 		if (content.trim().length() == 0 && content.indexOf(' ') < 0) {
 			return;
 		}
@@ -737,10 +762,36 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		if (currentParagraph == null) {
 			currentParagraph = FactoryProperties.createParagraph(cprops);
 		}
-		Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
-                Phrase ph = whtmlfs.process(buf.toString());//will be added to currentParagraph
+                if (isPRE) {
+                    Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
+                    Phrase ph = whtmlprefs.process(buf.toString());
+                    ph.setLeading(4f);
+                    currentParagraph.add(ph);
+                    isPRE = false;
+//			return;
+		}
+                else if(isH3){
+                    Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
+                    Phrase ph = whtmlprefs.process(buf.toString());
+//                    ph.setLeading(4f);
+                    currentParagraph.add(ph);
+                    isH3 = false;
+                }
+                else if(isTD){
+                    Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
+                    Phrase ph = whtmlprefs.process(buf.toString());
+                    ph.setLeading(4f);
+                    currentParagraph.add(ph);
+//                    isTD = false;
+                }
+                else{
+                    Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
+                    
+                Phrase ph = whtmlfs.process(buf.toString());
                 
 		currentParagraph.add(ph);
+                }
+		
 	}
 
 	public boolean add(Element element) throws DocumentException {
@@ -810,7 +861,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
          *
          */
         public static final String tagsSupportedString = "ol ul li a pre span br p div body i u sub sup em strong s strike"
-			+ " h1 h2 h3 h4 h5 h6 hr";
+			+ " h1 h2 h3 h4 h5 h6 hr"
+                        + " table td tr th dd dl";
                         //+ " b font table tr td th";
 
         /**

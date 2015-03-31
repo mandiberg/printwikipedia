@@ -2,6 +2,8 @@ package wikitopdf;
 /* *************************************************** */
 // Included for debuging delete after done
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 /* *************************************************** */
 import wikiactorprocessor.ActorProcessor;
@@ -18,17 +20,10 @@ public class PageParserExec {
     */
     public static void main(String[] args) {
     /* *************************************************** */
-    // Included for debuging delete after done
-    try {
-        PrintStream out = new PrintStream(new FileOutputStream("fullOutput.txt"));
-        System.setOut(out);
-        System.setErr(out);
-    } catch (Exception ex){
-        
-    }
-    /* *************************************************** */
+    
     int length = args.length;
     String wikiProcess = "";
+    String prod = "";
     //String isThreaded = "threaded";
     if (length <= 0) {
         System.out.println("Default is pdf. Options are: pdf, threaded, toc, pagenumbers, covers. e.g.: java -jar \"wikitopdf.jar\" pdf");
@@ -36,6 +31,29 @@ public class PageParserExec {
     } else {
     // setting the process from the command line args
         wikiProcess = args[0];
+    }
+    if(length > 1){
+        prod = args[1];
+    }
+    if(prod=="0"){//is not production
+        System.setOut(new PrintStream(new OutputStream() {
+
+        @Override
+        public void write(int arg0) throws IOException {
+            //do nothing.
+        }
+        }));
+    }
+    else if(prod=="1"){
+        // Included for debuging delete after done
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("fullOutput.txt"));
+            System.setOut(out);
+            System.setErr(out);
+        } catch (Exception ex){
+
+        }
+        /* *************************************************** */
     }
     try{
     //based on the wikiProcess, does one of several processes
