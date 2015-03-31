@@ -23,19 +23,16 @@ public class WikiHtmlConverter {
         //replace some of these thigns to see if they are causing the problem
         output = headerToUppercase(output) + "<b>_____________________</b><br /><br />";
         output = output.replace("<hr/>", "");
-        System.out.println(output + " BBBBBB"); 
         String whitespacePattern = "(<p>\\s+)(</p>)";//strange empty <p> tags at the end of articles.
         output = output.replaceAll(whitespacePattern,"");
-        System.out.println(output + " AAAAAAA");
         String blankHrefPattern = "(<li class=\"toclevel-\\d+\"><a href=\"#\"></a>)";//blank unrenderable href tags in the toc of the article.
         output = output.replaceAll(blankHrefPattern,"");
-        //need to figure out the proper way to remov everything from references and down...
-//        System.out.println("\n this is the text+++++++++\n"+text+"\n\n+++++++");
-//        String referencesP = "== References ==\n\n\n\n\trrtr";
-//        Pattern p = Pattern.compile("== References ==\\z");
-////        System.out.println(output.matches(referencesP)+ " HERE I AM THE MATCH");
-//        System.out.println(p.find() + " HERE I AM THE MATCH");
-//        System.out.println("\n this is the output\n"+output);
+        String hangingTemplate = "\\s*<p>.+?(}})\\s*</p>";
+        output = output.replaceAll(hangingTemplate,"");
+        String htSecond = "\\n\\W.+?(}})";
+        output = output.replaceAll(htSecond,"");
+//        String defaultSort = "(<p>+.*}}\\s*</p>)";
+//        output = output.replaceAll(defaultSort,"");
 
         return output;
     }
@@ -67,6 +64,7 @@ public class WikiHtmlConverter {
 
         while (matcher.find()) {
             matcher.appendReplacement(result, matcher.group(0).toUpperCase());
+//            System.out.println(matcher.group(0) + " < match group");
         }
 
         matcher.appendTail(result);
