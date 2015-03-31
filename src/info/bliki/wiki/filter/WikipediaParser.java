@@ -28,6 +28,8 @@ import info.bliki.wiki.tags.util.TagStack;
 import info.bliki.wiki.tags.util.WikiTagNode;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.validator.EmailValidator;
 
@@ -1002,6 +1004,7 @@ public class WikipediaParser extends AbstractParser implements IParser {
 			if (headerEndPosition > headerStartPosition) {
 				head = fStringSource.substring(headerStartPosition, headerEndPosition);
 			}
+                        System.out.println(head + " i am in the head!");
 			fEventListener.onHeader(fSource, headerStartPosition, headerEndPosition, level);
 			fCurrentPosition = endIndex;
 
@@ -1490,35 +1493,52 @@ public class WikipediaParser extends AbstractParser implements IParser {
 	 *         should be canceled according to the model.
 	 */
 	public static String parseRedirect(String rawWikiText, IWikiModel wikiModel) {
-		int redirectStart = -1;
-		int redirectEnd = -1;
-		for (int i = 0; i < rawWikiText.length(); i++) {
-			if (rawWikiText.charAt(i) == '#') {
-				boolean isRedirect = rawWikiText.startsWith("redirect", i + 1);
-				if (!isRedirect) {
-					isRedirect = rawWikiText.startsWith("REDIRECT", i + 1);
-				}
-				if (isRedirect) {
-					redirectStart = rawWikiText.indexOf("[[", i + 8);
-					if (redirectStart > i + 8) {
-						redirectStart += 2;
-						redirectEnd = rawWikiText.indexOf("]]", redirectStart);
-					}
-				}
-				break;
-			}
-			if (Character.isWhitespace(rawWikiText.charAt(i))) {
-				continue;
-			}
-			break;
-		}
-
-		if (redirectEnd >= 0) {
-			String redirectedLink = rawWikiText.substring(redirectStart, redirectEnd);
-			if (wikiModel.appendRedirectLink(redirectedLink)) {
-				return redirectedLink;
-			}
-		}
+            
+//		int redirectStart = -1;
+//		int redirectEnd = -1;
+//                Pattern redir_pattern = Pattern.compile("(?i)(#(redirect)+\\s?\\[\\[)");
+//                Matcher matcher = redir_pattern.matcher(rawWikiText);
+//                
+//                if(matcher.find()){
+//                    
+//                    System.out.println("yo it pattern"
+//                            + rawWikiText + " woo");
+//                    Pattern redir_contents_pattern = Pattern.compile("\\[\\[(.*?)\\]\\]");
+//                    Matcher m = redir_contents_pattern.matcher(rawWikiText);
+//                    m.find();
+//                    String final_redir  = m.group(1);
+//                    System.out.println(final_redir);
+//                    return "<p>"+final_redir+"</p>";
+//                }
+//                
+//		for (int i = 0; i < rawWikiText.length(); i++) {
+//			if (rawWikiText.charAt(i) == '#') {
+//				boolean isRedirect = rawWikiText.toLowerCase().startsWith("redirect",(i+1));
+//				if (isRedirect) {
+//					redirectStart = rawWikiText.indexOf("[[");
+//					if (redirectStart > i + 7) {
+//						redirectStart += 2;
+//						redirectEnd = rawWikiText.indexOf("]]", redirectStart);
+//					}
+//				}
+//				break;
+//			}
+////			if (Character.isWhitespace(rawWikiText.charAt(i))) {
+////				continue;
+////			}
+//			break;
+//		}
+//
+//		if (redirectEnd >= 0) {
+//			String redirectedLink = rawWikiText.substring(redirectStart, redirectEnd);
+//                        System.out.println(redirectedLink + " redirlink");
+//                            
+//			if (wikiModel.appendRedirectLink(redirectedLink)) {
+//                            System.out.println("ewuhfew");
+//                            return redirectedLink;
+//                                
+//			}
+//		}
 		return null;
 	}
 

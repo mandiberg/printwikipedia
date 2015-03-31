@@ -17,6 +17,7 @@ import info.bliki.wiki.filter.TemplateParser;
 import info.bliki.wiki.filter.WikipediaParser;
 import info.bliki.wiki.namespaces.INamespace;
 import info.bliki.wiki.namespaces.Namespace;
+import info.bliki.wiki.tags.PTag;
 import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.WPATag;
 import info.bliki.wiki.tags.WPTag;
@@ -35,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import scala.actors.threadpool.Arrays;
 
 /**
  * Standard model implementation for the Wikipedia syntax
@@ -44,6 +46,10 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	private static int fNextNumberCounter = 0;
 
 	protected ArrayList<Reference> fReferences;
+        
+        protected String[] tocCheck = {"Gallery", " Gallery ","Notes"," Notes ", "Reference", " Reference ","References", " References ","Bibliography", " Bibliography ", "External links", " External links ","See also", " See Also ", "Footnotes", " Footnotes "};
+        
+        protected boolean doTOC = false;
 
 	protected Map<String, Integer> fReferenceNames;
 
@@ -298,8 +304,6 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	public void appendExternalLink(String uriSchemeName, String link, String linkName, boolean withoutSquareBrackets) {
                 link = Utils.escapeXml(link, true, false, false);
                 String nonAlphaPattern ="([^\\d\\w\\s])";
-                linkName = linkName.replaceAll(nonAlphaPattern, "");
-                
 		// is the given link an image?
 		// int indx = link.lastIndexOf(".");
 		// if (indx > 0 && indx < (link.length() - 3)) {
@@ -410,7 +414,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 //			aTagNode.addAttribute("class", cssClass, true);
 //		}
 //		pTagNode.addObjectAttribute("wikilink", topic);
-
+                System.out.println(topicDescription + " topic desc");
 		pushNode(pTagNode);
 		if (parseRecursive) {
 			WikipediaParser.parseRecursive(topicDescription.trim(), this, false, true);
@@ -487,6 +491,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 //		aTagNode.addChild(new ContentToken(linkName));
 	}
 
+        @Override
 	public void appendRawWikipediaLink(String rawLinkText, String suffix) {
 		String rawTopicName = rawLinkText;
 		if (rawTopicName != null) {
@@ -644,6 +649,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		return false;
 	}
 
+        @Override
 	public boolean appendRedirectLink(String redirectLink) {
 		fRedirectLink = redirectLink;
 		return true;
@@ -933,9 +939,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		if (converter != null) {
 			StringBuilder buf = new StringBuilder(rawWikiText.length() + rawWikiText.length() / 10);
 			List<BaseToken> list = fTagStack.getNodeList();
-
 			try {
-				converter.nodesToText(list, buf, this);
+                            converter.nodesToText(list, buf, this);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -949,7 +954,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public String render(String rawWikiText) {
-		return render(new HTMLConverter(), rawWikiText);
+		return render(new HTMLConverter(), rawWikiText);//returns function render(itextconverter, string)
 	}
 
 	public String renderPDF(String rawWikiText) {
@@ -1256,7 +1261,12 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		String tocHead = headTagNode.getBodyString();
 		String anchor = Encoder.encodeDotUrl(tocHead);
 		createTableOfContent(false);
-		if (!noToC && (headCounter > 3)) {
+                if(Arrays.asList(tocCheck).contains(rawHead)==false){
+                    System.out.println("this is the end !");
+                    doTOC = true;
+                }
+
+		if (!noToC && (headCounter > 3) && doTOC) {
 			fTableOfContentTag.setShowToC(true);
 		}
 		if (fToCSet.contains(anchor)) {
