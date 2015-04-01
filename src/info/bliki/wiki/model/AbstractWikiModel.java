@@ -17,6 +17,7 @@ import info.bliki.wiki.filter.TemplateParser;
 import info.bliki.wiki.filter.WikipediaParser;
 import info.bliki.wiki.namespaces.INamespace;
 import info.bliki.wiki.namespaces.Namespace;
+import info.bliki.wiki.tags.PTag;
 import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.WPATag;
 import info.bliki.wiki.tags.WPTag;
@@ -35,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import scala.actors.threadpool.Arrays;
 
 /**
  * Standard model implementation for the Wikipedia syntax
@@ -44,6 +46,10 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	private static int fNextNumberCounter = 0;
 
 	protected ArrayList<Reference> fReferences;
+        
+        protected String[] tocCheck = {"Gallery", " Gallery ","Notes"," Notes ", "Reference", " Reference ","References", " References ","Bibliography", " Bibliography ", "External links", " External links ","See also", " See Also ", "Footnotes", " Footnotes "};
+        
+        protected boolean doTOC = false;
 
 	protected Map<String, Integer> fReferenceNames;
 
@@ -205,36 +211,37 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public String[] addToReferences(String reference, String nameAttribute) {
-		String[] result = new String[2];
-		result[1] = null;
-		if (fReferences == null) {
-			fReferences = new ArrayList<Reference>();
-			fReferenceNames = new HashMap<String, Integer>();
-		}
-		if (nameAttribute != null) {
-			Integer index = fReferenceNames.get(nameAttribute);
-			if (index != null) {
-				result[0] = index.toString();
-				Reference ref = fReferences.get(index - 1);
-				int count = ref.incCounter();
-				if (count >= Reference.CHARACTER_REFS.length()) {
-					result[1] = nameAttribute + '_' + 'Z';
-				} else {
-					result[1] = nameAttribute + '_' + Reference.CHARACTER_REFS.charAt(count);
-				}
-				return result;
-			}
-		}
-
-		if (nameAttribute != null) {
-			fReferences.add(new Reference(reference, nameAttribute));
-			Integer index = Integer.valueOf(fReferences.size());
-			fReferenceNames.put(nameAttribute, index);
-			result[1] = nameAttribute + "_a";
-		} else {
-			fReferences.add(new Reference(reference));
-		}
-		result[0] = Integer.toString(fReferences.size());
+//		String[] result = new String[2];
+//		result[1] = null;
+//		if (fReferences == null) {
+//			fReferences = new ArrayList<Reference>();
+//			fReferenceNames = new HashMap<String, Integer>();
+//		}
+//		if (nameAttribute != null) {
+//			Integer index = fReferenceNames.get(nameAttribute);
+//			if (index != null) {
+//				result[0] = index.toString();
+//				Reference ref = fReferences.get(index - 1);
+//				int count = ref.incCounter();
+//				if (count >= Reference.CHARACTER_REFS.length()) {
+//					result[1] = nameAttribute + '_' + 'Z';
+//				} else {
+//					result[1] = nameAttribute + '_' + Reference.CHARACTER_REFS.charAt(count);
+//				}
+//				return result;
+//			}
+//		}
+//
+//		if (nameAttribute != null) {
+//			fReferences.add(new Reference(reference, nameAttribute));
+//			Integer index = Integer.valueOf(fReferences.size());
+//			fReferenceNames.put(nameAttribute, index);
+//			result[1] = nameAttribute + "_a";
+//		} else {
+//			fReferences.add(new Reference(reference));
+//		}
+//		result[0] = Integer.toString(fReferences.size());
+                String[] result = new String[2];
 		return result;
 	}
 
@@ -243,13 +250,13 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public void appendExternalImageLink(String imageSrc, String imageAltText) {
-		TagNode spanTagNode = new TagNode("span");
-		append(spanTagNode);
-		spanTagNode.addAttribute("class", "image", true);
-		TagNode imgTagNode = new TagNode("img");
-		spanTagNode.addChild(imgTagNode);
-		imgTagNode.addAttribute("src", imageSrc, true);
-		imgTagNode.addAttribute("alt", imageAltText, true);
+//		TagNode spanTagNode = new TagNode("span");
+//		append(spanTagNode);
+//		spanTagNode.addAttribute("class", "image", true);
+//		TagNode imgTagNode = new TagNode("img");
+//		spanTagNode.addChild(imgTagNode);
+//		imgTagNode.addAttribute("src", imageSrc, true);
+//		imgTagNode.addAttribute("alt", imageAltText, true);
 		// "nofollow" keyword is not allowed for XHTML
 		// imgTagNode.addAttribute("rel", "nofollow", true);
 	}
@@ -295,9 +302,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	 *          link was parsed
 	 */
 	public void appendExternalLink(String uriSchemeName, String link, String linkName, boolean withoutSquareBrackets) {
-		link = Utils.escapeXml(link, true, false, false);
+                link = Utils.escapeXml(link, true, false, false);
                 String nonAlphaPattern ="([^\\d\\w\\s])";
-                linkName = linkName.replaceAll(nonAlphaPattern, "");
 		// is the given link an image?
 		// int indx = link.lastIndexOf(".");
 		// if (indx > 0 && indx < (link.length() - 3)) {
@@ -309,7 +315,6 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		// return;
 		// }
 		// }
-                System.out.println("\n" + link + " this is link \n");
 		TagNode aTagNode = new TagNode("a");
 		aTagNode.addAttribute("href", link, true);
 		aTagNode.addAttribute("class", "externallink", true);
@@ -320,7 +325,6 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 			aTagNode.addChild(new ContentToken(linkName));
 		} else {
 			String trimmedText = linkName.trim();
-                        System.out.println("iam trimtext: " + trimmedText);
 			if (trimmedText.length() > 0) {
 				pushNode(aTagNode);
 				WikipediaParser.parseRecursive(trimmedText, this, false, true);
@@ -330,61 +334,61 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public void appendInternalImageLink(String hrefImageLink, String srcImageLink, ImageFormat imageFormat) {
-		int pxWidth = imageFormat.getWidth();
-		int pxHeight = imageFormat.getHeight();
-		String caption = imageFormat.getCaption();
-		TagNode divTagNode = new TagNode("div");
-		divTagNode.addAttribute("id", "image", false);
-		// String link = imageFormat.getLink();
-		// if (link != null) {
-		// String href = encodeTitleToUrl(link, true);
-		// divTagNode.addAttribute("href", href, false);
-		// } else {
-		if (hrefImageLink.length() != 0) {
-			divTagNode.addAttribute("href", hrefImageLink, false);
-		}
-		// }
-		divTagNode.addAttribute("src", srcImageLink, false);
-		divTagNode.addObjectAttribute("wikiobject", imageFormat);
-		if (pxHeight != -1) {
-			if (pxWidth != -1) {
-				divTagNode.addAttribute("style", "height:" + pxHeight + "px; " + "width:" + pxWidth + "px", false);
-			} else {
-				divTagNode.addAttribute("style", "height:" + pxHeight + "px", false);
-			}
-		} else {
-			if (pxWidth != -1) {
-				divTagNode.addAttribute("style", "width:" + pxWidth + "px", false);
-			}
-		}
-		pushNode(divTagNode);
-
-		String imageType = imageFormat.getType();
-		// TODO: test all these cases
-		if (caption != null && caption.length() > 0
-				&& ("frame".equals(imageType) || "thumb".equals(imageType) || "thumbnail".equals(imageType))) {
-
-			TagNode captionTagNode = new TagNode("div");
-			String clazzValue = "caption";
-			String type = imageFormat.getType();
-			if (type != null) {
-				clazzValue = type + clazzValue;
-			}
-			captionTagNode.addAttribute("class", clazzValue, false);
-			//			
-			TagStack localStack = WikipediaParser.parseRecursive(caption, this, true, true);
-			captionTagNode.addChildren(localStack.getNodeList());
-			String altAttribute = imageFormat.getAlt();
-			if (altAttribute == null) {
-				altAttribute = captionTagNode.getBodyString();
-				imageFormat.setAlt(altAttribute);
-			}
-			pushNode(captionTagNode);
-			// WikipediaParser.parseRecursive(caption, this);
-			popNode();
-		}
-
-		popNode(); // div
+//		int pxWidth = imageFormat.getWidth();
+//		int pxHeight = imageFormat.getHeight();
+//		String caption = imageFormat.getCaption();
+//		TagNode divTagNode = new TagNode("div");
+//		divTagNode.addAttribute("id", "image", false);
+//		// String link = imageFormat.getLink();
+//		// if (link != null) {
+//		// String href = encodeTitleToUrl(link, true);
+//		// divTagNode.addAttribute("href", href, false);
+//		// } else {
+//		if (hrefImageLink.length() != 0) {
+//			divTagNode.addAttribute("href", hrefImageLink, false);
+//		}
+//		// }
+//		divTagNode.addAttribute("src", srcImageLink, false);
+//		divTagNode.addObjectAttribute("wikiobject", imageFormat);
+//		if (pxHeight != -1) {
+//			if (pxWidth != -1) {
+//				divTagNode.addAttribute("style", "height:" + pxHeight + "px; " + "width:" + pxWidth + "px", false);
+//			} else {
+//				divTagNode.addAttribute("style", "height:" + pxHeight + "px", false);
+//			}
+//		} else {
+//			if (pxWidth != -1) {
+//				divTagNode.addAttribute("style", "width:" + pxWidth + "px", false);
+//			}
+//		}
+//		pushNode(divTagNode);
+//
+//		String imageType = imageFormat.getType();
+//		// TODO: test all these cases
+//		if (caption != null && caption.length() > 0
+//				&& ("frame".equals(imageType) || "thumb".equals(imageType) || "thumbnail".equals(imageType))) {
+//
+//			TagNode captionTagNode = new TagNode("div");
+//			String clazzValue = "caption";
+//			String type = imageFormat.getType();
+//			if (type != null) {
+//				clazzValue = type + clazzValue;
+//			}
+//			captionTagNode.addAttribute("class", clazzValue, false);
+//			//			
+//			TagStack localStack = WikipediaParser.parseRecursive(caption, this, true, true);
+//			captionTagNode.addChildren(localStack.getNodeList());
+//			String altAttribute = imageFormat.getAlt();
+//			if (altAttribute == null) {
+//				altAttribute = captionTagNode.getBodyString();
+//				imageFormat.setAlt(altAttribute);
+//			}
+//			pushNode(captionTagNode);
+//			// WikipediaParser.parseRecursive(caption, this);
+//			popNode();
+//		}
+//
+//		popNode(); // div
 
 	}
 
@@ -397,72 +401,72 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public void appendInternalLink(String topic, String hashSection, String topicDescription, String cssClass, boolean parseRecursive) {
-		WPATag aTagNode = new WPATag();
+		WPATag pTagNode = new WPATag();
+                
 		// append(aTagNode);
 		// aTagNode.addAttribute("id", "w", true);
-		String href = encodeTitleToUrl(topic, true);
-		if (hashSection != null) {
-			href = href + '#' + encodeTitleDotUrl(hashSection, true);
-		}
-		aTagNode.addAttribute("href", href, true);
-		if (cssClass != null) {
-			aTagNode.addAttribute("class", cssClass, true);
-		}
-		aTagNode.addObjectAttribute("wikilink", topic);
-
-		pushNode(aTagNode);
+//		String href = encodeTitleToUrl(topic, true);
+//		if (hashSection != null) {
+//			href = href + '#' + encodeTitleDotUrl(hashSection, true);
+//		}
+		pTagNode.addAttribute("p",topic, true);
+//		if (cssClass != null) {
+//			aTagNode.addAttribute("class", cssClass, true);
+//		}
+//		pTagNode.addObjectAttribute("wikilink", topic);
+                System.out.println(topicDescription + " topic desc");
+		pushNode(pTagNode);
 		if (parseRecursive) {
 			WikipediaParser.parseRecursive(topicDescription.trim(), this, false, true);
 		} else {
-			aTagNode.addChild(new ContentToken(topicDescription));
+			pTagNode.addChild(new ContentToken(topicDescription));
 		}
 		popNode();
-
-		// ContentToken text = new ContentToken(topicDescription);
-		// aTagNode.addChild(text);
+		 ContentToken text = new ContentToken(topicDescription);
+		 pTagNode.addChild(text);
 	}
-
+//System.out.println("urischeme: " + uriSchemeName + " link " + link + " linkname: " +  linkName);
 	public void appendInterWikiLink(String namespace, String title, String linkText) {
-		String hrefLink = getInterwikiMap().get(namespace.toLowerCase());
-		if (hrefLink == null) {
-			// shouldn't really happen
-			hrefLink = "#";
-		}
-
-		// false -> don't convert first character to uppercase for interwiki links
-		String encodedtopic = encodeTitleToUrl(title, false);
-		if (replaceColon()) {
-			encodedtopic = encodedtopic.replace(':', '/');
-		}
-		hrefLink = hrefLink.replace("${title}", encodedtopic);
-
-		TagNode aTagNode = new TagNode("a");
-		// append(aTagNode);
-		aTagNode.addAttribute("href", hrefLink, true);
-		// aTagNode.addChild(new ContentToken(linkText));
-		pushNode(aTagNode);
-		WikipediaParser.parseRecursive(linkText.trim(), this, false, true);
-		popNode();
+//		String hrefLink = getInterwikiMap().get(namespace.toLowerCase());
+//		if (hrefLink == null) {
+//			// shouldn't really happen
+//			hrefLink = "#";
+//		}
+//
+//		// false -> don't convert first character to uppercase for interwiki links
+//		String encodedtopic = encodeTitleToUrl(title, false);
+//		if (replaceColon()) {
+//			encodedtopic = encodedtopic.replace(':', '/');
+//		}
+//		hrefLink = hrefLink.replace("${title}", encodedtopic);
+//
+//		TagNode aTagNode = new TagNode("a");
+//		// append(aTagNode);
+//		aTagNode.addAttribute("href", hrefLink, true);
+//		// aTagNode.addChild(new ContentToken(linkText));
+//		pushNode(aTagNode);
+//		WikipediaParser.parseRecursive(linkText.trim(), this, false, true);
+//		popNode();
 	}
 
 	public void appendISBNLink(String isbnPureText) {
-		StringBuffer isbnUrl = new StringBuffer(isbnPureText.length() + 100);
-		isbnUrl.append("http://www.amazon.com/exec/obidos/ASIN/");
-
-		for (int index = 0; index < isbnPureText.length(); index++) {
-			if (isbnPureText.charAt(index) >= '0' && isbnPureText.charAt(index) <= '9') {
-				isbnUrl.append(isbnPureText.charAt(index));
-			}
-		}
-
-		String isbnString = isbnUrl.toString();
-		TagNode aTagNode = new TagNode("a");
-		append(aTagNode);
-		aTagNode.addAttribute("href", isbnString, true);
-		aTagNode.addAttribute("class", "external text", true);
-		aTagNode.addAttribute("title", isbnString, true);
-		aTagNode.addAttribute("rel", "nofollow", true);
-		aTagNode.addChild(new ContentToken(isbnPureText));
+//		StringBuffer isbnUrl = new StringBuffer(isbnPureText.length() + 100);
+//		isbnUrl.append("http://www.amazon.com/exec/obidos/ASIN/");
+//
+//		for (int index = 0; index < isbnPureText.length(); index++) {
+//			if (isbnPureText.charAt(index) >= '0' && isbnPureText.charAt(index) <= '9') {
+//				isbnUrl.append(isbnPureText.charAt(index));
+//			}
+//		}
+//
+//		String isbnString = isbnUrl.toString();
+//		TagNode aTagNode = new TagNode("a");
+//		append(aTagNode);
+//		aTagNode.addAttribute("href", isbnString, true);
+//		aTagNode.addAttribute("class", "external text", true);
+//		aTagNode.addAttribute("title", isbnString, true);
+//		aTagNode.addAttribute("rel", "nofollow", true);
+//		aTagNode.addChild(new ContentToken(isbnPureText));
 	}
 
 	public void appendMailtoLink(String link, String linkName, boolean withoutSquareBrackets) {
@@ -478,15 +482,16 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		// return;
 		// }
 		// }
-		TagNode aTagNode = new TagNode("a");
-		append(aTagNode);
-		aTagNode.addAttribute("href", link, true);
-		aTagNode.addAttribute("class", "external free", true);
-		aTagNode.addAttribute("title", link, true);
-		aTagNode.addAttribute("rel", "nofollow", true);
-		aTagNode.addChild(new ContentToken(linkName));
+//		TagNode aTagNode = new TagNode("a");
+//		append(aTagNode);
+//		aTagNode.addAttribute("href", link, true);
+//		aTagNode.addAttribute("class", "external free", true);
+//		aTagNode.addAttribute("title", link, true);
+//		aTagNode.addAttribute("rel", "nofollow", true);
+//		aTagNode.addChild(new ContentToken(linkName));
 	}
 
+        @Override
 	public void appendRawWikipediaLink(String rawLinkText, String suffix) {
 		String rawTopicName = rawLinkText;
 		if (rawTopicName != null) {
@@ -585,7 +590,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public boolean appendRawNamespaceLinks(String rawNamespaceTopic, String viewableLinkDescription, boolean containsNoPipe) {
-		int colonIndex = rawNamespaceTopic.indexOf(':');
+//		return false;
+            int colonIndex = rawNamespaceTopic.indexOf(':');
 
 		if (colonIndex != (-1)) {
 			String nameSpace = rawNamespaceTopic.substring(0, colonIndex);
@@ -643,6 +649,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		return false;
 	}
 
+        @Override
 	public boolean appendRedirectLink(String redirectLink) {
 		fRedirectLink = redirectLink;
 		return true;
@@ -932,9 +939,8 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		if (converter != null) {
 			StringBuilder buf = new StringBuilder(rawWikiText.length() + rawWikiText.length() / 10);
 			List<BaseToken> list = fTagStack.getNodeList();
-
 			try {
-				converter.nodesToText(list, buf, this);
+                            converter.nodesToText(list, buf, this);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -948,7 +954,7 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 	}
 
 	public String render(String rawWikiText) {
-		return render(new HTMLConverter(), rawWikiText);
+		return render(new HTMLConverter(), rawWikiText);//returns function render(itextconverter, string)
 	}
 
 	public String renderPDF(String rawWikiText) {
@@ -1255,7 +1261,12 @@ public abstract class AbstractWikiModel implements IWikiModel, IContext {
 		String tocHead = headTagNode.getBodyString();
 		String anchor = Encoder.encodeDotUrl(tocHead);
 		createTableOfContent(false);
-		if (!noToC && (headCounter > 3)) {
+                if(Arrays.asList(tocCheck).contains(rawHead)==false){
+                    System.out.println("this is the end !");
+                    doTOC = true;
+                }
+
+		if (!noToC && (headCounter > 3) && doTOC) {
 			fTableOfContentTag.setShowToC(true);
 		}
 		if (fToCSet.contains(anchor)) {

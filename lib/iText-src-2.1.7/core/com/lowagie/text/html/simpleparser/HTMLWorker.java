@@ -401,6 +401,7 @@ public class HTMLWorker implements SimpleXMLDocHandler, DocListener {
 				return;
 			}
 			if (tag.equals(HtmlTags.DIV) || tag.equals(HtmlTags.BODY) || tag.equals("p")) {
+                            System.out.println("i am being used;");
 				cprops.addToChain(tag, h);
 				return;
 			}

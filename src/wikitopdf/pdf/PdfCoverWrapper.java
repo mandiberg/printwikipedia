@@ -60,7 +60,7 @@ public class PdfCoverWrapper {
     public PdfCoverWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
         //Read settings
         
-        String outputFileName = "covers/volume&&&" + String.format("%04d",num) + ".pdf";
+        String outputFileName = "covers/volume&&&" + String.format("%04d",num-1) + ".pdf";
         
         
         /*
@@ -283,6 +283,7 @@ public class PdfCoverWrapper {
         //Use the code below to create rotated text the first constant indicates alignment,
         //the third and fourth arguments indicate the origin of rotation,
         //the last argument is the rotation in degrees
+//        fileName = fileName.replace("_", " "); hack for a certain kind of output we did removes underscoers
         String[] titleArr = fileName.split("&&&");
         String beginTitle = titleArr[1];
         String endTitle = titleArr[2];
@@ -422,7 +423,7 @@ public class PdfCoverWrapper {
         float urx_hc_vol_title= 1073.5f;
         float urx_sc_vol_title = 937f;
         float llx_sc_vol_title  =  531f;
-        columnTitle.setSimpleColumn (llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, 144f);
+        columnTitle.setSimpleColumn(llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, 144f);
         columnTitle.go();
         
     }

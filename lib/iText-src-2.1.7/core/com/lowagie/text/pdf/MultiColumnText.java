@@ -348,6 +348,7 @@ public class MultiColumnText implements Element {
     }
 
     private void newPage() throws DocumentException {
+        System.err.println("No console.");
         resetCurrentColumn();
         if (desiredHeight == AUTOMATIC) {
         	top = nextY = AUTOMATIC;

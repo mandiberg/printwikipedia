@@ -18,6 +18,7 @@ import com.lowagie.text.pdf.PdfPageEvent;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
 public class TitlesFooter extends PdfPageEventHelper
 {
     public int lineC = 0;
-
+    
     /**
      *
      * @param startPage
@@ -41,21 +42,23 @@ public class TitlesFooter extends PdfPageEventHelper
 
     @Override
     public void onStartPage(PdfWriter writer, Document document)
-    {
+    {     
+        System.out.println("im start");
+        if(pageNum==701)
+            return;
         //header doesnt print for first and second pages
         pageNum = writer.getPageNumber() + startPage;
         
         if(pageNum < 4)
             return;
 
-        
-//            writeHeader(writer, document);
       
     }
 
     @Override
     public void onOpenDocument(PdfWriter writer, Document document)
     {
+        System.out.println("im open");
         total = writer.getDirectContent().createTemplate(100, 100);
         total.setBoundingBox(new Rectangle(-20, -20, 100, 100));
         try
@@ -73,17 +76,17 @@ public class TitlesFooter extends PdfPageEventHelper
     @Override
     public void onEndPage(PdfWriter writer, Document document)
     {
+        
         //footer doesnt print for first and second pages
         pageNum = writer.getPageNumber() + startPage;
-        
+        if(pageNum==701){
+            return;
+        }
         if(pageNum < 3){
             System.out.println("page " + pageNum);
             return;
-
         }
-
-
-        System.out.println("page " + pageNum);
+        System.out.println("paglalae " + pageNum);
         PdfContentByte cb = writer.getDirectContent();
         cb.saveState();
         String pNumString = String.valueOf(pageNum);
@@ -93,14 +96,13 @@ public class TitlesFooter extends PdfPageEventHelper
         cb.setFontAndSize(bsFont, 8);
         if ((pageNum % 2) == 1)
         {
-            cb.setTextMatrix(document.right(), textBase);
+            cb.setTextMatrix(document.right()-5.5f, textBase-25);
             cb.showText(pNumString);
         }
         else
         {
-            float adjust = bsFont.getWidthPoint("0", 8);
-            cb.setTextMatrix(
-            document.left() - textSize - adjust, textBase);
+//            float adjust = bsFont.getWidthPoint("0", 8);
+            cb.setTextMatrix(document.left(), textBase-25);
             cb.showText(pNumString);
             //Write header
 //            writeHeader(writer, document);
@@ -139,9 +141,9 @@ public class TitlesFooter extends PdfPageEventHelper
     public void setCurrentLine(String line)
     {
         //Current line for header
-        if(line.length()>15){
-                line = line.substring(0,15)+"...";
-            }
+//        if(line.length()>15){
+//                line = line.substring(0,15)+"...";
+//            }
         this.lineList.add(line);
 //        System.out.println(lineList);
     }
@@ -157,48 +159,52 @@ public class TitlesFooter extends PdfPageEventHelper
         }
 
         String text;
-        float textBase = document.top() - 53;
-        
-        
-
-
-        if ((pageNum % 2) == 1)
-        {
-            //Left top corner
-//            cb.beginText();
+        float textBase = document.top() - 43;
+        if(pageNum == 3){//FIRST PAGE ONLY
+            pg3 = getLineCount();//set this so first page starts with first title in list as header
             cb.setFontAndSize(bsFont, 8);
-            text = lineList.get(0+lineC);
-            text = text.length() > 20 ? text.substring(0, 20) : text;
+            text = "";
             cb.setTextMatrix(document.left(), textBase);
-            cb.showText(text);
-//            cb.endText();
-//            cb.restoreState();
-//            lineList.clear();
+            cb.showText(text.toUpperCase());
             return;
-            
         }
-        else
+
+        if((pageNum % 2) ==0)//even#--right top corner
         {
-            //Right top corner
-//            cb.beginText();
-            cb.setFontAndSize(bsFont, 8);
-            lineC = lineList.size();
-            text = lineList.get(lineC - 1);
             
-
+            cb.setFontAndSize(bsFont, 8);
+            if(pageNum == 4){
+                text = lineList.get(pg3);
+            }
+            else if(pageNum==700){
+                text=lineList.get(lineList.size()-1);
+            }
+            else{
+                text = lineList.get(lineC);
+            }
             //Cut if title very long
-            text = text.length() > 20 ? text.substring(0, 20) : text;
-
+            text = text.length() > 20 ? text.substring(0, 20) + "..." : text;
             float adjust = bsFont.getWidthPoint("0", 8);
             float textSize = bsFont.getWidthPoint(text, 8);
-
-            cb.setTextMatrix(document.right() - textSize - adjust, textBase);
-            cb.showText(text);
-//            cb.endText();
-//            cb.restoreState();
-//            lineList.clear();
+//            cb.setTextMatrix(document.right() - textSize - (adjust+15f), textBase);
+            cb.setTextMatrix(document.left(), textBase);
+            cb.showText(text.toUpperCase());
             return;
         }
+        if ((pageNum % 2) == 1)//odd #--Left top corner
+        {
+            lineC = lineList.size();
+            text = lineList.get(lineC - 1);
+            text = text.length() > 20 ? text.substring(0, 20) + "..." : text;
+
+//        cb.beginText();
+        cb.setFontAndSize(bsFont, 8);
+
+        cb.showTextAligned(cb.ALIGN_RIGHT, text, document.right()-5, document.top()-43, 0);
+        
+            return;
+        }
+        
 
     }
     
@@ -217,5 +223,7 @@ public class TitlesFooter extends PdfPageEventHelper
     private int pageNum = 0;
     private int pageNumber = 0;
     private int startPage = 0;
+    private int pg3 = 0;
+    public boolean pageFull;
     public ArrayList <String> lineList = new ArrayList<String>();
 }

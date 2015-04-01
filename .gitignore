@@ -2,6 +2,9 @@
 /dist/
 /nbproject/private/
 /logs/
+/curl/covers/
+/curl/in/
+/curl/out/
 
 # Compiled source #
 ###################
@@ -52,4 +55,9 @@ curl/pass.py
 
 curl/barcode.png
 
-fullOutput.txt
+
+
+
+*.pdf
+*.txt
+

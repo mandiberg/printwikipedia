@@ -193,7 +193,7 @@ public class SQLProcessor {
     }
 
     private String changeText(String wikiText) {
-        String strPattern = "#redirect \\[\\[(.*)\\]\\]";
+        String strPattern = "#redirect\\s*\\[\\[(.*)\\]\\]";
 
         Pattern p = Pattern.compile(strPattern, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(wikiText);
