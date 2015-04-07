@@ -101,8 +101,14 @@ Working with the test Database snippet
 	Don't forget to "USE thenameyougaveyourschema;"
 	**this is the sped up database**
 	  
---------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------
+Using a wiki dump
+	This page provides some of the past dumps of wikipedia http://dumps.wikimedia.org/enwiki/
+	The latest and largest dump is located at this address: http://dumps.wikimedia.org/enwiki/enwiki-latest-pages-articles.xml.bz2
+	The best way to download this is by using nohup and wget to make sure it goes through (these are very large files!)
+	like so: nohup wget -bcq <<http address of your file>> 
+--------------------------------------------------------------------------------------
 **************************************************************************************
 Database for Table of Contents
 --------------------------------------------------------------------------------------
