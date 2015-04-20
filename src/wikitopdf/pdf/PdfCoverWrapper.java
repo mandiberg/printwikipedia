@@ -224,6 +224,7 @@ public class PdfCoverWrapper {
         Font spine_to_font = null;
         Font main_title_font = null;
         Font sc_main_title_font = null;
+        Font dis_font = null;
         
 	
         
@@ -236,6 +237,7 @@ public class PdfCoverWrapper {
             spine_to_font = new Font(spine_base,13);
             main_title_font = new Font(spine_base,17);
             sc_main_title_font = new Font(spine_base, 20);
+            dis_font = new Font(spine_base,5);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -310,6 +312,7 @@ public class PdfCoverWrapper {
         else{
             rSpineTitle = endTitle;
         }
+        PdfPTable tabled = new PdfPTable(1);
         PdfPTable table1 = new PdfPTable(1);
         PdfPTable table2 = new PdfPTable(1);
         PdfPTable table3 = new PdfPTable(1);
@@ -319,11 +322,32 @@ public class PdfCoverWrapper {
         Paragraph first_abbr;
         Paragraph spine_to;
         Paragraph scnd_abbr;
-
+        Paragraph dis_text;
+                
         vol_num = new Paragraph(volNumber, spine_vol_font);
         first_abbr = new Paragraph(lSpineTitle.toUpperCase(),spine_abbr_font);
         scnd_abbr = new Paragraph(rSpineTitle.toUpperCase(),spine_abbr_font);
         spine_to = new Paragraph("TO",spine_to_font);
+        dis_text = new Paragraph("This work is not endorsed by the Wikimedia Foundation",dis_font);
+        
+        PdfPCell disclaim;
+        disclaim = new PdfPCell(dis_text);
+        disclaim.setBorderWidth(0f);
+        disclaim.setHorizontalAlignment(Element.ALIGN_LEFT);
+        disclaim.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        disclaim.setColspan(1);
+        disclaim.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-170f));
+        tabled.addCell(disclaim);
+        ColumnText columnd = new ColumnText(pdfWriter.getDirectContent());
+        columnd.addElement(tabled);
+        //llx, lly,urx,ury 
+        float llx_hc_volnum = 510.64f;
+        float urx_hc_volnum = 620.88f;
+        float llx_sc_volnum = 391f;
+        float urx_sc_volnum = 506f;
+        float lly_sc_volnum = 830f;
+        columnd.setSimpleColumn (llx_hc_volnum-250, pdfDocument.bottom()-130, urx_hc_volnum, pdfDocument.top()-50f);
+        columnd.go();
         
         
         //spine section for volume number
@@ -338,11 +362,11 @@ public class PdfCoverWrapper {
         ColumnText column = new ColumnText(pdfWriter.getDirectContent());
         column.addElement(table1);
         //llx, lly,urx,ury 
-        float llx_hc_volnum = 510.64f;
-        float urx_hc_volnum = 620.88f;
-        float llx_sc_volnum = 391f;
-        float urx_sc_volnum = 506f;
-        float lly_sc_volnum = 830f;
+//        float llx_hc_volnum = 510.64f;
+//        float urx_hc_volnum = 620.88f;
+//        float llx_sc_volnum = 391f;
+//        float urx_sc_volnum = 506f;
+//        float lly_sc_volnum = 830f;
         column.setSimpleColumn (llx_hc_volnum, pdfDocument.bottom()-170, urx_hc_volnum, pdfDocument.top()-50f);
         column.go();
         
