@@ -11,8 +11,13 @@ import com.lowagie.text.html.simpleparser.StyleSheet;
 import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.MultiColumnText;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,33 +40,49 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index) throws DocumentException, IOException {
+    public PdfPageWrapper(int index, int cVolNum) throws DocumentException, IOException {
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
         outputFileName = "_" + index + WikiSettings.getInstance().getOutputFileName();
         outputFileName = outputFileName.replace("/","\\");
-//        WHTMLWorker.fontGet();//start font thing for the new page.
+        prefn = "pre"+String.format("%05d", cVolNum)+".pdf";
+//      WHTMLWorker.fontGet();//start font thing for the new page.
         tFontGet();
         fontGet();
         preFontGet();
         //72 pixels per inch
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
         //pdfDocument = new Document(new Rectangle(1918, 1018)); //
-
+        preDoc = new Document(new Rectangle(432,648));
+        
+        
         pdfDocument.setMargins(27, 67.5f, -551, 49.5f);
         pdfDocument.setMarginMirroring(true);
-
+        preDoc.setMargins(66.3f, 47f, 5.5f, 62.5f);
+        preDoc.setMarginMirroring(true);
+        
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
                             "/" + outputFileName));
+        preWriter = PdfWriter.getInstance(preDoc,
+                new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
+                            "/" + prefn));
 
         header = new PageHeaderEvent(0);
         pdfWriter.setPageEvent(header);
-
+//        PageHeaderEvent phead = new PageHeaderEvent(0);
+//        preWriter.setPageEvent(phead);
+        System.out.println("a");
+        
         pdfDocument.open();
         
         pdfDocument.setMarginMirroring(true);
         _wikiFontSelector = new WikiFontSelector();
+        preDoc.open();
+        System.out.println("n");
+//        jknewPage();
+        addPrologue(cVolNum);
+        System.out.println("d");
         pdfDocument.add(new Paragraph(""));
         pdfDocument.newPage();
         
@@ -69,6 +90,113 @@ public class PdfPageWrapper {
         //PdfContentByte cb = pdfWriter.getDirectContent();
         //ColumnText ct = new ColumnText(cb);
         openMultiColumn();
+    }
+    public final void jknewPage() throws DocumentException{
+      System.out.println("1");
+      preDoc.add(new Paragraph(""));
+      System.out.println("2");
+      preDoc.newPage();
+      preDoc.add(new Paragraph(""));
+    }
+    public final void addPrologue(int cVolNum) throws DocumentException {
+        System.out.println("3333");
+        PdfContentByte cb = preWriter.getDirectContent();
+        System.out.println("eoww");
+        BaseFont times = null;
+        System.out.println("eeeeee");
+//        WikiFontSelector wikiFontSelector = new WikiFontSelector();
+        System.out.println("wwwwwww");
+        try {
+            _wikiFontSelector.getTitleFontSelector().process("");
+            times = _wikiFontSelector.getCommonFont().getBaseFont();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println("65");
+        //wikipedia on the first inside page.--right facing
+        cb.beginText();
+        System.out.println("66");
+        cb.setFontAndSize(times, 40);
+        cb.setTextMatrix(preDoc.right() - 182, 425);
+        System.out.println("68");
+        cb.showText("Wikipedia");
+        System.out.println("69");
+        cb.endText();
+        System.out.println("605");
+        PdfPTable tocTable = new PdfPTable(1);
+//        ct.setSimpleColumn(pdfDocument.left(),100,pdfDocument.right(),300);//llx,lly,urx,ury
+        try {
+            _wikiFontSelector.getTitleFontSelector().process("");
+            times = _wikiFontSelector.getCommonFont().getBaseFont();
+            Font pght = new Font(times,15);
+            Paragraph pgh = new Paragraph("\nVolume "+String.valueOf(cVolNum),pght);
+            PdfPCell cell = new PdfPCell(pgh);
+            cell.setBorderWidth(0f);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setColspan(1);
+            tocTable.addCell(cell);
+            ColumnText column = new ColumnText(preWriter.getDirectContent());
+            column.addElement(tocTable);
+            column.setSimpleColumn (preDoc.left()+20, preDoc.bottom()+20, preDoc.right()+27.5f, preDoc.bottom()-100);
+            column.go();
+//        pgh.setAlignment("right");
+        
+//      pgh.setFont(pght);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        preDoc.newPage();//get second page for the copyright text
+
+        String copyrightText = "CC BY-SA 2014, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
+                "Edited, compiled and designed by Michael Mandiberg (User:Theredproject).\r\r"+ 
+                "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/ Trademark_policy\r\r"+
+                "Wikipedia is a trademark of the Wikimedia Foundation and is used with the permission of the Wikimedia Foundation. This work is not endorsed by or affiliated with the Wikimedia Foundation.\r\r"+
+                "Produced with support from Eyebeam, The Banff Centre and the City University of New York, and assistance from Patrick Davison, Denis Lunev, Kenny Lozowski, Colin Elliot, and Jonathan Kirtharan.\r\r"+
+                "www.PrintWikipedia.com\r\r Printed by Lulu.com";
+        PdfPTable cpTable = new PdfPTable(1);
+        try {
+            times = _wikiFontSelector.getCommonFont().getBaseFont();
+            Font cpt = new Font(times,8);
+            Paragraph cpp = new Paragraph(copyrightText,cpt);
+            PdfPCell cell2 = new PdfPCell(cpp);
+            cell2.setBorderWidth(0f);
+            System.out.println(cpp.toString());
+            System.out.println(copyrightText);
+            cell2.setHorizontalAlignment(Element.ALIGN_TOP-50);
+            cell2.setVerticalAlignment(Element.ALIGN_LEFT);
+            cell2.setColspan(1);
+            cpTable.addCell(cell2);
+            ColumnText column2 = new ColumnText(preWriter.getDirectContent());
+            column2.addElement(cpTable);
+            column2.setSimpleColumn (preDoc.left()-88, preDoc.bottom()-10, preDoc.right(), preDoc.top()-57);
+            column2.go();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+//        cb.beginText();
+//        cb.setFontAndSize(times, 8);
+//
+//        String[] textArr = copyrightText.split("\r\n");
+//        for (int i = 0; i < textArr.length; i++) {
+//            cb.setTextMatrix(pdfDocument.left() - 10, 100 - (i * 10));
+//            cb.showText(textArr[i]);
+//        }
+////        cb.beginText();
+//        cb.setFontAndSize(times,8);
+//        cb.setTextMatrix(pdfDocument.left()-19,100);
+////        cb.showText("");
+//        cb.endText();
+        
+        
+        
+        
+//        jknewPage();
+        preDoc.close();
+        File savedithink = new File(prefn);
+//        System.exit(1);
+        
     }
 
     /**
@@ -613,13 +741,16 @@ public class PdfPageWrapper {
 
     private PageHeaderEvent header = null;
     private Document pdfDocument = null;
+    private Document preDoc = null;
     private PdfWriter pdfWriter;
+    private PdfWriter preWriter;
     private WikiFontSelector _wikiFontSelector = null;
     public static FontSelector fs = new FontSelector();
     private FontSelector tfs = new FontSelector();
     public static FontSelector pfs = new FontSelector();
     private MultiColumnText mct = null;
     private String outputFileName = "";
+    private String prefn = "";
     private String currentTitle = "";
     private int currentArticleID;
 }

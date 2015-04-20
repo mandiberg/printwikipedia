@@ -89,7 +89,7 @@ public class WikiProcessor {
             System.out.println(artCount);
 
             while (isInProggress && totalTime < timeLimit) {
-                pdfWrapper = new PdfPageWrapper(startLimit); // Start with page ID indicated in settings
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum); // Start with page ID indicated in settings
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
                 
