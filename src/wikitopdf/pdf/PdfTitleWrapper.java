@@ -59,14 +59,16 @@ public class PdfTitleWrapper {
         firstLine = firstLine.replaceAll("[_]"," ");
         firstLine = firstLine.replace("/","\\");//gets confused on filenames with / as is supposed to be directory separator
         String outputFileName = "temp/tocVol-" + num + "-"+firstLine+".pdf";
-
+        String prefn = "temp/pre"+String.format("%04d",(num))+".pdf";
         pdfDocument = new Document(new Rectangle(432, 648));
+        preToc = new Document(new Rectangle(432,648));
         //(l,r,t,b)
         //going to switch the margins here because in the lulu printout it seems to have the margins going the opposite sides
         //originally 27f, 67.5f
         
 //        pdfDocument.setMargins(74.3f, 27f, 5.5f, 62.5f);
         pdfDocument.setMargins(66.3f, 47f, 5.5f, 62.5f);
+        preToc.setMargins(66.3f, 47f, 5.5f, 62.5f);
         
         
 
@@ -74,12 +76,22 @@ public class PdfTitleWrapper {
 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream(outputFileName));
+        preWrite = PdfWriter.getInstance(preToc, new FileOutputStream(prefn));
         
         headerFooter = new TitlesFooter(startPage);
         pdfWriter.setPageEvent(headerFooter);
         pdfDocument.open();
         pdfDocument.setMarginMirroring(true);
         wikiFontSelector = new WikiFontSelector();
+        preToc.open();
+//        PdfContentByte bb = preWrite.getDirectContent();
+        System.out.println(preToc.isOpen() +"<pretoc pdfdoc>" +pdfDocument.isOpen() );
+        addPrologue();
+        jknewPage(preToc);
+        preToc.close();
+        jknewPage(pdfDocument);
+        
+        File savedithink = new File(prefn);
         //HeaderFooter hf =  new HeaderFooter(new Phrase("head1"), new Phrase("head2"));
 
         //pdfDocument.setHeader(hf);
@@ -179,13 +191,13 @@ public class PdfTitleWrapper {
      *
      * @throws DocumentException
      */
-    public final void jknewPage() throws DocumentException{
-      pdfDocument.add(new Paragraph(""));
-      pdfDocument.newPage();
-      pdfDocument.add(new Paragraph(""));
+    public final void jknewPage(Document doc) throws DocumentException{
+      doc.add(new Paragraph(""));
+      doc.newPage();
+      doc.add(new Paragraph(""));
     }
     public final void addPrologue() throws DocumentException {
-        PdfContentByte cb = pdfWriter.getDirectContent();
+        PdfContentByte cb = preWrite.getDirectContent();
         BaseFont times = null;
         try {
             wikiFontSelector.getTitleFontSelector().process("");
@@ -199,7 +211,7 @@ public class PdfTitleWrapper {
         cb.beginText();
         
         cb.setFontAndSize(times, 40);
-        cb.setTextMatrix(pdfDocument.right() - 182, 425);
+        cb.setTextMatrix(preToc.right() - 182, 425);
         cb.showText("Wikipedia");
         cb.endText();
         PdfPTable tocTable = new PdfPTable(1);
@@ -208,15 +220,15 @@ public class PdfTitleWrapper {
             wikiFontSelector.getTitleFontSelector().process("");
             times = wikiFontSelector.getCommonFont().getBaseFont();
             Font pght = new Font(times,15);
-            Paragraph pgh = new Paragraph("Table of Contents\nVolume "+String.valueOf(PdfTitleWrapper.num),pght);
+            Paragraph pgh = new Paragraph("Table of Contents\nVolume "+String.valueOf((PdfTitleWrapper.num+1)),pght);
             PdfPCell cell = new PdfPCell(pgh);
             cell.setBorderWidth(0f);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell.setColspan(1);
             tocTable.addCell(cell);
-            ColumnText column = new ColumnText(pdfWriter.getDirectContent());
+            ColumnText column = new ColumnText(preWrite.getDirectContent());
             column.addElement(tocTable);
-            column.setSimpleColumn (pdfDocument.left()+20, pdfDocument.bottom()+20, pdfDocument.right()+27.5f, pdfDocument.bottom()-100);
+            column.setSimpleColumn (preToc.left()+20, preToc.bottom()+20, preToc.right()+27.5f, preToc.bottom()-100);
             column.go();
 //        pgh.setAlignment("right");
         
@@ -225,7 +237,7 @@ public class PdfTitleWrapper {
             ex.printStackTrace();
         }
         
-        pdfDocument.newPage();//get second page for the copyright text
+        preToc.newPage();//get second page for the copyright text
 //        ColumnText ct = new ColumnText(pdfWriter.getDirectContent());
         
         
@@ -263,9 +275,9 @@ public class PdfTitleWrapper {
             cell2.setVerticalAlignment(Element.ALIGN_LEFT);
             cell2.setColspan(1);
             cpTable.addCell(cell2);
-            ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
+            ColumnText column2 = new ColumnText(preWrite.getDirectContent());
             column2.addElement(cpTable);
-            column2.setSimpleColumn (pdfDocument.left()-88, pdfDocument.bottom()-10, pdfDocument.right(), pdfDocument.top()-57);
+            column2.setSimpleColumn (preToc.left()-88, preToc.bottom()-10, preToc.right(), preToc.top()-57);
             column2.go();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -351,9 +363,11 @@ public class PdfTitleWrapper {
         return headerFooter.pageFull;
     }
     private Document pdfDocument = null;
+    private Document preToc = null;
     private FontSelector _fontSelector = null;
     private MultiColumnText mct = null;
     private PdfWriter pdfWriter;
+    private PdfWriter preWrite;
     private int currentPageNum = 3;
     private int currentTitleNum = 0;
     private TitlesFooter headerFooter;

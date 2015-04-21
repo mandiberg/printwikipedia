@@ -57,8 +57,8 @@ public class WikiTitleParser extends PdfPageEventHelper
         String firstLine=bufferReader.readLine();//first line will change the title of the file at the end.
         String lastLine="";
         PdfTitleWrapper pdfWrapper = new PdfTitleWrapper(num, pagesCount,firstLine,"");
-        pdfWrapper.addPrologue();
-        pdfWrapper.jknewPage();
+//        pdfWrapper.addPrologue();
+//        pdfWrapper.jknewPage();
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
@@ -203,8 +203,8 @@ public class WikiTitleParser extends PdfPageEventHelper
                             num++;
                             System.out.println(line + " this is line here after chad");
                             pdfWrapper = new PdfTitleWrapper(num, pagesCount,newFirst,lastLine);
-                            pdfWrapper.addPrologue();
-                            pdfWrapper.jknewPage();
+//                            pdfWrapper.addPrologue();
+//                            pdfWrapper.jknewPage();
                             pdfWrapper.openMultiColumn(); // starts new volume (starting from vol 2)
                             pdfWrapper.writeTitle(newFirst,fs);
                             lastLine = newFirst;
