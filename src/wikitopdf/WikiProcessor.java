@@ -96,7 +96,6 @@ public class WikiProcessor {
                 // While still pages in database and still writing pages to this volume 
                 // This inner while loop creates a single pdf volume
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
-                    
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
                     //for (WikiPage page : pages) {
@@ -104,7 +103,8 @@ public class WikiProcessor {
                     //}
                     
                     // Added May 23 by CE to stop writing articles when page limit is reached
-                    outputName = pages.get(0).getTitle();
+                    outputName = pages.get(0).getTitle()+"&&&";
+                    
                     Iterator<WikiPage> i = pages.iterator();
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
                         WikiPage page = i.next();
@@ -112,7 +112,8 @@ public class WikiProcessor {
                         artWritten++;
                         System.out.println("Current Article is: " + (startLimit + artWritten));
                     }
-                    outputName = outputName + "-" + pages.get(artWritten - 1).getTitle();
+                    outputName = outputName +  pages.get(artWritten - 1).getTitle();
+                    System.out.println(outputName + " !!!!!!!!! " + pages.get(artWritten-1).getTitle());
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
                     outputName = outputName.replace(":", "");
@@ -120,13 +121,15 @@ public class WikiProcessor {
                     outputName = outputName.replace("$", "");
                     outputName = outputName.replace("%", "");
                     outputName = outputName.replace("^", "");
-                    outputName = outputName.replace("&", "");
+//                    outputName = outputName.replace("&", "");
                     outputName = outputName.replace("*", "");
                     outputName = outputName.replace("|", "");
                     outputName = outputName.replace("?", "");
                     outputName = outputName.replace("<", "");
                     outputName = outputName.replace(">", "");
                     outputName = outputName.replace("\"", "");
+                    outputName = outputName.replace("_", " ");
+//                    outputName = outputName+"&&&";
 
                     isInProggress = sqlReader.isInProggres(); // checks to see if there is still database entries
                     //TODO change from test value
@@ -153,10 +156,10 @@ public class WikiProcessor {
                 totalPageNum += cPageNum;
                 //Renaming Added May 24 by CE, renames outputfile
                 tempName = tempName.replace("_", "");
-                outputName = "./output/Vol-" + String.format("%05d", cVolNum) + "-" + 
-                        outputName + "-" + startLimit + "-" +  totalPageNum + ".pdf";
+                outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
+                        outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
-                //String tempNameNoUnderscore = tempName.replace("_","");
+//                String tempNameNoUnderscore = tempName.replace("_","");
                 //File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
                 if(newFile.exists()){
