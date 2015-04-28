@@ -17,15 +17,33 @@ public class WikiRestart {
     int startPage = 0;
     
     public WikiRestart(File[] folder) throws NumberFormatException{
+        String lastOutput = "";
+        String[] pathArray = null;
         try {
-            File lastFile = folder[folder.length - 1];
-            String pathName = lastFile.getCanonicalPath();
-            String[] pathArray = pathName.split("/");
-            String lastOutput = pathArray[pathArray.length - 1];
+            for(int i=folder.length-1;i>-1;i--){
+               File lastFile = folder[i];
+               String pathName = lastFile.getCanonicalPath();
+               pathArray = pathName.split("/");
+               lastOutput = pathArray[pathArray.length - 1];
+//               System.out.println(lastOutput);
+               if(lastOutput.startsWith("_")){
+                   lastOutput = lastOutput.substring(1, lastOutput.length());
+                   System.out.println(lastOutput);
+                   break;
+               }
+                else{
+                    continue;
+                }
+            }
+            
+            
+            
             String[] settings = lastOutput.split("[-.]");
             startVol = Integer.parseInt(settings[1]);
-            startLimit = Integer.parseInt(settings[settings.length - 3]);
-            startPage = Integer.parseInt(settings[settings.length - 2]);
+            System.out.println(startVol);
+//            System.exit(1);
+            startLimit = Integer.parseInt(settings[0]);
+            startPage = Integer.parseInt(settings[2]);
             settings = null;
             pathArray = null;
         }
@@ -40,7 +58,7 @@ public class WikiRestart {
     }
     
     public int getRestartVol(){
-        return startVol + 1;
+        return startVol;
     }
     
     public int getRestartPage(){

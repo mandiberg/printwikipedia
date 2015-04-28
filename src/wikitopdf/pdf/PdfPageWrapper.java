@@ -40,12 +40,13 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum) throws DocumentException, IOException {
+    public PdfPageWrapper(int index, int cVolNum, int pageNum) throws DocumentException, IOException {
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
-        outputFileName = "_" + index + WikiSettings.getInstance().getOutputFileName();
+        outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
+        System.out.println(outputFileName);
         outputFileName = outputFileName.replace("/","\\");
-        prefn = "pre"+String.format("%05d", cVolNum)+".pdf";
+        prefn = "copyright/pre"+String.format("%04d", cVolNum)+".pdf";
 //      WHTMLWorker.fontGet();//start font thing for the new page.
         tFontGet();
         fontGet();
@@ -72,19 +73,16 @@ public class PdfPageWrapper {
         pdfWriter.setPageEvent(header);
 //        PageHeaderEvent phead = new PageHeaderEvent(0);
 //        preWriter.setPageEvent(phead);
-        System.out.println("a");
         
         pdfDocument.open();
         
         pdfDocument.setMarginMirroring(true);
         _wikiFontSelector = new WikiFontSelector();
         preDoc.open();
-        System.out.println("n");
 //        jknewPage();
         addPrologue(cVolNum);
-        System.out.println("d");
-        pdfDocument.add(new Paragraph(""));
-        pdfDocument.newPage();
+//        pdfDocument.add(new Paragraph(""));
+//        pdfDocument.newPage();
         
 
         //PdfContentByte cb = pdfWriter.getDirectContent();
@@ -92,20 +90,13 @@ public class PdfPageWrapper {
         openMultiColumn();
     }
     public final void jknewPage() throws DocumentException{
-      System.out.println("1");
       preDoc.add(new Paragraph(""));
-      System.out.println("2");
       preDoc.newPage();
       preDoc.add(new Paragraph(""));
     }
     public final void addPrologue(int cVolNum) throws DocumentException {
-        System.out.println("3333");
         PdfContentByte cb = preWriter.getDirectContent();
-        System.out.println("eoww");
         BaseFont times = null;
-        System.out.println("eeeeee");
-//        WikiFontSelector wikiFontSelector = new WikiFontSelector();
-        System.out.println("wwwwwww");
         try {
             _wikiFontSelector.getTitleFontSelector().process("");
             times = _wikiFontSelector.getCommonFont().getBaseFont();
@@ -113,17 +104,12 @@ public class PdfPageWrapper {
             ex.printStackTrace();
         }
 
-        System.out.println("65");
         //wikipedia on the first inside page.--right facing
         cb.beginText();
-        System.out.println("66");
         cb.setFontAndSize(times, 40);
         cb.setTextMatrix(preDoc.right() - 182, 425);
-        System.out.println("68");
         cb.showText("Wikipedia");
-        System.out.println("69");
         cb.endText();
-        System.out.println("605");
         PdfPTable tocTable = new PdfPTable(1);
 //        ct.setSimpleColumn(pdfDocument.left(),100,pdfDocument.right(),300);//llx,lly,urx,ury
         try {
@@ -149,12 +135,12 @@ public class PdfPageWrapper {
         
         preDoc.newPage();//get second page for the copyright text
 
-        String copyrightText = "CC BY-SA 2014, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
+        String copyrightText = "CC BY-SA 3.0 2015, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
                 "Edited, compiled and designed by Michael Mandiberg (User:Theredproject).\r\r"+ 
-                "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/ Trademark_policy\r\r"+
+                "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/Trademark_policy\r\r"+
                 "Wikipedia is a trademark of the Wikimedia Foundation and is used with the permission of the Wikimedia Foundation. This work is not endorsed by or affiliated with the Wikimedia Foundation.\r\r"+
-                "Produced with support from Eyebeam, The Banff Centre and the City University of New York, and assistance from Patrick Davison, Denis Lunev, Kenny Lozowski, Colin Elliot, and Jonathan Kirtharan.\r\r"+
-                "www.PrintWikipedia.com\r\r Printed by Lulu.com";
+                "Produced with support from Eyebeam, The Banff Centre and the City University of New York, and assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
+                "PrintWikipedia.com\r\rgithub.com/mandiberg/printwikipedia\r\rPrinted by Lulu.com";
         PdfPTable cpTable = new PdfPTable(1);
         try {
             times = _wikiFontSelector.getCommonFont().getBaseFont();
@@ -162,8 +148,8 @@ public class PdfPageWrapper {
             Paragraph cpp = new Paragraph(copyrightText,cpt);
             PdfPCell cell2 = new PdfPCell(cpp);
             cell2.setBorderWidth(0f);
-            System.out.println(cpp.toString());
-            System.out.println(copyrightText);
+//            System.out.println(cpp.toString());
+//            System.out.println(copyrightText);
             cell2.setHorizontalAlignment(Element.ALIGN_TOP-50);
             cell2.setVerticalAlignment(Element.ALIGN_LEFT);
             cell2.setColspan(1);
@@ -239,7 +225,7 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
-        System.out.println(FontFactory.getRegisteredFonts().toString());
+
 
 
 
@@ -352,7 +338,6 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
-        System.out.println(FontFactory.getRegisteredFonts().toString());
 
 
 
@@ -592,14 +577,14 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
-            System.out.println("77777" + text );
+//            System.out.println("77777" + text );
             text = text.replaceAll("<gallery[\\s\\S]*?</gallery>","");
 //            text = text.replaceAll("(official_name\\s+\\=).+?(\\|)","");
 //            text = text.replaceAll("(name\\s+\\=).+?(\\|)","");
             
 //             text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
-            System.out.println(html);
+//            System.out.println(html);
             //<a id="References" name="References"></a><H2>REFERENCES</H2>
             html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");

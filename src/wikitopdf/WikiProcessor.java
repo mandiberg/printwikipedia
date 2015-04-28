@@ -50,14 +50,14 @@ public class WikiProcessor {
         /****************************************/
         FileFilter dsFilter = new FileFilter(){
             public boolean accept(File file){
-                return (!(file.getName().contains("DS_Store") || file.getName().contains("output.pdf")));
+                return (!(file.getName().contains("DS_Store")));// || file.getName().contains("output.pdf")));
             }
         };
         File[] listOfFiles = new File("output").listFiles(dsFilter);
         String listo = String.valueOf(listOfFiles.length);
         System.out.println(listo);
         System.out.println("^^this is list of files length");
-        System.out.println(listOfFiles);
+        System.out.println(listOfFiles.toString());
         System.out.println("^^this is list of files.");
         if (listOfFiles.length > 0){
             System.out.println("Foo");
@@ -89,7 +89,7 @@ public class WikiProcessor {
             System.out.println(artCount);
 
             while (isInProggress && totalTime < timeLimit) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum); // Start with page ID indicated in settings
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum,totalPageNum); // Start with page ID indicated in settings
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
                 
