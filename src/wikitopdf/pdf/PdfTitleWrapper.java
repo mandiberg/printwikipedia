@@ -16,6 +16,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +50,6 @@ public class PdfTitleWrapper {
         //Read settings
         int curPage = startPage;
         pageFull = false;
-        startPage = 0;
         PdfTitleWrapper.lastLine = lastLine;
         if(PdfTitleWrapper.lastLine!=""){
             PdfTitleWrapper.lastLine = PdfTitleWrapper.lastLine.replace("/","\\");
@@ -168,12 +168,19 @@ public class PdfTitleWrapper {
         }
     }
     public String coverChad(){//meant to just cover the hanging last title with rect
-        PdfContentByte canvas = pdfWriter.getDirectContent();
-        Rectangle rect = new Rectangle(pdfDocument.right(), pdfDocument.top());
-        rect.setBorder(Rectangle.BOX);
-        rect.setBorderWidth(0);
-        rect.setGrayFill(3);
-        canvas.rectangle(rect);
+        System.out.println("i'mcover chad");
+         PdfContentByte ecanvas = pdfWriter.getDirectContent();
+        ecanvas.rectangle(10, 10, pdfDocument.right()+20, pdfDocument.top()-10);
+        ecanvas.setColorFill(Color.WHITE);
+        ecanvas.fill();
+//        PdfContentByte canvas = pdfWriter.getDirectContent();
+//        Rectangle rect = new Rectangle(pdfDocument.right()+20, pdfDocument.top());
+//        rect.setBorder(Rectangle.BOX);
+//        rect.setBorderWidth(2f);
+//        rect.setGrayFill(3);
+//        rect.setBackgroundColor(Color.WHITE);
+//        canvas.rectangle(rect);
+//        canvas.fillStroke();
         int lc = headerFooter.getLineCount();
         String newLastLine = headerFooter.lineList.get(lc-2);
         return newLastLine;

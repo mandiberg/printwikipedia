@@ -49,8 +49,8 @@ public class TitlesFooter extends PdfPageEventHelper
         //header doesnt print for first and second pages
         pageNum = writer.getPageNumber() + startPage;
         
-        if(pageNum < 4)
-            return;
+//        if(pageNum < 4)
+//            return;
 
       
     }

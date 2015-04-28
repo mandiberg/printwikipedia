@@ -53,7 +53,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         }
 */
         int num = 1;
-        int pagesCount = 0;
+        int pagesCount = 2;
         String firstLine=bufferReader.readLine();//first line will change the title of the file at the end.
         String lastLine="";
         PdfTitleWrapper pdfWrapper = new PdfTitleWrapper(num, pagesCount,firstLine,"");
@@ -192,7 +192,7 @@ public class WikiTitleParser extends PdfPageEventHelper
                     //sqlProcessor.saveTitle(line);                    
                     //if the pages in the current volume == 670, close current pdf, track volume/page numbers, and start new pdf
                     System.out.println("about to test for pgcount");
-                    if(pdfWrapper.getPagesCount()%701==0 && pdfWrapper.getPagesCount()>690)
+                    if(pdfWrapper.getPagesCount()%699==0 && pdfWrapper.getPagesCount()>690)
                     {
                             System.out.println(line + " line before chad");
                             lastLine = pdfWrapper.coverChad();
