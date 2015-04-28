@@ -60,10 +60,16 @@ public class WikiCoverParser {
 //                
 //            }
 //        }
+        String check_str = "";
         for (int i = 0; i < listOfFiles.length; i++) {
           if (listOfFiles[i].isFile()) {
               // need to filter out .ds_store and other "." files
-            System.out.println("File " + listOfFiles[i].getName());
+            String cur_file = listOfFiles[i].getName();
+            if(listOfFiles[i].getName().length() > 4){
+                check_str = cur_file.substring(0,3);
+            }
+            if(check_str.equals("pre")==false){
+             System.out.println("no " + check_str + " does not equal pre!");   
                 try
                 {
                     System.out.println("Trying " + listOfFiles[i].getName());
@@ -83,6 +89,7 @@ public class WikiCoverParser {
                     pdfWrapper = new PdfCoverWrapper(num, pagesCount);
 
                 }
+            }
             
 
           

@@ -237,7 +237,7 @@ public class PdfCoverWrapper {
             spine_to_font = new Font(spine_base,13);
             main_title_font = new Font(spine_base,17);
             sc_main_title_font = new Font(spine_base, 20);
-            dis_font = new Font(spine_base,5);
+            dis_font = new Font(spine_base,6);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -336,7 +336,7 @@ public class PdfCoverWrapper {
         disclaim.setHorizontalAlignment(Element.ALIGN_LEFT);
         disclaim.setVerticalAlignment(Element.ALIGN_BOTTOM);
         disclaim.setColspan(1);
-        disclaim.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-170f));
+        disclaim.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-173f));
         tabled.addCell(disclaim);
         ColumnText columnd = new ColumnText(pdfWriter.getDirectContent());
         columnd.addElement(tabled);
@@ -346,7 +346,7 @@ public class PdfCoverWrapper {
         float llx_sc_volnum = 391f;
         float urx_sc_volnum = 506f;
         float lly_sc_volnum = 830f;
-        columnd.setSimpleColumn (llx_hc_volnum-250, pdfDocument.bottom()-130, urx_hc_volnum, pdfDocument.top()-50f);
+        columnd.setSimpleColumn (llx_hc_volnum-240, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
         columnd.go();
         
         

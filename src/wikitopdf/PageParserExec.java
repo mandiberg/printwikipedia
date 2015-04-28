@@ -35,7 +35,7 @@ public class PageParserExec {
     if(length > 1){
         prod = args[1];
     }
-    if(prod.equals("0")){//is not production
+    if(prod.equals("reg")){//is not production
         System.setOut(new PrintStream(new OutputStream() {
 
         @Override
@@ -44,7 +44,7 @@ public class PageParserExec {
         }
         }));
     }
-    else if(prod.equals("1")){
+    else if(prod.equals("prod")){
         // Included for debuging delete after done
         try {
             PrintStream out = new PrintStream(new FileOutputStream("fullOutput.txt"));
