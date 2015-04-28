@@ -100,7 +100,6 @@ Working with the test Database snippet
 	Dump this into the schema via command line or MySQLWorkbench
 	Don't forget to "USE thenameyougaveyourschema;"
 	**this is the sped up database**
-	  
 
 --------------------------------------------------------------------------------------
 Using a wiki dump
@@ -109,6 +108,7 @@ Using a wiki dump
 	The best way to download this is by using nohup and wget to make sure it goes through (these are very large files!)
 	like so: nohup wget -bcq <<http address of your file>> 
 --------------------------------------------------------------------------------------
+
 **************************************************************************************
 Database for Table of Contents
 --------------------------------------------------------------------------------------
@@ -232,10 +232,12 @@ Running Manually
 	with how the progam works, and make sure things are working correctly
 --------------------------------------------------------------------------------------
 Possible Problems:
+	
 	1. The "wikitopdf.jar" uses large amounts of dynamic memory. On some machines this will result in frequent crashing. In order to fix this add the "Xmx1024m" argument to your java command: "java -Xmx1024m -jar wikitopdf.jar ..."
 	**************
 	NOTE : If this is an issue edit the .bat files that you will use for auto running the program to include the "Xmx1024m" argument as well.
 	**************
+	
 	2. When trying to run mwdumper.jar if an error appears saying: "ERROR 1366 (HY000) at line 54: Incorrect string value: '\xF0\x90\xA1\x80\x0A|...' for column 'old_text' at row 2" it will not add the mediawiki data to the database because the sql connection has just closed on that error. This error means that there is a piece of string data that is too large for the mysql character set in the text table.
 	To fix this drop your schema and start over again and edit the structure.sql file from line 757 to 764 to:
 		DROP TABLE IF EXISTS `text`;
@@ -250,6 +252,72 @@ Possible Problems:
 		/*!40101 SET character_set_client = @saved_cs_client */;
 	run the structure.sql code against your schema and then in your regular terminal
 	run: "java -jar -Xmx6024m mwdumper.jar --format=sql:1.5 enwiki-late-pages-articles.xml.bz2 --filter=latest --filter=notalk | mysql -u root --default-character-set=utf8mb4 NAMEOFYOURSCHEMA" without quotes.
+
+	3. While MWDumper is running you may get a mysql error that pops up. It can be anything from invalid characters to something in your database structure not being large enough... This can either be because we did not set up the structure.sql file properly or someone who was editing wikipedia put something in there that messes up the dump. One way of telling that you got this error is if you do a count of ids for the page table (SELECT COUNT(page_id) from page;) it will be a number ending in three zeroes. This is probably incorrect as you have a 1 in 1000 chance of landing on 1000 exactly. Scroll up in the terminal window where mwdumper was running until you see a mysql error or something other than (for example) 
+	7,445,000 pages (49.169/sec), 7,445,000 revs (49.169/sec)
+	Your order of operations to fix the problem should be as follows:
+		a) Identify the line of code that has the error. google it. read stackoverflow about why you got that error. if it says that a column in your table was too small for the data make that column bigger if possible.
+		b) If you think it's something wrong with the dump-- a bad character, malformed data, etc. contact someone in the mailinglist for the dumps https://lists.wikimedia.org/mailman/listinfo/xmldatadumps-l (it's fun to give back) and see if they can help you.
+		c) If you can't figure out what's wrong then you might have to use a different dump or wait until next month to get new data.
+	If you've identified the problem via option a and have fixed your mysql database or if you know where the issue is via option b in the xml file and want to delete that piece of data you can then take the rest of the dump and append it to wherever mwdumper took you successfully.
+		-Use mysql to get the last entry in your database: SELECT * FROM page ORDER BY page_id desc limit 1;
+		-bunzip your bz2 dump that you're using which had the error.
+		*****It's not recommended to do ^this^ if you are using a very large dump (one of the 11GB+). It will take absolutely forever to bunzip and then do the following steps. If possible get a smaller one and find out if where you failed is within that. This is good if you know you were close to the end of the dump. Otherwise i would recommend you use option c.
+		-use grep -an "YOUR LAST TITLE" FILENAME and make note of the line number that you get for a result that looks like 
+			<title>YOURLASTTITLE</title>
+		-use sed to trim back about 300 lines to be safe and output your file to something you can open in a text editor.
+			sed -n '251540000,$'p YOURFILENAME > NEWFILENAME
+		-open that new file in a text editor look for your entry within <title></title> scroll up until you see <page> and delete everything before that.
+		-add this xml to the top 
+			<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.10/ http://www.mediawiki.org/xml/export-0.10.xsd" version="0.10" xml:lang="en">
+			  <siteinfo>
+			    <sitename>Wikipedia</sitename>
+			    <dbname>enwiki</dbname>
+			    <base>http://en.wikipedia.org/wiki/Main_Page</base>
+			    <generator>MediaWiki 1.25wmf23</generator>
+			    <case>first-letter</case>
+			    <namespaces>
+			      <namespace key="-2" case="first-letter">Media</namespace>
+			      <namespace key="-1" case="first-letter">Special</namespace>
+			      <namespace key="0" case="first-letter" />
+			      <namespace key="1" case="first-letter">Talk</namespace>
+			      <namespace key="2" case="first-letter">User</namespace>
+			      <namespace key="3" case="first-letter">User talk</namespace>
+			      <namespace key="4" case="first-letter">Wikipedia</namespace>
+			      <namespace key="5" case="first-letter">Wikipedia talk</namespace>
+			      <namespace key="6" case="first-letter">File</namespace>
+			      <namespace key="7" case="first-letter">File talk</namespace>
+			      <namespace key="8" case="first-letter">MediaWiki</namespace>
+			      <namespace key="9" case="first-letter">MediaWiki talk</namespace>
+			      <namespace key="10" case="first-letter">Template</namespace>
+			      <namespace key="11" case="first-letter">Template talk</namespace>
+			      <namespace key="12" case="first-letter">Help</namespace>
+			      <namespace key="13" case="first-letter">Help talk</namespace>
+			      <namespace key="14" case="first-letter">Category</namespace>
+			      <namespace key="15" case="first-letter">Category talk</namespace>
+			      <namespace key="100" case="first-letter">Portal</namespace>
+			      <namespace key="101" case="first-letter">Portal talk</namespace>
+			      <namespace key="108" case="first-letter">Book</namespace>
+			      <namespace key="109" case="first-letter">Book talk</namespace>
+			      <namespace key="118" case="first-letter">Draft</namespace>
+			      <namespace key="119" case="first-letter">Draft talk</namespace>
+			      <namespace key="446" case="first-letter">Education Program</namespace>
+			      <namespace key="447" case="first-letter">Education Program talk</namespace>
+			      <namespace key="710" case="first-letter">TimedText</namespace>
+			      <namespace key="711" case="first-letter">TimedText talk</namespace>
+			      <namespace key="828" case="first-letter">Module</namespace>
+			      <namespace key="829" case="first-letter">Module talk</namespace>
+			      <namespace key="2600" case="first-letter">Topic</namespace>
+			    </namespaces>
+			  </siteinfo>	
+		-run this command: bzip2 NEWEDITEDFILE
+		-create a new schema with a new name using the steps above
+		-run mwdumper on your newly bzip'd file into the schema you just created.
+		-once it's done use mysqldump to create a sql file 
+			 mysqldump -n -t -u YOURNAME --password=pw NEWSCHEMA > DUMPEDFILE.sql
+		-then run that into your original dump
+			mysql -u YOURNAME -p -D ORIGINALSCHEMA < DUMPEDFILE.sql
+		-pat yourself on the back
 
 **************************************************************************************
 Setting up Graceful Restarts
