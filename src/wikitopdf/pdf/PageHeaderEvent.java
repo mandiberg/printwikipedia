@@ -40,14 +40,15 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 
     @Override
     public void onStartPage(PdfWriter writer, Document document){
+       
        pageNum = writer.getPageNumber() + startPage;
+       if(writer.getPageNumber() <=3)
+           return;
        contentPage.saveState();
-
-       if ((pageNum % 2) == 1 && pageNum != 1) {
-
-           writeHeader(currentTitle, 27,
-                    document.getPageSize().getHeight() - 27,
-                    PdfContentByte.ALIGN_LEFT);
+       
+       if ((pageNum % 2) == 0 && writer.getPageNumber() > 3) {
+           writeHeader(currentTitle, document.left(),//-5.5f,
+                    document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_LEFT);
            contentPage.restoreState();
        }
        
@@ -56,20 +57,54 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     @Override
     public void onEndPage(PdfWriter writer, Document document) {
         pageNum = writer.getPageNumber() + startPage;
+        if(writer.getPageNumber() < 2)
+            return;
         contentPage.saveState();
-
-        if(pageNum == 1){
-            writeHeader(currentTitle, 27,
-                    document.getPageSize().getHeight() - 27,
-                    PdfContentByte.ALIGN_LEFT);
-            contentPage.restoreState();
-        }
-
-        if ((pageNum % 2) == 0) {
-            writeHeader(currentTitle, document.getPageSize().getWidth() - 27,
+        
+        String pNumString = String.valueOf(pageNum);
+        float textBase = document.bottom() +2;
+        float textSize = bsFont.getWidthPoint(pNumString, 8);
+        contentPage.beginText();
+        contentPage.setFontAndSize(bsFont, 8);
+        currentTitle = currentTitle.length() > 20 ? currentTitle.substring(0, 20) + "..." : currentTitle;
+        if ((pageNum % 2) == 1)
+        {
+            if(writer.getPageNumber()>2){
+                contentPage.setTextMatrix(document.right()-5.5f, textBase-25);
+                contentPage.showText(pNumString);
+                contentPage.endText();
+                contentPage.restoreState();
+            }
+            
+            if(pageNum!=1){
+                if(writer.getPageNumber()>3){
+                    
+                    writeHeader(currentTitle, document.right(),//-5.5f,
                     document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_RIGHT);
-            contentPage.restoreState();
+                
+                    contentPage.restoreState();
+                }
+            }
+            
         }
+        else
+        {
+//            float adjust = bsFont.getWidthPoint("0", 8);
+            if(writer.getPageNumber()>2){
+                contentPage.setTextMatrix(document.left(), textBase-25);
+                contentPage.showText(pNumString);
+                contentPage.endText();
+                contentPage.restoreState();
+            }
+            
+//            writeHeader(currentTitle, document.left(),
+//                    document.getPageSize().getHeight() - 47,
+//                    PdfContentByte.ALIGN_LEFT);
+//            contentPage.restoreState();
+            //Write header
+//            writeHeader(writer, document);
+        }
+        
         
     }
 
@@ -93,7 +128,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     private void writeHeader(String text, float x, float y, int align){
         
         int sign = (align == PdfContentByte.ALIGN_LEFT) ? -1 : 1;
-
+        contentPage.saveState();
         contentPage.beginText();
         contentPage.setFontAndSize(bsFont, 8);
 
@@ -103,10 +138,13 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 //        contentPage.restoreState();
 
         //13.5f - space to left or right page border
-        contentPage.moveTo(x + 13.5f * sign, y + 10);
-        contentPage.setColorStroke(new GrayColor(1));
-        contentPage.lineTo(x + 13.5f * sign, y - 1);
-        contentPage.stroke();
+//        40.5<x  y>621.010
+//        418.5<x  y>621.010
+        System.out.println(x+13.5 + "<x  y>" + y+10);
+//        contentPage.moveTo(x + 13.5f * sign, y + 10);
+//        contentPage.setColorStroke(new GrayColor(1));
+//        contentPage.lineTo(x + 13.5f * sign, y - 1);
+//        contentPage.stroke();
     }
 
     private PdfContentByte contentPage;

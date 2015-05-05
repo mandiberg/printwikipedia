@@ -46,21 +46,27 @@ public class PdfPageWrapper {
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
         outputFileName = outputFileName.replace("/","\\");
-        prefn = "copyright/pre"+String.format("%04d", cVolNum)+".pdf";
+        System.out.println("qqq");
+        prefn = "/../copyright/pre"+String.format("%04d", cVolNum)+".pdf";
+        System.out.println("ooo");
 //      WHTMLWorker.fontGet();//start font thing for the new page.
+        System.out.println("fff");
         tFontGet();
+        System.out.println("fff");
         fontGet();
+        System.out.println("fff");
         preFontGet();
         //72 pixels per inch
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
         //pdfDocument = new Document(new Rectangle(1918, 1018)); //
         preDoc = new Document(new Rectangle(432,648));
+        System.out.println("fuck");
         
+        pdfDocument.setMargins(67, 47.5f, -551, 49.5f); //old margins w/error.
+//        pdfDocument.setMargins(66.3f, 47f, 5.5f, 62.5f);//toc margins
         
-        pdfDocument.setMargins(27, 67.5f, -551, 49.5f);
-        pdfDocument.setMarginMirroring(true);
-        preDoc.setMargins(66.3f, 47f, 5.5f, 62.5f);
-        preDoc.setMarginMirroring(true);
+        pdfDocument.setMargins(67, 47.5f, -551, 49.5f); //old margins w/error.
+        
         
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
@@ -69,18 +75,23 @@ public class PdfPageWrapper {
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
                             "/" + prefn));
 
-        header = new PageHeaderEvent(0);
+        header = new PageHeaderEvent(pageNum);
         pdfWriter.setPageEvent(header);
 //        PageHeaderEvent phead = new PageHeaderEvent(0);
 //        preWriter.setPageEvent(phead);
         
         pdfDocument.open();
         
-        pdfDocument.setMarginMirroring(true);
+//        pdfDocument.setMarginMirroring(true);
         _wikiFontSelector = new WikiFontSelector();
-        preDoc.open();
+        
+        
+        pdfDocument.setMarginMirroring(true);
+        
 //        jknewPage();
-        addPrologue(cVolNum);
+        //_4073-2-703-output.pdf
+        addPrologue(cVolNum, pdfDocument, pdfWriter);
+//        addPrologue(cVolNum,preDoc);
 //        pdfDocument.add(new Paragraph(""));
 //        pdfDocument.newPage();
         
@@ -89,13 +100,62 @@ public class PdfPageWrapper {
         //ColumnText ct = new ColumnText(cb);
         openMultiColumn();
     }
-    public final void jknewPage() throws DocumentException{
-      preDoc.add(new Paragraph(""));
-      preDoc.newPage();
-      preDoc.add(new Paragraph(""));
+    /**
+     *
+     */
+    public void openMultiColumn() {
+//        mct = new MultiColumnText(pdfDocument.bottom());
+        mct = new MultiColumnText(600);
+        int columnCount = 3;
+        float space = (float) 8;
+        float columnWidth = (float) 103;
+        float left = 67;
+        float right = left + columnWidth;
+//        mct.addSimpleColumn(27, 115);
+//        mct.addSimpleColumn(120, 200);
+        mct.addRegularColumns(pdfDocument.left(), pdfDocument.right(), 6f, 3);
+                System.out.println(pdfDocument.left()+ " l\n"+
+                (pdfDocument.top() - pdfDocument.bottom()-40)+" size\n"+
+                pdfDocument.right()+ " r\n"+
+                pdfDocument.rightMargin()+ " rm\n"+
+                pdfDocument.leftMargin()+ " lm\n"+
+                pdfDocument.top()+ " t\n"+
+                pdfDocument.bottom()+ " b\n"+
+                pdfDocument.topMargin()+ " tm\n"+
+                pdfDocument.bottomMargin() + " bm\n"
+                        );
+                        
+//
+//        for (int i = 0; i < columnCount; i++) {
+//            //System.out.println("left:" + left + " right:" + right);
+//            mct.addSimpleColumn(left, right);
+//            left = right + space;
+//            right = left + columnWidth;
+//        }
+
+        //First page hack
+        for (int i = 0; i < 38; i++) {
+            try {
+                Phrase ph = _wikiFontSelector.getTitleFontSelector().process("\n");
+                mct.addElement(ph);
+                pdfDocument.add(mct);
+            } catch (Exception ex) {
+                WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
+            }
+        }
     }
-    public final void addPrologue(int cVolNum) throws DocumentException {
-        PdfContentByte cb = preWriter.getDirectContent();
+    
+    public final void jknewPage(Document docu) throws DocumentException{
+      docu.add(new Paragraph(""));
+      docu.newPage();
+      docu.add(new Paragraph(""));
+    }
+    public final void addPrologue(int cVolNum, Document docu, PdfWriter writ) throws DocumentException {
+        if(docu.equals(preDoc)){
+            preDoc.open();
+            preDoc.setMarginMirroring(true);
+        }
+        PdfContentByte cb = writ.getDirectContent();
         BaseFont times = null;
         try {
             _wikiFontSelector.getTitleFontSelector().process("");
@@ -103,11 +163,12 @@ public class PdfPageWrapper {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
 
         //wikipedia on the first inside page.--right facing
         cb.beginText();
         cb.setFontAndSize(times, 40);
-        cb.setTextMatrix(preDoc.right() - 182, 425);
+        cb.setTextMatrix(docu.right() - 182, 425);
         cb.showText("Wikipedia");
         cb.endText();
         PdfPTable tocTable = new PdfPTable(1);
@@ -122,9 +183,9 @@ public class PdfPageWrapper {
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell.setColspan(1);
             tocTable.addCell(cell);
-            ColumnText column = new ColumnText(preWriter.getDirectContent());
+            ColumnText column = new ColumnText(writ.getDirectContent());
             column.addElement(tocTable);
-            column.setSimpleColumn (preDoc.left()+20, preDoc.bottom()+20, preDoc.right()+27.5f, preDoc.bottom()-100);
+            column.setSimpleColumn(docu.left()+15, docu.bottom()+20, docu.right()+27.5f, docu.bottom()-100);
             column.go();
 //        pgh.setAlignment("right");
         
@@ -133,7 +194,9 @@ public class PdfPageWrapper {
             ex.printStackTrace();
         }
         
-        preDoc.newPage();//get second page for the copyright text
+        docu.newPage();//get second page for the copyright text
+//        jknewPage(docu);
+        System.out.println("I MADE A NEW MAPAGE.");
 
         String copyrightText = "CC BY-SA 3.0 2015, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
                 "Edited, compiled and designed by Michael Mandiberg (User:Theredproject).\r\r"+ 
@@ -148,16 +211,26 @@ public class PdfPageWrapper {
             Paragraph cpp = new Paragraph(copyrightText,cpt);
             PdfPCell cell2 = new PdfPCell(cpp);
             cell2.setBorderWidth(0f);
-//            System.out.println(cpp.toString());
-//            System.out.println(copyrightText);
+            System.out.println(cpp.toString());
+            System.out.println(copyrightText);
             cell2.setHorizontalAlignment(Element.ALIGN_TOP-50);
             cell2.setVerticalAlignment(Element.ALIGN_LEFT);
             cell2.setColspan(1);
             cpTable.addCell(cell2);
-            ColumnText column2 = new ColumnText(preWriter.getDirectContent());
+            ColumnText column2 = new ColumnText(writ.getDirectContent());
             column2.addElement(cpTable);
-            column2.setSimpleColumn (preDoc.left()-88, preDoc.bottom()-10, preDoc.right(), preDoc.top()-57);
+            column2.setSimpleColumn (docu.left()-67, 10, docu.right(), 551);
+            
             column2.go();
+            System.out.println("here i am in docum \n"+docu.left()+ " l\n"+
+                docu.right()+ " r\n"+
+                docu.top()+ " t\n"+
+                docu.bottom()+ " b\n"
+                        );
+            docu.add(cpTable);
+            docu.newPage();
+//            docu.add(column2);
+            //_4073-2-703-output.pdf
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -179,9 +252,12 @@ public class PdfPageWrapper {
         
         
 //        jknewPage();
-        preDoc.close();
-        File savedithink = new File(prefn);
-//        System.exit(1);
+        if(docu.equals(preDoc)){
+            preDoc.close();
+            File savedithink = new File(prefn);
+    //        System.exit(1);
+        }
+        
         
     }
 
@@ -225,9 +301,6 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
-
-
-
 
         int font_size = 13;
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
@@ -547,13 +620,14 @@ public class PdfPageWrapper {
     //Write title of article to document
     //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
-        Phrase ph;
+        Phrase ph = null;
+        Paragraph pr = null;
         try {
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
             ph = tfs.process(line);
             ph.setLeading(14);//changes leading between spaces in titles
-            Paragraph pr = new Paragraph(ph);
+            pr = new Paragraph(ph);
             pr.setSpacingBefore(8);//changes spacing before title
             pr.setSpacingAfter(4);//changes spacing after title.
 
@@ -577,7 +651,7 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
-//            System.out.println("77777" + text );
+            System.out.println("77777" + text );
             text = text.replaceAll("<gallery[\\s\\S]*?</gallery>","");
 //            text = text.replaceAll("(official_name\\s+\\=).+?(\\|)","");
 //            text = text.replaceAll("(name\\s+\\=).+?(\\|)","");
@@ -642,36 +716,7 @@ public class PdfPageWrapper {
         }
     }
 
-    /**
-     *
-     */
-    public void openMultiColumn() {
-        mct = new MultiColumnText(600);
-        int columnCount = 3;
-        float gap = (float) 27;
-        float space = (float) 8;
-        float columnWidth = (float) 107;
-        float left = gap;
-        float right = left + columnWidth;
-
-        for (int i = 0; i < columnCount; i++) {
-            //System.out.println("left:" + left + " right:" + right);
-            mct.addSimpleColumn(left, right);
-            left = right + space;
-            right = left + columnWidth;
-        }
-
-        //First page hack
-        for (int i = 0; i < 38; i++) {
-            try {
-                Phrase ph = _wikiFontSelector.getTitleFontSelector().process("\n");
-                mct.addElement(ph);
-                pdfDocument.add(mct);
-            } catch (Exception ex) {
-                WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
-            }
-        }
-    }
+    
 
     /**
      *

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import wikitopdf.pdf.PdfPageWrapper;
 import wikitopdf.pdf.PdfStamp;
 import wikitopdf.wiki.WikiPage;
+import wikitopdf.wiki.WikiRevision;
 
 /**
  *
@@ -32,7 +33,7 @@ public class WikiProcessor {
         int startLimit = WikiSettings.getInstance().getStartPage();
         int timeLimit = WikiSettings.getInstance().getTimeLimit();
         boolean isInProggress = true;
-        int totalPageNum = 0;
+        int totalPageNum = 3;
         int cPageNum = 0;
         int artWritten = 0;
         int numArt = 0;
@@ -86,11 +87,13 @@ public class WikiProcessor {
             System.out.println("make sqlprocessor");
             int artCount = sqlReader.getArticlesCount();// Counts total from database --- is this taking a long time to query?
             sqlReader = null;
+            
             System.out.println(artCount);
 
             while (isInProggress && totalTime < timeLimit) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum,totalPageNum); // Start with page ID indicated in settings
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in settings
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
+                System.out.println(tempName + " IM OUTPUT FILEFILE");
                 sqlReader = new SQLProcessor();
                 
                 // While still pages in database and still writing pages to this volume 
@@ -101,13 +104,24 @@ public class WikiProcessor {
                     //for (WikiPage page : pages) {
                       //  pdfWrapper.writePage(page);
                     //}
-                    
                     // Added May 23 by CE to stop writing articles when page limit is reached
                     outputName = pages.get(0).getTitle()+"&&&";
                     
                     Iterator<WikiPage> i = pages.iterator();
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
                         WikiPage page = i.next();
+//                        WikiPage p = new WikiPage();
+//                        p.setId(1);
+//                        p.setTitle("wop");
+//                        WikiRevision i = new WikiRevision();
+//                        p.setRevision(null);
+//                        System.out.println(page.getRevision().getText());
+//                        System.out.println(page.getRevision().getContributor());
+//                        System.out.println(page.getRevision().getComment());
+//                        System.out.println(page.getRevision().getId());
+//                        System.out.println(page.getRevision().getTimestamp());
+//                        System.out.println("im revision");
+                        
                         pdfWrapper.writePage(page);
                         artWritten++;
                         System.out.println("Current Article is: " + (startLimit + artWritten));
@@ -150,12 +164,15 @@ public class WikiProcessor {
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
                 System.out.println("trying to read " + pdfWrapper.getOutputFileName() );               
-                PdfStamp stamp = new PdfStamp();
-                //stamp.stampDir(cPageNum);
-                stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
+//              PdfStamp stamp = new PdfStamp();
+//              stamp.stampDir(cPageNum);
+//              stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
                 totalPageNum += cPageNum;
+                System.out.println(totalPageNum + " total page!!!!");
                 //Renaming Added May 24 by CE, renames outputfile
-                tempName = tempName.replace("_", "");
+//removed. after stamp was removed this would not work...
+//                tempName = tempName.replace("_", "");
+                System.out.println(tempName + " i temp" );               
                 outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
                         outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
