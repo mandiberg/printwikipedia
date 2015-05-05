@@ -319,16 +319,16 @@ public class PdfTitleWrapper {
 
         //First page hack 
        
-        for (int i = 0; i < 4; i++) {
-            try {
-                Phrase ph = wikiFontSelector.getTitleFontSelector().process("\n");
-
-                mct.addElement(ph);
-                pdfDocument.add(mct);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+//        for (int i = 0; i < 4; i++) {
+//            try {
+//                Phrase ph = wikiFontSelector.getTitleFontSelector().process("\n");
+//
+//                mct.addElement(ph);
+//                pdfDocument.add(mct);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
     /**
