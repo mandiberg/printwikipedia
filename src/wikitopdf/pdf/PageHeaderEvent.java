@@ -28,6 +28,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     public void onOpenDocument(PdfWriter writer, Document document) {
 
         contentPage = writer.getDirectContent();
+        theBottom = document.bottom();
         
         try {
             WikiFontSelector wikiFontSelector = new WikiFontSelector();
@@ -70,7 +71,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
         if ((pageNum % 2) == 1)
         {
             if(writer.getPageNumber()>2){
-                contentPage.setTextMatrix(document.right()-5.5f, textBase-25);
+                contentPage.setTextMatrix(document.right()-16.5f, textBase-25);
                 contentPage.showText(pNumString);
                 contentPage.endText();
                 contentPage.restoreState();
@@ -141,15 +142,21 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 //        40.5<x  y>621.010
 //        418.5<x  y>621.010
         System.out.println(x+13.5 + "<x  y>" + y+10);
-//        contentPage.moveTo(x + 13.5f * sign, y + 10);
-//        contentPage.setColorStroke(new GrayColor(1));
-//        contentPage.lineTo(x + 13.5f * sign, y - 1);
-//        contentPage.stroke();
+        contentPage.moveTo(x + 13.5f * sign, y + 10);
+        contentPage.setColorStroke(new GrayColor(1));
+        contentPage.lineTo(x + 13.5f * sign, y - 1);
+        contentPage.stroke();
+        
+        contentPage.moveTo(x+13.5f* sign, theBottom -13);
+        contentPage.setColorStroke(new GrayColor(1));
+        contentPage.lineTo(x + 13.5f* sign, theBottom - 24);
+        contentPage.stroke();
     }
 
     private PdfContentByte contentPage;
     private BaseFont bsFont;
     private int pageNum = 0;
     private int startPage = 0;
+    private float theBottom = 0f;
     private String currentTitle = "";
 }
