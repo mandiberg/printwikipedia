@@ -248,8 +248,10 @@ public class PdfCoverWrapper {
         cb.showText("Wikipedia");
         cb.endText();
          String main_spine;
+         int spine_y = 0;
         if(coverType == "temp"){
             main_spine = "Wikipedia Table of Contents";
+            spine_y = 698;
 //            cb.beginText();
 //            cb.setFontAndSize(times, 43);
 //            cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
@@ -263,9 +265,17 @@ public class PdfCoverWrapper {
             
             //add other parameters that would differ here depending on pdf or temp.
         }
-        else{
+        else if(coverType =="output"){
             main_spine = "Wikipedia";
+            spine_y = 644;
             //again add in other parameters here.
+        }
+        else if(coverType == "contrib"){
+            main_spine = "Wikipedia Contributors Appendix";
+            spine_y = 698;
+        }
+        else{
+            main_spine = "";
         }
         int hc_title_size = 40;
         int sc_title_size = 35;
@@ -275,7 +285,8 @@ public class PdfCoverWrapper {
         //sc
 //        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
         //hc
-        cb.showTextAligned(0,main_spine,555.03f,698,270);
+        cb.showTextAligned(0,main_spine,555.03f,spine_y,270);
+        
         cb.endText();
 //        cb.beginText();
 //        cb.setFontAndSize(times, 12);
@@ -346,7 +357,7 @@ public class PdfCoverWrapper {
         float llx_sc_volnum = 391f;
         float urx_sc_volnum = 506f;
         float lly_sc_volnum = 830f;
-        columnd.setSimpleColumn (llx_hc_volnum-240, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
+        columnd.setSimpleColumn (llx_hc_volnum-260, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
         columnd.go();
         
         
