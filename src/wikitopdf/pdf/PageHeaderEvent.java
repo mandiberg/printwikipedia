@@ -74,6 +74,14 @@ public class PageHeaderEvent extends PdfPageEventHelper {
                 contentPage.setTextMatrix(document.right()-16.5f, textBase-25);
                 contentPage.showText(pNumString);
                 contentPage.endText();
+                if(writer.getPageNumber() == 3){
+                    int sign = 1;
+                    contentPage.moveTo(document.right()+13.5f* sign, theBottom -13);
+                    contentPage.setColorStroke(new GrayColor(1));
+                    contentPage.lineTo(document.right() + 13.5f* sign, theBottom - 24);
+                    contentPage.stroke();
+                }
+                
                 contentPage.restoreState();
             }
             
@@ -92,6 +100,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
         {
 //            float adjust = bsFont.getWidthPoint("0", 8);
             if(writer.getPageNumber()>2){
+                
                 contentPage.setTextMatrix(document.left(), textBase-25);
                 contentPage.showText(pNumString);
                 contentPage.endText();
@@ -146,11 +155,12 @@ public class PageHeaderEvent extends PdfPageEventHelper {
         contentPage.setColorStroke(new GrayColor(1));
         contentPage.lineTo(x + 13.5f * sign, y - 1);
         contentPage.stroke();
-        
         contentPage.moveTo(x+13.5f* sign, theBottom -13);
         contentPage.setColorStroke(new GrayColor(1));
         contentPage.lineTo(x + 13.5f* sign, theBottom - 24);
         contentPage.stroke();
+        
+        
     }
 
     private PdfContentByte contentPage;
