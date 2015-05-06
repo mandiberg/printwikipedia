@@ -89,8 +89,10 @@ public class PdfPageWrapper {
         pdfDocument.setMarginMirroring(true);
         
 //        jknewPage();
-        //_4073-2-703-output.pdf
-        addPrologue(cVolNum, pdfDocument, pdfWriter);
+        //_4073-2-703-output.pdf // secibd
+        //_10911-3-1404-output.pdf //tghurd
+        // _16211-4-2104-output.pdf //fourht
+          addPrologue(cVolNum, preDoc, preWriter);
 //        addPrologue(cVolNum,preDoc);
 //        pdfDocument.add(new Paragraph(""));
 //        pdfDocument.newPage();
@@ -219,7 +221,8 @@ public class PdfPageWrapper {
             cpTable.addCell(cell2);
             ColumnText column2 = new ColumnText(writ.getDirectContent());
             column2.addElement(cpTable);
-            column2.setSimpleColumn (docu.left()-67, 10, docu.right(), 551);
+            
+            column2.setSimpleColumn (docu.left()-30, 10, docu.right(), docu.top()+13);
             
             column2.go();
             System.out.println("here i am in docum \n"+docu.left()+ " l\n"+
@@ -227,7 +230,7 @@ public class PdfPageWrapper {
                 docu.top()+ " t\n"+
                 docu.bottom()+ " b\n"
                         );
-            docu.add(cpTable);
+//            docu.add(cpTable);
             docu.newPage();
 //            docu.add(column2);
             //_4073-2-703-output.pdf
