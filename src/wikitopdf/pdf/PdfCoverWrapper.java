@@ -25,6 +25,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import com.itextpdf.text.BaseColor;
@@ -45,11 +46,20 @@ public class PdfCoverWrapper {
     int hc_height = 774;
     int sc_width = 979;
     int sc_height = 666;
+    int spine_width = 106;//1.4 = 101, 1.43 = 103, 1.47 = 106, 1.5 = 108
+    int spine_height = 649;
+    boolean make_spine = true; //for making spines . change this to false if you do not want to generate them.
     //w = 1129 h = 774 for hc 670 pg book
     public int width = hc_width;//spine = 119 points beginning at 495 points.
     //meaning that each page is 495 points wide.
     public int height = hc_height;
-    
+    BaseFont times = null;
+    Font spine_vol_font = null;
+    Font spine_abbr_font = null;
+    Font spine_to_font = null;
+    Font main_title_font = null;
+    Font sc_main_title_font = null;
+    Font dis_font = null;
         /**
      *
      * @param num
@@ -59,16 +69,23 @@ public class PdfCoverWrapper {
      */
     public PdfCoverWrapper(int num, int startPage) throws FileNotFoundException, DocumentException {
         //Read settings
+        num-=1;
+        String outputFileName = "covers/volume&&&" + String.format("%04d",num+1) + ".pdf";
+        String spine_out = "covers/spines/spine&&&" + String.format("%04d",num+1) + ".pdf";
+        try {
+            bflib = BaseFont.createFont("fonts/LinLibertine_Rah.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (IOException ex) {
+            Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Font lib = new Font(bflib);
         
-        String outputFileName = "covers/volume&&&" + String.format("%04d",num-1) + ".pdf";
-        
-        
-        /*
-         * 
-         * NEED TO CHANGE THESE VALUES TO REFLECT COVER SPECS
-         * 
-         */
-        
+        //start setting up spine and cover doc.
+        if(make_spine){
+            spineDoc = new Document(new Rectangle(spine_width, spine_height));
+            spineWriter = PdfWriter.getInstance(spineDoc, new FileOutputStream(spine_out));
+            spineSelector = new WikiFontSelector();
+            spineDoc.open();
+        }
         pdfDocument = new Document(new Rectangle(width, height));
 
         pdfDocument.setMargins(25, 25, -35, 25);
@@ -76,162 +93,436 @@ public class PdfCoverWrapper {
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream(outputFileName));
 
-        headerFooter = new TitlesFooter(startPage);
-        pdfWriter.setPageEvent(headerFooter);
         pdfDocument.open();
 
         wikiFontSelector = new WikiFontSelector();
-        //HeaderFooter hf =  new HeaderFooter(new Phrase("head1"), new Phrase("head2"));
-
-        //pdfDocument.setHeader(hf);
-
-        //addPrologue();
-        //openMultiColumn();
-
-
-
-
         PdfContentByte cb = pdfWriter.getDirectContent();
-        //ct = new ColumnText(cb);
-        //ct.setIndent(20);
+         
+       try
+        { //need font stack in order to process different titles and all their characters. new fs for eachc different font size.
+            System.out.println("im open");
+            String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
+            BaseFont bsFontGlyph=null;
+            bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
+            BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+            Font fontGlyph = new Font(bsFontGlyph);
+            Font helv = new Font(bsHelv);
+            Font pnumbers = new Font(bsHelv,8);
+            fontGlyph.setSize(7f); 
+            helv.setSize(7f);
+
+            FontFactory.register(path_to_fonts+ "LinLibertine_Rah.ttf","liber");
+            FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+            FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
+            FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
+            FontFactory.register(path_to_fonts+"cwTeXKai-zhonly.tff","chinese3");
+            FontFactory.register(path_to_fonts+"cwTeXMing-zhonly.ttf","chinese4");
+            FontFactory.register(path_to_fonts+"cwTeXYen-zhonly.ttf","chinese5");
+            FontFactory.register(path_to_fonts+"G5LISL1B.TTF","chinese6");
+            FontFactory.register(path_to_fonts+"Amiri-Regular.ttf","arab1");
+            FontFactory.register(path_to_fonts+"DroidKufi-Regular.ttf","arab2");
+            FontFactory.register(path_to_fonts+"Alef-Regular.ttf","hebrew");
+            FontFactory.register(path_to_fonts+"NotoSansCherokee-Regular.ttf","cherokee");
+            FontFactory.register(path_to_fonts+"NotoSansGeorgian-Regular.ttf","georgian");
+            FontFactory.register(path_to_fonts+"NotoSansDevanagari-Regular.ttf","devanagari");
+            FontFactory.register(path_to_fonts+"NanumGothic-Regular.ttf","nanum");
+            FontFactory.register(path_to_fonts+"NotoKufiArabic-Regular.ttf","arab3");
+            FontFactory.register(path_to_fonts+"NotoSansJP-Regular.otf","jap");
+            FontFactory.register(path_to_fonts+"NotoSansKhmer-Regular.ttf","khmer");
+            FontFactory.register(path_to_fonts+"NotoSansThai-Regular.ttf","thai");
+            FontFactory.register(path_to_fonts+"NotoSerifArmenian-Regular.ttf","armenian");
+            FontFactory.register(path_to_fonts+"NotoSansTamilUI-Regular.ttf","tamil");
+            FontFactory.register(path_to_fonts+"DejaVuSans.ttf","dvs");
+            FontFactory.register(path_to_fonts+"Roboto-Regular.ttf","roboto");
+            FontFactory.register(path_to_fonts+"OpenSans-Light.ttf","ops");
+            FontFactory.register(path_to_fonts+"MCTIME.TTF","russ");
+            FontFactory.register(path_to_fonts+"FreeSerif.ttf","fser");
+            FontFactory.register(path_to_fonts+"NotoSansSinhala-Regular.ttf","sinhala");
+            FontFactory.register(path_to_fonts+"NotoSansBengali-Regular.ttf","bengali");
+            FontFactory.register(path_to_fonts+"lohit_gu.ttf","punj");
+            FontFactory.register(path_to_fonts+"FreeSans.ttf","fsans");
+            FontFactory.register(path_to_fonts+"NotoSansTelugu-Regular.ttf","telugu");
+            FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
+            FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
+            FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
+    //      System.out.println(FontFactory.getRegisteredFonts().toString());
+
+
+
+            Font liber = FontFactory.getFont("liber", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese1 = FontFactory.getFont("chinese1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese2 = FontFactory.getFont("chinese2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese3 = FontFactory.getFont("chinese3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese4 = FontFactory.getFont("chinese4", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese5 = FontFactory.getFont("chinese5", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font chinese6 = FontFactory.getFont("chinese6", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font arab1 = FontFactory.getFont("arab1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font arab2 = FontFactory.getFont("arab2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font arab3 = FontFactory.getFont("arab3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font hebrew = FontFactory.getFont("hebrew", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font cherokee = FontFactory.getFont("cherokee", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font georgian = FontFactory.getFont("georgian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font devanagari = FontFactory.getFont("devanagari", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font nanum = FontFactory.getFont("nanum", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font jap = FontFactory.getFont("jap", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font khmer = FontFactory.getFont("khmer", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font thai = FontFactory.getFont("thai", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font tamil = FontFactory.getFont("tamil", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font armenian = FontFactory.getFont("armenian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font sinhala = FontFactory.getFont("sinhala", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font ops = FontFactory.getFont("ops", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font bengali = FontFactory.getFont("bengali", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font punj = FontFactory.getFont("punj", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font fsans = FontFactory.getFont("fsans", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font dvs = FontFactory.getFont("dvs", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);                    
+            Font telugu = FontFactory.getFont("telugu", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font cjk = FontFactory.getFont("cjk", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);                    
+            Font ind = FontFactory.getFont("ind", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);                    
+            Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 17);
+            
+            fs.addFont(liber);
+            fs.addFont(cardo);
+            //fs.addFont(dvs);
+            fs.addFont(fser);
+            fs.addFont(cjk);
+            fs.addFont(russ);
+            fs.addFont(armenian);
+            fs.addFont(chinese1);
+            fs.addFont(chinese2);
+            fs.addFont(chinese3);
+            fs.addFont(chinese4);
+            fs.addFont(chinese5);
+            fs.addFont(chinese6);
+            fs.addFont(arab1);
+            fs.addFont(arab2);
+            fs.addFont(arab3);
+    //                    fs.addFont(ind);
+            fs.addFont(hebrew);
+            fs.addFont(cherokee);
+            fs.addFont(georgian);
+            fs.addFont(devanagari);
+            fs.addFont(nanum);
+            fs.addFont(jap);
+            fs.addFont(khmer);
+            fs.addFont(thai);
+            fs.addFont(tamil);
+            fs.addFont(ops);
+            fs.addFont(fontGlyph);
+            fs.addFont(helv);
+            fs.addFont(roboto);
+            fs.addFont(sinhala);
+            fs.addFont(bengali);
+            fs.addFont(punj);
+            fs.addFont(fsans);
+            fs.addFont(telugu);
+            fs.addFont(oriya);
+            fs.addFont(fser);
+
+     
+        }
+        catch (DocumentException ex)
+        {
+            Logger.getLogger(TitlesFooter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TitlesFooter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       try
+        {
+            String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
+            BaseFont bsFontGlyph=null;
+            bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+            Font fontGlyph = new Font(bsFontGlyph);
+            Font helv = new Font(bsHelv);
+            Font pnumbers = new Font(bsHelv,8);
+            fontGlyph.setSize(7f); 
+            helv.setSize(7f);
+            
+            FontFactory.register(path_to_fonts+ "LinLibertine_Rah.ttf","liber");
+            FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+            FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
+            FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
+            FontFactory.register(path_to_fonts+"cwTeXKai-zhonly.tff","chinese3");
+            FontFactory.register(path_to_fonts+"cwTeXMing-zhonly.ttf","chinese4");
+            FontFactory.register(path_to_fonts+"cwTeXYen-zhonly.ttf","chinese5");
+            FontFactory.register(path_to_fonts+"G5LISL1B.TTF","chinese6");
+            FontFactory.register(path_to_fonts+"Amiri-Regular.ttf","arab1");
+            FontFactory.register(path_to_fonts+"DroidKufi-Regular.ttf","arab2");
+            FontFactory.register(path_to_fonts+"Alef-Regular.ttf","hebrew");
+            FontFactory.register(path_to_fonts+"NotoSansCherokee-Regular.ttf","cherokee");
+            FontFactory.register(path_to_fonts+"NotoSansGeorgian-Regular.ttf","georgian");
+            FontFactory.register(path_to_fonts+"NotoSansDevanagari-Regular.ttf","devanagari");
+            FontFactory.register(path_to_fonts+"NanumGothic-Regular.ttf","nanum");
+            FontFactory.register(path_to_fonts+"NotoKufiArabic-Regular.ttf","arab3");
+            FontFactory.register(path_to_fonts+"NotoSansJP-Regular.otf","jap");
+            FontFactory.register(path_to_fonts+"NotoSansKhmer-Regular.ttf","khmer");
+            FontFactory.register(path_to_fonts+"NotoSansThai-Regular.ttf","thai");
+            FontFactory.register(path_to_fonts+"NotoSerifArmenian-Regular.ttf","armenian");
+            FontFactory.register(path_to_fonts+"NotoSansTamilUI-Regular.ttf","tamil");
+            FontFactory.register(path_to_fonts+"DejaVuSans.ttf","dvs");
+            FontFactory.register(path_to_fonts+"Roboto-Regular.ttf","roboto");
+            FontFactory.register(path_to_fonts+"OpenSans-Light.ttf","ops");
+            FontFactory.register(path_to_fonts+"MCTIME.TTF","russ");
+            FontFactory.register(path_to_fonts+"FreeSerif.ttf","fser");
+            FontFactory.register(path_to_fonts+"NotoSansSinhala-Regular.ttf","sinhala");
+            FontFactory.register(path_to_fonts+"NotoSansBengali-Regular.ttf","bengali");
+            FontFactory.register(path_to_fonts+"lohit_gu.ttf","punj");
+            FontFactory.register(path_to_fonts+"FreeSans.ttf","fsans");
+            FontFactory.register(path_to_fonts+"NotoSansTelugu-Regular.ttf","telugu");
+            FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
+            FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
+            FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
+    //      System.out.println(FontFactory.getRegisteredFonts().toString());
+
+
+
+            Font liber = FontFactory.getFont("liber", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese1 = FontFactory.getFont("chinese1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese2 = FontFactory.getFont("chinese2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese3 = FontFactory.getFont("chinese3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese4 = FontFactory.getFont("chinese4", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese5 = FontFactory.getFont("chinese5", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font chinese6 = FontFactory.getFont("chinese6", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font arab1 = FontFactory.getFont("arab1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font arab2 = FontFactory.getFont("arab2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font arab3 = FontFactory.getFont("arab3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font hebrew = FontFactory.getFont("hebrew", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font cherokee = FontFactory.getFont("cherokee", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font georgian = FontFactory.getFont("georgian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font devanagari = FontFactory.getFont("devanagari", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font nanum = FontFactory.getFont("nanum", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font jap = FontFactory.getFont("jap", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font khmer = FontFactory.getFont("khmer", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font thai = FontFactory.getFont("thai", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font tamil = FontFactory.getFont("tamil", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font armenian = FontFactory.getFont("armenian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font sinhala = FontFactory.getFont("sinhala", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font ops = FontFactory.getFont("ops", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font bengali = FontFactory.getFont("bengali", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font punj = FontFactory.getFont("punj", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font fsans = FontFactory.getFont("fsans", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font dvs = FontFactory.getFont("dvs", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);                    
+            Font telugu = FontFactory.getFont("telugu", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font cjk = FontFactory.getFont("cjk", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);                    
+            Font ind = FontFactory.getFont("ind", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);                    
+            Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+            Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 20);
+
+            fs_abbr.addFont(liber);
+            fs_abbr.addFont(cardo);
+            //fs.addFont(dvs);
+            fs_abbr.addFont(fser);
+            fs_abbr.addFont(cjk);
+            fs_abbr.addFont(russ);
+            fs_abbr.addFont(armenian);
+            fs_abbr.addFont(chinese1);
+            fs_abbr.addFont(chinese2);
+            fs_abbr.addFont(chinese3);
+            fs_abbr.addFont(chinese4);
+            fs_abbr.addFont(chinese5);
+            fs_abbr.addFont(chinese6);
+            fs_abbr.addFont(arab1);
+            fs_abbr.addFont(arab2);
+            fs_abbr.addFont(arab3);
+    //                    fs.addFont(ind);
+            fs_abbr.addFont(hebrew);
+            fs_abbr.addFont(cherokee);
+            fs_abbr.addFont(georgian);
+            fs_abbr.addFont(devanagari);
+            fs_abbr.addFont(nanum);
+            fs_abbr.addFont(jap);
+            fs_abbr.addFont(khmer);
+            fs_abbr.addFont(thai);
+            fs_abbr.addFont(tamil);
+            fs_abbr.addFont(ops);
+            fs_abbr.addFont(fontGlyph);
+            fs_abbr.addFont(helv);
+            fs_abbr.addFont(roboto);
+            fs_abbr.addFont(sinhala);
+            fs_abbr.addFont(bengali);
+            fs_abbr.addFont(punj);
+            fs_abbr.addFont(fsans);
+            fs_abbr.addFont(telugu);
+            fs_abbr.addFont(oriya);
+            fs_abbr.addFont(fser);
+
+     
+        }
+        catch (DocumentException ex)
+        {
+            Logger.getLogger(TitlesFooter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TitlesFooter.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    public int chopLine(String line, int sizer) throws DocumentException{
-        int chopStart = sizer - 3;
-        int chopEnd = sizer + 2;
-           
-        if(line.length()<chopEnd){
-            return 0;
-        }
-        String tempLine = line.substring(chopStart,chopEnd);
-        System.out.println(tempLine);
-        Character c = tempLine.charAt(0);
-        if(c==' '){
-          return -2; 
-        }
-        c = tempLine.charAt(1);
-        if(c==' '){
-          return -1; 
-        }
-        c = tempLine.charAt(2);
-        if(c==' '){
-          return 0; 
-        }
-        c = tempLine.charAt(3);
-        if(c==' '){
-          return 1; 
-        }
-        c = tempLine.charAt(4);
-        if(c==' '){
-          return 2; 
-        }
-       
-        return 0;
+    public void spineOnly(PdfContentByte cb, String coverType, String fileName) throws DocumentException{ //for generating the spines.
         
-    }
- 
-    
-    public String longTitle(String line, int sizer, boolean multiLine) throws DocumentException{
-        boolean tooLong = false;
-        if(line.length()<sizer){
-            return line;
+        int c = 57391;
+        String wiki_w = Character.toString((char)c);//generating the wiki W. different from the normal capitalized w
+        float half_spine = spine_width/2;
+        String main_spine;
+        int hc_title_size = 40;
+        int spine_y = 0;
+        //different spines for different types of output.
+        if(coverType == "temp"){
+            main_spine = wiki_w+"ikipedia Table of Contents";
+            hc_title_size = 32;
         }
-        int near = chopLine(line,sizer);
-        String lastLine=line.substring(0,sizer+near)+"\r\n";
-        line = line.substring(sizer+near);
-        if(multiLine==false){
-            sizer=sizer-5;
-        }//after first iteration of chopping it make sizer smaller after indent.
-        while(line.length()>=sizer+near){//while line is longer than 15 characters
-           near = chopLine(line,sizer);
-           lastLine = lastLine+"\r\n"+line.substring(0,sizer+near);
-           line = line.substring(sizer+near);
-           if(line.length()<=sizer){
-               break;
-            }
+        else if(coverType =="output" || coverType == "output-old"||coverType == "output-long"){
+            main_spine = wiki_w+"ikipedia";
+            hc_title_size=40;
         }
-        lastLine = lastLine +"\r\n"+line;
-
-        System.out.println(lastLine+ "  /finalLine" );
-        return lastLine;
-    }
-    public float firstTitleResize(String beginTitle, double titleLength){//fuck with this
-        String[] tempBegin = beginTitle.split("\r\n");
-        int tb = tempBegin.length;
-        String tempFirst = "";
-        if(tb>1){
-            tempFirst = tempBegin[tb];
+        else if(coverType == "contrib"){
+            main_spine = wiki_w+"ikipedia Contributor Appendix";
+            hc_title_size = 31;
         }
         else{
-            tempFirst = beginTitle;
+            main_spine = "";
         }
-        float tempFirstWidth = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(tempFirst,
-            wikiFontSelector.getCommonFont().getSize());
+        spine_y = spine_height-35;
         
-        return tempFirstWidth;
-    }
-    
-    public String breakTitle(String beginTitle, String endTitle, double titleLength){
-        String finalTitle="";
-        float beginWidth = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(beginTitle,
-                wikiFontSelector.getCommonFont().getSize());
-         float endWidth = wikiFontSelector.getCommonFont().getBaseFont().getWidthPoint(endTitle,
-                wikiFontSelector.getCommonFont().getSize());
-         System.out.println(beginWidth + " that's begin \n" + endWidth + " tht's end width");
-        if(beginWidth>titleLength){ //if first title has more space  than the second
-            try {
-                beginTitle = longTitle(beginTitle,36,false);//so you chop it up at 36
-            }
-            catch (DocumentException ex) {
-                Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        boolean nextLine = false;
-        float tempFirstWidth = firstTitleResize(beginTitle,titleLength);
-        if(tempFirstWidth>titleLength-30){
-            beginTitle=beginTitle+"\n";
-            nextLine = true;
-        }
-        if(nextLine==true){
-            titleLength = titleLength -27;
-        }
+        int sc_title_size = 35;
+        cb.beginText();
+        cb.setFontAndSize(bflib,hc_title_size);
+        cb.setTextMatrix(50, 595);
+        cb.showTextAligned(0,main_spine,half_spine-9,spine_y,270);
+        //^rotates the string to show up at 270 degree angle.
+        cb.endText();
 
-        if(endWidth>titleLength){//if you got this far it means that begintitle is short
-                                 //and end is long so just add the two together and treat it as one.
-            finalTitle = beginTitle + endTitle;
-            try {
-                finalTitle = longTitle(finalTitle,36,false);
-                return finalTitle;
-            } catch (DocumentException ex) {
-                Logger.getLogger(PdfCoverWrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+        String[] titleArr = fileName.split("&&&");
+        
+        String beginTitle = titleArr[1];
+        String endTitle = titleArr[2];
+        String volNumber = titleArr[0];
+        //****replace the leading zeroes**
+        volNumber = volNumber.replaceFirst("^0+(?!$)", "");        
+
+        String lSpineTitle = "";
+        String rSpineTitle = "";
+        if(beginTitle.length()>3){
+            lSpineTitle = beginTitle.substring(0,3);
+        }
+        else{
+            lSpineTitle=beginTitle;
+        }
+        if(endTitle.length()>4){
+            rSpineTitle = endTitle.substring(0,3);
+        }
+        else{
+            rSpineTitle = endTitle;
         }
         
-               
-        return finalTitle;
+        //using tables to take advantage of their horizontal and vertical alignment 
+        PdfPTable tabled = new PdfPTable(1);
+        PdfPTable table1 = new PdfPTable(1);
+        PdfPTable table2 = new PdfPTable(1);
+        PdfPTable table3 = new PdfPTable(1);
+        PdfPTable table4 = new PdfPTable(1);
+
+        Paragraph vol_num;
+        Paragraph first_abbr;
+        Paragraph spine_to;
+        Paragraph scnd_abbr;
+        Paragraph dis_text;
+                
+        vol_num = new Paragraph(volNumber, spine_vol_font);
+        first_abbr = new Paragraph(fs_abbr.process(lSpineTitle.toUpperCase()));
+        scnd_abbr = new Paragraph(fs_abbr.process(rSpineTitle.toUpperCase()));
+        spine_to = new Paragraph("TO",spine_to_font);
+        
+        //spine section for volume number
+        PdfPCell cell;
+        cell = new PdfPCell(vol_num);
+        cell.setBorderWidth(0f);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setColspan(1);
+        cell.setMinimumHeight(spineDoc.top()+(spineDoc.bottom()-191.8f));
+        table1.addCell(cell);
+        ColumnText column = new ColumnText(spineWriter.getDirectContent());
+        column.addElement(table1);
+
+        float llx_hc_volnum = spineDoc.left()-36;
+        float urx_hc_volnum = spineDoc.right()+36;
+        float llx_sc_volnum = 391f;
+        float urx_sc_volnum = 506f;
+        float lly_sc_volnum = 830f;
+        column.setSimpleColumn (llx_hc_volnum, spineDoc.bottom()-170, urx_hc_volnum, spineDoc.top()-50f);
+        column.go();
+        
+        //spine section for first abbreviated title
+        PdfPCell cell2;    
+        cell2 = new PdfPCell(first_abbr);
+        cell2.setBorderWidth(0f);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell2.setColspan(1);
+        cell2.setMinimumHeight(spineDoc.top()+(spineDoc.bottom()-144.8f));
+        table2.addCell(cell2);
+        ColumnText column2 = new ColumnText(spineWriter.getDirectContent());
+        column2.addElement(table2);
+        //llx, lly,urx,ury 
+        float llx_hc_fa = spineDoc.left()-36;
+        float urx_hc_fa = spineDoc.right()+36;
+        float llx_sc_fa = 395f;
+        float urx_sc_fa  = 497f;
+        column2.setSimpleColumn (llx_hc_fa, spineDoc.bottom()-170f, urx_hc_fa, spineDoc.top()-50f);
+        column2.go();
+        
+        //third table for TO
+        PdfPCell cell3;    
+        cell3 = new PdfPCell(spine_to);
+        cell3.setBorderWidth(0f);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell3.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell3.setColspan(1);
+        cell3.setMinimumHeight(spineDoc.top()+(spineDoc.bottom()-130.8f));
+        table3.addCell(cell3);
+        ColumnText column3 = new ColumnText(spineWriter.getDirectContent());
+        column3.addElement(table3);
+        //llx, lly,urx,ury 
+        column3.setSimpleColumn(llx_hc_fa, spineDoc.bottom()-170f, urx_hc_fa, spineDoc.top()-50f);
+        column3.go();
+        
+        //4th table for second abbreviated title!
+        PdfPCell cell4;    
+        cell4 = new PdfPCell(scnd_abbr);
+        cell4.setBorderWidth(0f);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell4.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell4.setColspan(1);
+        cell4.setMinimumHeight(spineDoc.top()+(spineDoc.bottom()-112.8f));
+        table4.addCell(cell4);
+        ColumnText column4 = new ColumnText(spineWriter.getDirectContent());
+        column4.addElement(table4);
+        //llx, lly,urx,ury 
+        column4.setSimpleColumn (llx_hc_fa, spineDoc.bottom()-170f, urx_hc_fa, spineDoc.top()-50f);
+        column4.go();
+        try {
+            spineDoc.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
     }
-    
-    
         public void addCover(String fileName, String coverType) throws DocumentException {
-        
+        int c = 57391;
+        String wiki_w = Character.toString((char)c);
+        PdfContentByte scb = spineWriter.getDirectContent();
         PdfContentByte cb = pdfWriter.getDirectContent();
-        //declare my fonts
-        BaseFont times = null;
-        //could not figure out why these would not work with times. i guess because one is in contentbyte and one im doing paragraphs?
-        Font spine_vol_font = null;
-        Font spine_abbr_font = null;
-        Font spine_to_font = null;
-        Font main_title_font = null;
-        Font sc_main_title_font = null;
-        Font dis_font = null;
-        
-	
-        
         try {
             wikiFontSelector.getTitleFontSelector().process("");
             times = wikiFontSelector.getCommonFont().getBaseFont();
-            BaseFont spine_base = BaseFont.createFont("/Users/wiki/Library/Fonts/Cardo-Regular.ttf", BaseFont.CP1252, BaseFont.EMBEDDED);
+            BaseFont spine_base = bflib;
             spine_vol_font = new Font(spine_base, 35);
             spine_abbr_font = new Font(spine_base,20);
             spine_to_font = new Font(spine_base,13);
@@ -241,73 +532,49 @@ public class PdfCoverWrapper {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        if(make_spine)
+            spineOnly(scb,coverType,fileName);
         cb.beginText();
-        cb.setFontAndSize(times, 71f);
-        cb.setTextMatrix(720.667f, pdfDocument.top()-280);
-        cb.showText("Wikipedia");
+        cb.setFontAndSize(bflib, 73f);
+        cb.setTextMatrix(711.8f, pdfDocument.top()-280);
+        cb.showText(wiki_w+"ikipedia");
         cb.endText();
          String main_spine;
+         int hc_title_size = 40;
          int spine_y = 0;
         if(coverType == "temp"){
-            main_spine = "Wikipedia Table of Contents";
-            spine_y = 698;
-//            cb.beginText();
-//            cb.setFontAndSize(times, 43);
-//            cb.setTextMatrix(pdfDocument.right()-405, pdfDocument.top()-315);
-//            cb.showText("Table of");
-//            cb.endText();
-//            cb.beginText();
-//            cb.setFontAndSize(times, 43);
-//            cb.setTextMatrix(pdfDocument.right()-213, pdfDocument.top()-315);
-//            cb.showText("Contents");
-//            cb.endText();
-            
-            //add other parameters that would differ here depending on pdf or temp.
+            main_spine = wiki_w+"ikipedia Table of Contents";
+            hc_title_size = 34;
         }
-        else if(coverType =="output"){
-            main_spine = "Wikipedia";
-            spine_y = 644;
+        else if(coverType =="output" || coverType == "output-old"){
+            main_spine = wiki_w+"ikipedia";
+            hc_title_size=40;
             //again add in other parameters here.
         }
         else if(coverType == "contrib"){
-            main_spine = "Wikipedia Contributors Appendix";
-            spine_y = 698;
+            main_spine = wiki_w+"ikipedia Contributor Appendix";
+            hc_title_size = 31;
+//            spine_y = 698;
         }
         else{
             main_spine = "";
         }
-        int hc_title_size = 40;
+        spine_y = 677;//always start at same position.
+        
         int sc_title_size = 35;
         cb.beginText();
-        cb.setFontAndSize(times,hc_title_size);
+        cb.setFontAndSize(bflib,hc_title_size);
         cb.setTextMatrix(50, 595);
-        //sc
-//        cb.showTextAligned(0,main_spine,441,pdfDocument.top()-45,270);
-        //hc
-        cb.showTextAligned(0,main_spine,555.03f,spine_y,270);
-        
+
+        cb.showTextAligned(0,main_spine,544.5f,spine_y,270);
+        // ^rotate text.
         cb.endText();
-//        cb.beginText();
-//        cb.setFontAndSize(times, 12);
-//        cb.setTextMatrix(pdfDocument.right()-230, 70);
-//        cb.showText("May 2014 Edition");
-//        cb.endText();
-        //Use the code below to create rotated text the first constant indicates alignment,
-        //the third and fourth arguments indicate the origin of rotation,
-        //the last argument is the rotation in degrees
-//        fileName = fileName.replace("_", " "); hack for a certain kind of output we did removes underscoers
         String[] titleArr = fileName.split("&&&");
         String beginTitle = titleArr[1];
         String endTitle = titleArr[2];
         String volNumber = titleArr[0];
         //****replace the leading zeroes**
-        volNumber = volNumber.replaceFirst("^0+(?!$)", "");
-//        cb.setFontAndSize(times, 18);
-//        cb.setTextMatrix(pdfDocument.right() - 150, pdfDocument.top()-330);
-//        cb.showTextAligned(2, "Volume "+volNumber, pdfDocument.right()-48.7f, pdfDocument.top()-336, status);
-//        cb.showText("Volume "+ volNumber);
-        
+        volNumber = volNumber.replaceFirst("^0+(?!$)", "");        
 
         String lSpineTitle = "";
         String rSpineTitle = "";
@@ -328,7 +595,7 @@ public class PdfCoverWrapper {
         PdfPTable table2 = new PdfPTable(1);
         PdfPTable table3 = new PdfPTable(1);
         PdfPTable table4 = new PdfPTable(1);
-//        table.setTotalWidth(18.6f);
+
         Paragraph vol_num;
         Paragraph first_abbr;
         Paragraph spine_to;
@@ -336,14 +603,14 @@ public class PdfCoverWrapper {
         Paragraph dis_text;
                 
         vol_num = new Paragraph(volNumber, spine_vol_font);
-        first_abbr = new Paragraph(lSpineTitle.toUpperCase(),spine_abbr_font);
-        scnd_abbr = new Paragraph(rSpineTitle.toUpperCase(),spine_abbr_font);
+        first_abbr = new Paragraph(fs_abbr.process(lSpineTitle.toUpperCase()));
+        scnd_abbr = new Paragraph(fs_abbr.process(rSpineTitle.toUpperCase()));
         spine_to = new Paragraph("TO",spine_to_font);
-        dis_text = new Paragraph("This work is not endorsed by the Wikimedia Foundation",dis_font);
+        dis_text = new Paragraph("This work is not endorsed by the "+wiki_w+"ikimedia Foundation",dis_font); //for the ISBN
         
         PdfPCell disclaim;
         disclaim = new PdfPCell(dis_text);
-        disclaim.setBorderWidth(0f);
+        disclaim.setBorderWidth(0f); // if you need to get a bearing on where this is being placed: change this border width to 1 or more.
         disclaim.setHorizontalAlignment(Element.ALIGN_LEFT);
         disclaim.setVerticalAlignment(Element.ALIGN_BOTTOM);
         disclaim.setColspan(1);
@@ -351,13 +618,14 @@ public class PdfCoverWrapper {
         tabled.addCell(disclaim);
         ColumnText columnd = new ColumnText(pdfWriter.getDirectContent());
         columnd.addElement(tabled);
+        
         //llx, lly,urx,ury 
         float llx_hc_volnum = 510.64f;
         float urx_hc_volnum = 620.88f;
         float llx_sc_volnum = 391f;
         float urx_sc_volnum = 506f;
         float lly_sc_volnum = 830f;
-        columnd.setSimpleColumn (llx_hc_volnum-260, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
+        columnd.setSimpleColumn (llx_hc_volnum-241, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
         columnd.go();
         
         
@@ -378,7 +646,7 @@ public class PdfCoverWrapper {
 //        float llx_sc_volnum = 391f;
 //        float urx_sc_volnum = 506f;
 //        float lly_sc_volnum = 830f;
-        column.setSimpleColumn (llx_hc_volnum, pdfDocument.bottom()-170, urx_hc_volnum, pdfDocument.top()-50f);
+        column.setSimpleColumn (llx_hc_volnum-14, pdfDocument.bottom()-170, urx_hc_volnum-14, pdfDocument.top()-50f);
         column.go();
         
         //spine section for first abbreviated title
@@ -393,8 +661,8 @@ public class PdfCoverWrapper {
         ColumnText column2 = new ColumnText(pdfWriter.getDirectContent());
         column2.addElement(table2);
         //llx, lly,urx,ury 
-        float llx_hc_fa = 501.64f;
-        float urx_hc_fa = 629.88f;
+        float llx_hc_fa = 492.64f;
+        float urx_hc_fa = 611.88f;
         float llx_sc_fa = 395f;
         float urx_sc_fa  = 497f;
         column2.setSimpleColumn (llx_hc_fa, pdfDocument.bottom()-170f, urx_hc_fa, pdfDocument.top()-50f);
@@ -431,22 +699,24 @@ public class PdfCoverWrapper {
         column4.go();
         
         //printing the title underneath Wikipedia on right cover
+        
         beginTitle = beginTitle + " — ";
         String mainTitle = beginTitle + endTitle;//title as it appears on the front cover
+        Phrase phmt = fs.process(mainTitle);
         PdfPTable tableTitle = new PdfPTable(1);
         tableTitle.setSpacingBefore(400);
         tableTitle.setSplitRows(true);
         tableTitle.setLockedWidth(false);
         Paragraph vol_title;
-        vol_title = new Paragraph(mainTitle, main_title_font);
+        vol_title = new Paragraph(phmt);
+        
+        
         PdfPCell cell_title = new PdfPCell(vol_title);   
-//        cell_title.setPaddingRight(-30);//to force the words over a bit more subtract from right padding. -30 seems to work perfectly.
         cell_title.setFollowingIndent(40);
         cell_title.setBorderWidth(0f);
         cell_title.setLeading(20f, .3f);
         cell_title.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell_title.setVerticalAlignment(Element.ALIGN_TOP);
-//        cell_title.setFixedHeight(urx_sc_fa);
+        cell_title.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell_title.setColspan(1);
         cell_title.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-144f));
         tableTitle.addCell(cell_title);
@@ -455,54 +725,20 @@ public class PdfCoverWrapper {
         columnTitle.addElement(tableTitle);
         //llx, lly,urx,ury 
         float llx_hc_vol_title = 631f;
-        float urx_hc_vol_title= 1073.5f;
+        float urx_hc_vol_title= 1060.5f;
         float urx_sc_vol_title = 937f;
         float llx_sc_vol_title  =  531f;
-        columnTitle.setSimpleColumn(llx_hc_vol_title, pdfDocument.bottom()-170f, urx_hc_vol_title, 144f);
+        columnTitle.setSimpleColumn(llx_hc_vol_title, pdfDocument.bottom()+53f, urx_hc_vol_title, 344f);
         columnTitle.go();
         
-    }
-
-     /**
-     * Converts the CIDs of the horizontal characters of a String
-     * into a String with vertical characters.
-     * @param text The String with the horizontal characters
-     * @return A String with vertical characters
-     */
-    public String convertCIDs(String text) {
-        char cid[] = text.toCharArray();
-        for (int k = 0; k < cid.length; ++k) {
-            char c = cid[k];
-            if (c == '\n')
-                cid[k] = '\uff00';
-            else
-                cid[k] = (char) (c - ' ' + 8720);
-        }
-        return new String(cid);
-    }
-
-    
+    }   
     
         public void close() {
-        try {
-            //pdfDocument.add(mct);
-            //int i = 1;
-            /*
-            do
-            {
-
-            //mct.nextColumn();
-            //pdfDocument.newPage();
-
-            System.out.println("page " + i + " -- " );
-            i++;
-            }while(mct.isOverflow());
-             */
-
-            pdfDocument.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            try {
+                pdfDocument.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
     }
 
         
@@ -534,13 +770,20 @@ public class PdfCoverWrapper {
     
     
     private Document pdfDocument = null;
+    private Document spineDoc = null;
     private FontSelector _fontSelector = null;
     private MultiColumnText mct = null;
     private PdfWriter pdfWriter;
+    private PdfWriter spineWriter;
     private int currentPageNum = 3;
     private int currentTitleNum = 0;
+    private BaseFont bflib = null;
     private TitlesFooter headerFooter;
     private WikiFontSelector wikiFontSelector;
+    private WikiFontSelector spineSelector;
+    FontSelector fs_abbr = new FontSelector();
+    FontSelector fs = new FontSelector();
+    
 
     
 }

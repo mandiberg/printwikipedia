@@ -42,38 +42,31 @@ public class WikiCoverParser {
         PdfCoverWrapper pdfWrapper = new PdfCoverWrapper(num, pagesCount);
 /*
  * 
- * CHANGE THE FOLLOWING LINES TO MAKE COVERS FOR PDF(output) VS. TOC(temp)
+ * CHANGE THE FOLLOWING LINES TO MAKE COVERS FOR PDF(output) or TOC(temp) or contrib ;)
  * 
  */
-
-//      String use_folder = "output";
-        String use_folder = "temp";
+        
+          String use_folder = "output";
+//        String use_folder = "temp";
+//        String use_folder = "contrib";
         File folder = new File(use_folder);
         File[] listOfFiles = folder.listFiles();
-       // Arrays.sort(listOfFiles);
-//        for(int i = 0; i<listOfFiles.length-1; i++){
-//            String[] titleArrOne = listOfFiles[i].getName().split("&&&");
-//            String[] titleArrTwo = listOfFiles[i+1].getName().split("&&&");
-//            int thisVol = Integer.parseInt(titleArrOne[0]);
-//            int nextVol = Integer.parseInt(titleArrTwo[0]);
-//            if(thisVol>nextVol){
-//                
-//            }
-//        }
+
         String check_str = "";
         for (int i = 0; i < listOfFiles.length; i++) {
           if (listOfFiles[i].isFile()) {
-              // need to filter out .ds_store and other "." files
             String cur_file = listOfFiles[i].getName();
             if(listOfFiles[i].getName().length() > 4){
                 check_str = cur_file.substring(0,3);
             }
-            if(check_str.equals("pre")==false){
-             System.out.println("no " + check_str + " does not equal pre!");   
+            if(check_str.contains("pre") == false || check_str.contains("_")==false){ //if the files in the folder you're iterating through are not pre files or DS_STORE then go on.
                 try
                 {
-                    System.out.println("Trying " + listOfFiles[i].getName());
+                    System.err.println(listOfFiles[i].getName());//make sure you're on the right path here.
+                    num = Integer.parseInt(listOfFiles[i].getName().split("&&&")[0]);
+                    pdfWrapper = new PdfCoverWrapper(num, pagesCount);
                     pdfWrapper.addCover(listOfFiles[i].getName(), use_folder); // will parse file name inside pdfWrapper
+                    pdfWrapper.close();
                     
                 }   
                 catch (Exception ex)
@@ -82,11 +75,7 @@ public class WikiCoverParser {
                 }
                 finally
                 {
-                    pdfWrapper.close();
-                    //System.out.println(num + " this is what num is now");
-                    num++;
-                   // System.out.println(num + " this is what num is after adding");
-                    pdfWrapper = new PdfCoverWrapper(num, pagesCount);
+                    
 
                 }
             }
