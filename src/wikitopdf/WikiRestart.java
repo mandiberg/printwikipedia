@@ -25,7 +25,6 @@ public class WikiRestart {
                String pathName = lastFile.getCanonicalPath();
                pathArray = pathName.split("/");
                lastOutput = pathArray[pathArray.length - 1];
-//               System.out.println(lastOutput);
                if(lastOutput.startsWith("_")){
                    lastOutput = lastOutput.substring(1, lastOutput.length());
                    System.out.println(lastOutput);
