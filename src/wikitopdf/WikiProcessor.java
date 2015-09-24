@@ -27,6 +27,8 @@ public class WikiProcessor {
      *
      */
     public void createPdf() {
+        int helpme = 0;
+        boolean end_times = false;
         int pageBunch = WikiSettings.getInstance().getArticleBunch();
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
         String pageInfo = "";
@@ -46,7 +48,7 @@ public class WikiProcessor {
         String outputName = "";
         File oldFile;
         File newFile;
-        System.out.println("Foo");
+        System.out.println("starting now.");
         //Added May 28 by CE for Graceful Restart
         /****************************************/
         FileFilter dsFilter = new FileFilter(){
@@ -55,18 +57,14 @@ public class WikiProcessor {
             }
         };
         File[] listOfFiles = new File("output").listFiles(dsFilter);
+
         String listo = String.valueOf(listOfFiles.length);
-        System.out.println(listo);
-        System.out.println("^^this is list of files length");
-        System.out.println(listOfFiles.toString());
-        System.out.println("^^this is list of files.");
+
         if (listOfFiles.length > 0){
-            System.out.println("Foo");
             WikiRestart restartSettings = new WikiRestart(listOfFiles);
             startLimit = restartSettings.getRestartLimit();
             totalPageNum = restartSettings.getRestartPage();
             cVolNum = restartSettings.getRestartVol();
-            System.out.println("Foo");
         }
         System.out.println("Starting from Vol: " + cVolNum + " " + "Page: " + 
                 totalPageNum + " " + "Article: " + startLimit);
@@ -76,58 +74,40 @@ public class WikiProcessor {
         SQLProcessor sqlReader = null;
         PdfPageWrapper pdfWrapper = null;
         Runtime runtime = Runtime.getRuntime();
-        System.out.println(runtime);
-        System.out.println("^^runtime");
-
-        //while (isInProggress) {
 
         try {
              //i want this to get built and broken down with each iteration to ensure no memory leaking in it.
             sqlReader = new SQLProcessor();
             System.out.println("make sqlprocessor");
-            int artCount = sqlReader.getArticlesCount();// Counts total from database --- is this taking a long time to query?
+            int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
-            
-            System.out.println(artCount);
-
-            while (isInProggress && totalTime < timeLimit) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in settings
+            while (isInProggress && totalTime < timeLimit ) {
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in _output.pdf file.
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
-                System.out.println(tempName + " IM OUTPUT FILEFILE");
                 sqlReader = new SQLProcessor();
                 
-                // While still pages in database and still writing pages to this volume 
-                // This inner while loop creates a single pdf volume
+                // While still entires in database and still writing pages to this volume 
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
-                    //for (WikiPage page : pages) {
-                      //  pdfWrapper.writePage(page);
-                    //}
-                    // Added May 23 by CE to stop writing articles when page limit is reached
+
                     outputName = pages.get(0).getTitle()+"&&&";
                     
                     Iterator<WikiPage> i = pages.iterator();
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
-                        WikiPage page = i.next();
-//                        WikiPage p = new WikiPage();
-//                        p.setId(1);
-//                        p.setTitle("wop");
-//                        WikiRevision i = new WikiRevision();
-//                        p.setRevision(null);
-//                        System.out.println(page.getRevision().getText());
-//                        System.out.println(page.getRevision().getContributor());
-//                        System.out.println(page.getRevision().getComment());
-//                        System.out.println(page.getRevision().getId());
-//                        System.out.println(page.getRevision().getTimestamp());
-//                        System.out.println("im revision");
+                        if(!pdfWrapper.checkOpen())
+                            break;
                         
+                        WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
                         System.out.println("Current Article is: " + (startLimit + artWritten));
+                        if(startLimit + artWritten+1 == 11602880){//final pkey...
+                            end_times = true;
+                            break;//if you made it through then stop.
+                        }
                     }
                     outputName = outputName +  pages.get(artWritten - 1).getTitle();
-                    System.out.println(outputName + " !!!!!!!!! " + pages.get(artWritten-1).getTitle());
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
                     outputName = outputName.replace(":", "");
@@ -135,7 +115,6 @@ public class WikiProcessor {
                     outputName = outputName.replace("$", "");
                     outputName = outputName.replace("%", "");
                     outputName = outputName.replace("^", "");
-//                    outputName = outputName.replace("&", "");
                     outputName = outputName.replace("*", "");
                     outputName = outputName.replace("|", "");
                     outputName = outputName.replace("?", "");
@@ -143,8 +122,8 @@ public class WikiProcessor {
                     outputName = outputName.replace(">", "");
                     outputName = outputName.replace("\"", "");
                     outputName = outputName.replace("_", " ");
-//                    outputName = outputName+"&&&";
-
+                    if(end_times)
+                        break;
                     isInProggress = sqlReader.isInProggres(); // checks to see if there is still database entries
                     //TODO change from test value
                     //isInProggress = false;
@@ -155,38 +134,29 @@ public class WikiProcessor {
                     
                     numArt = artWritten;
                     artWritten = 0; // Added May 23 by CE resets incramentor so that it doesn't skip articles next loop through
-                    pages = null;
-                    //System.out.println("starting PDF, page number: " + pdfWrapper.getPageNumb()); // the number that is being printed
-                    //pdfWrapper.closeColumn();
+                    pages = null;                    
                 } // End of Volume
-                
                 
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
-                System.out.println("trying to read " + pdfWrapper.getOutputFileName() );               
+
+
 //              PdfStamp stamp = new PdfStamp();
 //              stamp.stampDir(cPageNum);
 //              stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
-                totalPageNum += cPageNum;
-                System.out.println(totalPageNum + " total page!!!!");
-                //Renaming Added May 24 by CE, renames outputfile
-//removed. after stamp was removed this would not work...
-//                tempName = tempName.replace("_", "");
-                System.out.println(tempName + " i temp" );               
+                totalPageNum += cPageNum+1;
+                //Renaming Added May 24 by CE, renames outputfile         
                 outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
                         outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
-//                String tempNameNoUnderscore = tempName.replace("_","");
-                //File oldFileNoUnderscore = new File(tempName);
+                File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
-                if(newFile.exists()){
-                    newFile.delete();
-                }
+
                 if(!(oldFile.renameTo(newFile))){
                     System.out.println("File not renamed first time");
-                    //if (!(oldFileNoUnderscore.renameTo(newFile))){
-                      //  System.out.println("File not renamed second time, matching" + tempNameNoUnderscore);
-                    //}
+                    if (!(oldFileNoUnderscore.renameTo(newFile))){
+                        System.out.println("File not renamed second time, matching" );
+                    }
                 }
              
                 //Timing

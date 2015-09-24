@@ -35,7 +35,7 @@ public class PageParserExec {
     if(length > 1){
         prod = args[1];
     }
-    if(prod.equals("reg")){//is not production
+    if(prod.equals("prod")){//is production and won't print out to a file. this saves a bunch of time and doesn't use much memory.
         System.setOut(new PrintStream(new OutputStream() {
 
         @Override
@@ -44,7 +44,7 @@ public class PageParserExec {
         }
         }));
     }
-    else if(prod.equals("prod")){
+    else if(prod.equals("testing")){ //writes to file so all system.out.println is viewable there.
         // Included for debuging delete after done
         try {
             PrintStream out = new PrintStream(new FileOutputStream("fullOutput.txt"));
@@ -67,7 +67,10 @@ public class PageParserExec {
                 wikiProcessor.createPdf();
         } else if(wikiProcess.equals("toc")){
             System.out.println("Running " + wikiProcess + " "+ System.getProperty("user.dir"));
-            String fileName = "enwiki-latest-all-titles-in-ns0";
+              //change this to be whatever you wish to iterate through to make TOC formatted pdfs
+              String fileName = "enwiki-latest-all-titles-in-ns0";
+//            String fileName = "alphabetlzed_nov_usernames_final.txt";
+            
             WikiTitleParser parser = new WikiTitleParser();
             try {
                 parser.parseTxt(fileName);
