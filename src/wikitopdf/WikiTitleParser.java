@@ -52,13 +52,13 @@ public class WikiTitleParser extends PdfPageEventHelper
             Logger.getLogger(WikiParser.class.getName()).log(Level.SEVERE, null, ex);
         }
 */
+        
+        //start initial/first file up here then readlines to go through the loop.
         int num = 1;
-        int pagesCount = 2;
+        int pagesCount = 0;
         String firstLine=bufferReader.readLine();//first line will change the title of the file at the end.
         String lastLine="";
         PdfTitleWrapper pdfWrapper = new PdfTitleWrapper(num, pagesCount,firstLine,"");
-//        pdfWrapper.addPrologue();
-//        pdfWrapper.jknewPage();
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
@@ -179,9 +179,6 @@ public class WikiTitleParser extends PdfPageEventHelper
                     
         try
         {
-            //while()
-               
-                //start writing the first volume
                 pdfWrapper.openMultiColumn();
                 if(num==1){
                     
@@ -189,23 +186,20 @@ public class WikiTitleParser extends PdfPageEventHelper
                 }
                 while ((line = bufferReader.readLine()) != null)
                 {
-                    //sqlProcessor.saveTitle(line);                    
-                    //if the pages in the current volume == 670, close current pdf, track volume/page numbers, and start new pdf
-                    System.out.println("about to test for pgcount");
-                    if(pdfWrapper.getPagesCount()%699==0 && pdfWrapper.getPagesCount()>690)
+                    
+                    if(pdfWrapper.getPagesCount()%701==0)//if you're at 701 pages. pdftitlewrapper will have applied the cover(chad) and you can close up here.
                     {
-                            System.out.println(line + " line before chad");
+                            //num is the number of files.
+                            if(num!=88)//do this once the last volume is known (youwill have to run twice). it will be shorter than other pages and so you don't want to cover the text on the last page.
+                            //for our particular settings we ended at volume 88.
                             lastLine = pdfWrapper.coverChad();
                             String newFirst = pdfWrapper.getNewFirst();
                             pdfWrapper.closeMultiColumn();
                             pagesCount += pdfWrapper.getPagesCount();
                             pdfWrapper.close();
                             num++;
-                            System.out.println(line + " this is line here after chad");
-                            pdfWrapper = new PdfTitleWrapper(num, pagesCount,newFirst,lastLine);
-//                            pdfWrapper.addPrologue();
-//                            pdfWrapper.jknewPage();
-                            pdfWrapper.openMultiColumn(); // starts new volume (starting from vol 2)
+                            pdfWrapper = new PdfTitleWrapper(num, pagesCount,newFirst,lastLine); //get started/
+                            pdfWrapper.openMultiColumn(); 
                             pdfWrapper.writeTitle(newFirst,fs);
                             lastLine = newFirst;
                         
@@ -224,14 +218,11 @@ public class WikiTitleParser extends PdfPageEventHelper
         }
         finally
         {
-            //sqlProcessor.close();
-            //pdfWrapper.closeMultiColumn();
+
             pdfWrapper.close();
             bufferReader.close();
         }
     }
-
-    //private String inputFileName = "";
                     FontSelector fs = new FontSelector();
 
                     
