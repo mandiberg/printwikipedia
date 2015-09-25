@@ -228,6 +228,7 @@ Running Manually
 	4. "java -jar wikitopdf.jar pagenumbers" does nothing as of yet
 	5. "java -jar wikitopdf.jar covers" creates the coverpages for the outputs in the 
 	output file. 
+		*****before outputting covers check to make sure that each file is sequential and there are no files with two of the same volume number (ie. the amount of volumes matches the total number of pdfs in the output/temp folders not including the _output.pdf file). This has happened before!
 	Have some fun experimenting with the different settings to familiarize yourself 
 	with how the progam works, and make sure things are working correctly
 --------------------------------------------------------------------------------------
