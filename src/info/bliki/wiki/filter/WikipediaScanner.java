@@ -19,8 +19,8 @@ public class WikipediaScanner {
 	public final static String TAG_NAME = "$TAG_NAME";
         
         public static boolean is_infobox = false;
-        public static List<String> unwanted = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
-        public static List<String> unwanted2 = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary"));
+        public static List<String> unwanted = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary","taxobox"));
+        public static List<String> unwanted2 = new ArrayList<String>(Arrays.asList("infobox","orphan","coord","wiktionary","taxobox"));
         public static int unwanted_len = unwanted.size();
 //        public static String[] holding = new String[unwanted.size()];
 
