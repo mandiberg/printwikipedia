@@ -176,11 +176,7 @@ public class TemplateParser extends AbstractParser {
 		fWhiteStartPosition = fCurrentPosition;
 		try {
 			while (true) {
-				// if (oldCurrentPosition >= fCurrentPosition) {
-				// System.out.println("stop stop: " + oldCurrentPosition + "--" +
-				// fStringSource);
-				// System.exit(-1);
-				// }
+
 				fCurrentCharacter = fSource[fCurrentPosition++];
 
 				// oldCurrentPosition = fCurrentPosition;
