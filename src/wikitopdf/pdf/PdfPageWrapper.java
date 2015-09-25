@@ -22,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import wikitopdf.utils.WikiLogger;
 import wikitopdf.utils.WikiSettings;
 import wikitopdf.html.WHTMLWorker;
@@ -40,34 +42,25 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum) throws DocumentException, IOException {
+    public PdfPageWrapper(int index, int cVolNum, int pageNum) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
+        System.out.println("i am start page " + pageNum);
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
         outputFileName = outputFileName.replace("/","\\");
-        System.out.println("qqq");
         prefn = "/../copyright/pre"+String.format("%04d", cVolNum)+".pdf";
-        System.out.println("ooo");
 //      WHTMLWorker.fontGet();//start font thing for the new page.
-        System.out.println("fff");
-        tFontGet();
-        System.out.println("fff");
-        fontGet();
-        System.out.println("fff");
-        preFontGet();
-        //72 pixels per inch
+        tFontGet();//title/entryheading font
+        fontGet();//regular font
+        preFontGet();//smaller font for quotes/<pre> tags. -- not sure if this is working or being rendered.
+
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
-        //pdfDocument = new Document(new Rectangle(1918, 1018)); //
+
         preDoc = new Document(new Rectangle(432,648));
-        System.out.println("fuck");
         
         pdfDocument.setMargins(67, 47.5f, -551, 49.5f); //old margins w/error.
-//        pdfDocument.setMargins(66.3f, 47f, 5.5f, 62.5f);//toc margins
-        
-        pdfDocument.setMargins(67, 47.5f, -551, 49.5f); //old margins w/error.
-        
-        
+//        pdfDocument.setMargins(66.3f, 47f, 5.5f, 62.5f);//toc margins 
         pdfWriter = PdfWriter.getInstance(pdfDocument,
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
                             "/" + outputFileName));
@@ -75,68 +68,36 @@ public class PdfPageWrapper {
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
                             "/" + prefn));
 
-        header = new PageHeaderEvent(pageNum);
+        header = new PageHeaderEvent(pageNum,pdfDocument);
         pdfWriter.setPageEvent(header);
-//        PageHeaderEvent phead = new PageHeaderEvent(0);
-//        preWriter.setPageEvent(phead);
-        
+
         pdfDocument.open();
-        
-//        pdfDocument.setMarginMirroring(true);
+
         _wikiFontSelector = new WikiFontSelector();
         
         
-        pdfDocument.setMarginMirroring(true);
-        
-//        jknewPage();
-        //_4073-2-703-output.pdf // secibd
-        //_10911-3-1404-output.pdf //tghurd
-        // _16211-4-2104-output.pdf //fourht
-          addPrologue(cVolNum, preDoc, preWriter);
-//        addPrologue(cVolNum,preDoc);
-//        pdfDocument.add(new Paragraph(""));
-//        pdfDocument.newPage();
-        
+        pdfDocument.setMarginMirroring(true);//for alternating margins for alternate pages
 
-        //PdfContentByte cb = pdfWriter.getDirectContent();
-        //ColumnText ct = new ColumnText(cb);
+          addPrologue(cVolNum, preDoc, preWriter); //creates copyright two pages.
+        
         openMultiColumn();
     }
-    /**
-     *
-     */
+
+    
+    
     public void openMultiColumn() {
-//        mct = new MultiColumnText(pdfDocument.bottom());
+
         mct = new MultiColumnText(600);
         int columnCount = 3;
         float space = (float) 8;
         float columnWidth = (float) 103;
         float left = 67;
         float right = left + columnWidth;
-//        mct.addSimpleColumn(27, 115);
-//        mct.addSimpleColumn(120, 200);
+
         mct.addRegularColumns(pdfDocument.left(), pdfDocument.right(), 6f, 3);
-                System.out.println(pdfDocument.left()+ " l\n"+
-                (pdfDocument.top() - pdfDocument.bottom()-40)+" size\n"+
-                pdfDocument.right()+ " r\n"+
-                pdfDocument.rightMargin()+ " rm\n"+
-                pdfDocument.leftMargin()+ " lm\n"+
-                pdfDocument.top()+ " t\n"+
-                pdfDocument.bottom()+ " b\n"+
-                pdfDocument.topMargin()+ " tm\n"+
-                pdfDocument.bottomMargin() + " bm\n"
-                        );
-                        
-//
-//        for (int i = 0; i < columnCount; i++) {
-//            //System.out.println("left:" + left + " right:" + right);
-//            mct.addSimpleColumn(left, right);
-//            left = right + space;
-//            right = left + columnWidth;
-//        }
 
         //First page hack
-        for (int i = 0; i < 38; i++) {
+        for (int i = 0; i < 38; i++) {//same as the TOC -- for some reason the first entry always wants to start at the top of the page. This moves it down. Should be a better fix.
             try {
                 Phrase ph = _wikiFontSelector.getTitleFontSelector().process("\n");
                 mct.addElement(ph);
@@ -147,12 +108,8 @@ public class PdfPageWrapper {
         }
     }
     
-    public final void jknewPage(Document docu) throws DocumentException{
-      docu.add(new Paragraph(""));
-      docu.newPage();
-      docu.add(new Paragraph(""));
-    }
     public final void addPrologue(int cVolNum, Document docu, PdfWriter writ) throws DocumentException {
+        //adds copyright document.
         if(docu.equals(preDoc)){
             preDoc.open();
             preDoc.setMarginMirroring(true);
@@ -165,20 +122,27 @@ public class PdfPageWrapper {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+        try {
+            bflib = BaseFont.createFont("fonts/LinLibertine_Rah.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (IOException ex) {
+            Logger.getLogger(PdfPageWrapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int c = 57391;
+        String wiki_w = Character.toString((char)c);
 
         //wikipedia on the first inside page.--right facing
         cb.beginText();
-        cb.setFontAndSize(times, 40);
+        cb.setFontAndSize(bflib, 42);
         cb.setTextMatrix(docu.right() - 182, 425);
-        cb.showText("Wikipedia");
+        cb.showText(wiki_w+"ikipedia");
         cb.endText();
         PdfPTable tocTable = new PdfPTable(1);
-//        ct.setSimpleColumn(pdfDocument.left(),100,pdfDocument.right(),300);//llx,lly,urx,ury
+        
         try {
+            //setting volume number position and adding to page.
             _wikiFontSelector.getTitleFontSelector().process("");
             times = _wikiFontSelector.getCommonFont().getBaseFont();
-            Font pght = new Font(times,15);
+            Font pght = new Font(bflib,16);
             Paragraph pgh = new Paragraph("\nVolume "+String.valueOf(cVolNum),pght);
             PdfPCell cell = new PdfPCell(pgh);
             cell.setBorderWidth(0f);
@@ -189,78 +153,48 @@ public class PdfPageWrapper {
             column.addElement(tocTable);
             column.setSimpleColumn(docu.left()+15, docu.bottom()+20, docu.right()+27.5f, docu.bottom()-100);
             column.go();
-//        pgh.setAlignment("right");
-        
-//      pgh.setFont(pght);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         
         docu.newPage();//get second page for the copyright text
 //        jknewPage(docu);
-        System.out.println("I MADE A NEW MAPAGE.");
 
         String copyrightText = "CC BY-SA 3.0 2015, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
                 "Edited, compiled and designed by Michael Mandiberg (User:Theredproject).\r\r"+ 
                 "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/Trademark_policy\r\r"+
                 "Wikipedia is a trademark of the Wikimedia Foundation and is used with the permission of the Wikimedia Foundation. This work is not endorsed by or affiliated with the Wikimedia Foundation.\r\r"+
-                "Produced with support from Eyebeam, The Banff Centre and the City University of New York, and assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
-                "PrintWikipedia.com\r\rgithub.com/mandiberg/printwikipedia\r\rPrinted by Lulu.com";
+                "Cover set in Linux Libertine. Book set in Cardo, with the following 36 typefaces added to handle the many languages contained within: Alef, Amiri, Android Emoji, Bitstream CyberCJK, Casy EA, cwTeXFangSong, cwTeXHei, cwTeXKai, cwTeXMing, cwTeXYen, DejaVu Sans, Droid Arabic Kufi, FreeSans, FreeSerif, GurbaniAkharSlim, IndUni-N, Junicode, Lohit Gujarati, Lohit Oriya, MAC C Times, MS Gothic, NanumGothic, Noto Kufi Arabic, Noto Sans, Noto Sans Bengali, Noto Sans Cherokee, Noto Sans Devanagari, Noto Sans Georgian, Noto Sans Japanese, Noto Sans Sinhala, Noto Sans Tamil UI, Noto Sans Telugu, Noto Sans Thai, Noto Serif Armenian, Open Sans, Roboto.\r\r"+
+                "Produced with support from Eyebeam, The Banff Centre, the City University of New York, and Lulu.com. Designed and built with assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
+                "PrintWikipedia.com\r\rGitHub.com/mandiberg/printwikipedia\r\rPrinted by Lulu.com";
         PdfPTable cpTable = new PdfPTable(1);
-        try {
+        try { //setting copyright text and adding to page
             times = _wikiFontSelector.getCommonFont().getBaseFont();
-            Font cpt = new Font(times,8);
+            Font cpt = new Font(bflib,8);
             Paragraph cpp = new Paragraph(copyrightText,cpt);
             PdfPCell cell2 = new PdfPCell(cpp);
+            cell2.setLeading(10,0);
             cell2.setBorderWidth(0f);
-            System.out.println(cpp.toString());
-            System.out.println(copyrightText);
-            cell2.setHorizontalAlignment(Element.ALIGN_TOP-50);
+            cell2.setHorizontalAlignment(Element.ALIGN_TOP);
             cell2.setVerticalAlignment(Element.ALIGN_LEFT);
             cell2.setColspan(1);
             cpTable.addCell(cell2);
             ColumnText column2 = new ColumnText(writ.getDirectContent());
             column2.addElement(cpTable);
-            
-            column2.setSimpleColumn (docu.left()-30, 10, docu.right(), docu.top()+13);
-            
+            column2.setSimpleColumn (docu.left()-30, 10, docu.right(), docu.top()-15);
             column2.go();
-            System.out.println("here i am in docum \n"+docu.left()+ " l\n"+
-                docu.right()+ " r\n"+
-                docu.top()+ " t\n"+
-                docu.bottom()+ " b\n"
-                        );
-//            docu.add(cpTable);
+            
             docu.newPage();
-//            docu.add(column2);
-            //_4073-2-703-output.pdf
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-//        cb.beginText();
-//        cb.setFontAndSize(times, 8);
-//
-//        String[] textArr = copyrightText.split("\r\n");
-//        for (int i = 0; i < textArr.length; i++) {
-//            cb.setTextMatrix(pdfDocument.left() - 10, 100 - (i * 10));
-//            cb.showText(textArr[i]);
-//        }
-////        cb.beginText();
-//        cb.setFontAndSize(times,8);
-//        cb.setTextMatrix(pdfDocument.left()-19,100);
-////        cb.showText("");
-//        cb.endText();
         
-        
-        
-        
-//        jknewPage();
         if(docu.equals(preDoc)){
             preDoc.close();
             File savedithink = new File(prefn);
-    //        System.exit(1);
         }
-        
         
     }
 
@@ -304,6 +238,11 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
+        FontFactory.register(path_to_fonts+"AppleColorEmoji.ttf","emojiAp");
+        FontFactory.register(path_to_fonts+"android-emoji.ttf","emojiAn");
+        FontFactory.register(path_to_fonts+"casy_ea.ttf","garif");
+        
+        
 
         int font_size = 13;
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
@@ -340,6 +279,10 @@ public class PdfPageWrapper {
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fontGlyph = FontFactory.getFont("fontGlyph", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAn = FontFactory.getFont("emojiAn", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAp = FontFactory.getFont("emojiAp", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font garif = FontFactory.getFont("garif", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        
 
         tfs.addFont(cardo);
         tfs.addFont(fontGlyph);
@@ -377,6 +320,9 @@ public class PdfPageWrapper {
         tfs.addFont(telugu);
         tfs.addFont(oriya);
         tfs.addFont(fser);
+//        tfs.addFont(emojiAn);
+//        tfs.addFont(emojiAp);
+        tfs.addFont(garif);
     }
     public void preFontGet(){
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
@@ -414,6 +360,9 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
+        FontFactory.register(path_to_fonts+"AppleColorEmoji.ttf","emojiAp");
+        FontFactory.register(path_to_fonts+"android-emoji.ttf","emojiAn");
+        FontFactory.register(path_to_fonts+"casy_ea.ttf","garif");
 
 
 
@@ -452,6 +401,9 @@ public class PdfPageWrapper {
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fontGlyph = FontFactory.getFont("fontGlyph", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAn = FontFactory.getFont("emojiAn", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAp = FontFactory.getFont("emojiAp", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font garif = FontFactory.getFont("garif", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
 
         pfs.addFont(cardo);
         pfs.addFont(fontGlyph);
@@ -489,6 +441,10 @@ public class PdfPageWrapper {
         pfs.addFont(telugu);
         pfs.addFont(oriya);
         pfs.addFont(fser);
+//        pfs.addFont(emojiAn);
+//        pfs.addFont(emojiAp);
+        fs.addFont(garif);
+        
     }
             public void fontGet() throws DocumentException, IOException{
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
@@ -527,7 +483,9 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
 //      System.out.println(FontFactory.getRegisteredFonts().toString());
-
+        FontFactory.register(path_to_fonts+"AppleColorEmoji.ttf","emojiAp");
+        FontFactory.register(path_to_fonts+"android-emoji.ttf","emojiAn");
+        FontFactory.register(path_to_fonts+"casy_ea.ttf","garif");
 
 
         int font_size = 8;
@@ -569,6 +527,10 @@ public class PdfPageWrapper {
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
         Font fontGlyph = FontFactory.getFont("fontGlyph", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAn = FontFactory.getFont("emojiAn", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font emojiAp = FontFactory.getFont("emojiAp", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        Font garif = FontFactory.getFont("garif", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, font_size);
+        
 
         fs.addFont(cardo);
         fs.addFont(fontGlyph);
@@ -606,22 +568,23 @@ public class PdfPageWrapper {
         fs.addFont(telugu);
         fs.addFont(oriya);
         fs.addFont(fser);
+//        fs.addFont(emojiAn);
+//        fs.addFont(emojiAp);
+        fs.addFont(garif);
     }
     
     public void writePage(WikiPage page) {
         currentTitle = page.getTitle();
         currentArticleID = page.getId();
         String x = page.getRevision().getText().toLowerCase();
-        if(x.contains("wiktionary redirect"))//breaks on wiktionary redirect. just ommit it.
+        if(x.contains("wiktionary redirect"))//breaks on wiktionary redirect. just ommit it. COULD REMOVE IF AFTER UPDATING wiki parse library!
             return;
-        //System.out.println("Article ID is" + currentArticleID);
         writeTitle(currentTitle);
         writeText(page.getRevision().getText());
     }
 
 
     //Write title of article to document
-    //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
     private void writeTitle(String line) {
         Phrase ph = null;
         Paragraph pr = null;
@@ -638,7 +601,7 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-            if (pdfWriter.getCurrentPageNumber() > 1) {
+            if (pdfWriter.getCurrentPageNumber() > 1) { //9/2015 not sure what these does. or why it's commented out...
                 //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
 //                mct.addElement(new Phrase("\n"));
             }
@@ -654,15 +617,13 @@ public class PdfPageWrapper {
     //Write article text using defined styles
     private void writeText(String text) {
         try {
-            System.out.println("77777" + text );
-            text = text.replaceAll("<gallery[\\s\\S]*?</gallery>","");
-//            text = text.replaceAll("(official_name\\s+\\=).+?(\\|)","");
-//            text = text.replaceAll("(name\\s+\\=).+?(\\|)","");
-            
+            //review the below removed/replaced items to see if you want to include. -- no good or easy way to add gallery though. probably don't want that.
+            text = text.replaceAll("<gallery[\\s\\S]*?</gallery>",""); //no gallery
+
 //             text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
 //            System.out.println(html);
-            //<a id="References" name="References"></a><H2>REFERENCES</H2>
+            //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
             html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
@@ -702,10 +663,8 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-            //THIS SHOULD BE CHANGED TO BE PROCESSED WITH THE FONT STACK!!!
-            //
-            //
-            //
+//this is where i first tried to add font stack and it worked well and fast but it could not parse everything correctly. only one font size was applied :\
+
 //            
 //            String temp_elem = element.toString();
 //            temp_elem = temp_elem.substring(1, temp_elem.length()-1);
@@ -760,8 +719,14 @@ public class PdfPageWrapper {
     /**
      *
      */
-    public void close() {
+    public void close() throws DocumentException, IOException {
+        System.out.println("i close!");
+        
         pdfDocument.close();
+        
+    }
+    public boolean checkOpen(){
+        return pdfDocument.isOpen();
     }
 
     /**
@@ -786,4 +751,5 @@ public class PdfPageWrapper {
     private String prefn = "";
     private String currentTitle = "";
     private int currentArticleID;
+    private BaseFont bflib;
 }
