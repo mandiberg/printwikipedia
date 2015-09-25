@@ -798,7 +798,7 @@ class Local:
                 # print "get luluid to be put into json string and added to file."
                 driver.quit()
                 if i_fail==True:
-                        helv_error = open("crasherrfiles.txt","a")
+                        helv_error = open("crasherrfiles2.txt","a")
                         helv_error.write(self.volume.num+ " " + self.volume.title+" upload:"+ upload_type+" reason: "+err_type+"\n")
                         helv_error.close()
                 else:

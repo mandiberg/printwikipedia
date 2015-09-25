@@ -370,15 +370,22 @@ class Browser:
                             sleep(1)
                             return
                         else:
-                            self.local.immigration(self.volume,self.driver,True,"something else...")
+                            # self.local.immigration(self.volume,self.driver,True,"something else...")
+                            #attempt to upload file yourself. webfail involved here so it should fail gracefully.
+                            self.local.ftpIt(True)
+                            sleep(3)
+                            self.webFailure()
                 else:
                     self.driver.switch_to_default_content()
                     if(self.iterateFiles(False)==True):
                         sleep(1)
                         return
                     else:
-                        print 'it was not meant to be'
-                        self.local.immigration(self.volume, self.driver,True, "finding file error")
+                        # print 'it was not meant to be'
+                        # self.local.immigration(self.volume, self.driver,True, "finding file error")
+                        self.local.ftpIt(True)
+                        sleep(3)
+                        self.webFailure()
                 
         def iterateFiles(self,mod,encoding="utf-8"):
                 print "about to go through files"
