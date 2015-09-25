@@ -277,6 +277,10 @@ public class ColumnText {
         ct.setACopy(org);
         return ct;
     }
+
+    public ColumnText() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     /**
      * Makes this instance an independent copy of <CODE>org</CODE>.
