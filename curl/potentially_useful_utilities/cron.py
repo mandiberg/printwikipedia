@@ -1,3 +1,6 @@
+#use this file with cron in order to check if things are being uploaded correctly.
+# this checks twitter to see if there has been a tweet <30 minutes ago.
+
 import tweepy
 from datetime import datetime, timedelta
 import smtplib
