@@ -1,16 +1,25 @@
 printwikipedia
 ==============
 
-This code parses the Wikipedia database and creates print ready PDFs. 
+This code parses the entire Wikipedia database, creates print ready PDFs, and uploads them to Lulu.com. This is a multi-step process documented in the meta-and-documentation folder. The code can create three different sets of PDFs: Print Wikipedia (the encyclopedia), Wikipedia Table of Contents and Wikipedia Contributor Appendix.
 
-The project is partially complete at present- it reads the database, and can output part of it to PDFs, but it crashes after 20% of the way through. 
+##About Print Wikipedia
 
-See design-documents folder for an example of sample output, and the design mockup for the layout. 
+Print Wikipedia is a both a utilitarian visualization of the largest accumulation of human knowledge and a poetic gesture towards the challenges of knowing in an episteme of big data. Artist Michael Mandiberg wrote software that transforms the entirety of the English-language Wikipedia database into 7473 volumes of 700 pages each, complete with covers, and then uploads them for print-on-demand. Built on what is likely the largest appropriation ever made, it is also a work of found poetry that draws attention to the sheer size of the encyclopedia’s content and the impossibility of rendering Wikipedia as a material object in fixed form: once a volume is printed it is already out of date. The work is also a reflection on the actual transparency or completeness of knowledge containers and history.
 
-Next Steps:
+This artwork was launched and first exhibited at Denny Gallery in New York City from June 18 – July 11, 2015. The exhibition, From Aaaaa! to ZZZap!, presented a live projected video which displayed a performance of the upload of Print Wikipedia to Lulu.com (a print-on-demand website), and the exhibition of a selection of volumes from the project. The artist made custom wallpaper that represented floor-to-ceiling bookshelves full of volumes. The upload process lasted 24 days, 3 hours, and 18 minutes and was on continuous view, with the gallery open 24 hours to the public in during the first weekend. Each time a volume was completely uploaded, the script posted to Twitter @PrintWikipedia. 
 
-1. The core script needs stability and design improvements. The design is close, but not totally there, but more importantly, the script crashes about 20% through the database around "D" or "E." It needs better stability and error handling, and it needs to be able to be restarted when it encounters an error or skip the problem entries and keep going.
+Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 36 volume Wikipedia Contributor Appendix which lists the names of the 7.5 million Wikipedia users who have made at least a single edit to the website.
 
-2. Covers: Each volume needs a print ready cover to be generated that has the correct start/end words (e.g. "Fredericksburg - Free Market"), and it needs to have the correct dimensions. This is mostly determined by the spine width, which will be kept consistent on all volumes, except the last one, which will be smaller. Could be done concurrently with the creation of the pdfs, or volume number, start/end words could be stored elsewhere, and the covers could be build by a separate (non java?!?) program afterwards
+##Next Steps
 
-3. Uploading to CreateSpace: Is there an API to upload to CreateSpace? It doesn't seem like any of the major print on demand services have APIs, this will have to be done manually. Can it be done via mTurk? Or will it have to be done by myself or an assistant?
+1. Upgrade dependencies to most current versions
+2. Resolve Helvetica non-embed error
+3. Cap all volumes at 700 pages (split and save entries that exceed the 700th page)
+4. Correct Right-To-Left languages (Hebrew and Arabic), and make sure Joined languages (Arabic) are doing so
+
+#Other URLs
+
+www.printwikipedia.com
+www.dennygallery.com/exhibitions/fromaaaaatozzzap/
+www.mandiberg.com
