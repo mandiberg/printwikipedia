@@ -1,7 +1,0 @@
-Recent changes in lulu's website do not accept POST headers for all webpages.
-using python + selenium as an alternative to go through and browse the website and fill out forms as an actual human using the site would.
-Please have mozilla firefox installed, python 2.7.2 or 2.7.3 (these are the known working versions, other versions may also work), and selenium for python installed.
-You do not need to have the selenium IDE installed for firefox. Although if you are new to selenium it may be helpful.
-execute from the command line with "$ python lulu.py"
-
-
