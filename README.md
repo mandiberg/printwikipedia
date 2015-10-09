@@ -1,4 +1,4 @@
-printwikipedia
+Print Wikipedia
 ==============
 
 This code parses the entire Wikipedia database, creates print ready PDFs, and uploads them to Lulu.com. This is a multi-step process documented in the meta-and-documentation folder. The code can create three different sets of PDFs: Print Wikipedia (the encyclopedia), Wikipedia Table of Contents and Wikipedia Contributor Appendix.
@@ -18,7 +18,7 @@ Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 3
 3. Cap all volumes at 700 pages (split and save entries that exceed the 700th page)
 4. Correct Right-To-Left languages (Hebrew and Arabic), and make sure Joined languages (Arabic) are doing so
 
-#Other URLs
+##Other URLs
 
 www.printwikipedia.com
 www.dennygallery.com/exhibitions/fromaaaaatozzzap/
