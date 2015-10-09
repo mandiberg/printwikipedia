@@ -20,6 +20,6 @@ Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 3
 
 ##Other URLs
 
-*www.printwikipedia.com
-*www.dennygallery.com/exhibitions/fromaaaaatozzzap/
-*www.mandiberg.com
+- www.printwikipedia.com
+- www.dennygallery.com/exhibitions/fromaaaaatozzzap/
+- www.mandiberg.com
