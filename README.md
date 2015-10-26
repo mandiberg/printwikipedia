@@ -18,6 +18,13 @@ Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 3
 3. Cap all volumes at 700 pages (split and save entries that exceed the 700th page)
 4. Correct Right-To-Left languages (Hebrew and Arabic), and make sure Joined languages (Arabic) are doing so
 
+
+##Other READMEs
+All other READMEs live in the folder meta-and-documentation. 
+Use the main README.txt to learn how to set up this project
+UPLOAD_README.txt is how to set up the upload process and things to watch out for during the upload.
+REFACTORING_README.txt is notes for future developers on some overall issues/bugs that need to be solved and other advice.
+
 ##Other URLs
 
 - www.printwikipedia.com
