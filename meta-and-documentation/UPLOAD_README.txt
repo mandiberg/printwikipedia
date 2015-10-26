@@ -1,4 +1,4 @@
-===notes to consider for next iteration and during upload===
+===notes to consider for next iteration of the printwikipedia project and during upload===
 
 *****PRE UPLOAD*******
 
