@@ -56,7 +56,7 @@ Structuring the schema
 	Type "mysql -u root" to login to the mysql client
 	Next type "USE yourschemaname" to switch to your newly made schema, you should see 
 	a message saying "Database changed" in your terminal window
-	Finally type "\.structure.sql" this will apply the needed structure to your schema 
+	Finally type "\. structure.sql" this will apply the needed structure to your schema 
 	in order for it to hold the printwikipedia database
 	
 	Alternately, do it via a query in MySQLWorkbench

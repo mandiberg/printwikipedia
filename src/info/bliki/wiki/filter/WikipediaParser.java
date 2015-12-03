@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.validator.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  * A Wikipedia syntax parser for the second pass in the parsing of a Wikipedia
