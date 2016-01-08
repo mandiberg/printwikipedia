@@ -5,13 +5,13 @@ import info.bliki.wiki.template.expr.ast.IParserFactory;
 
 public class PrePlusOperator extends PrefixOperator {
 
-	public PrePlusOperator(final String oper, final String functionName, final int precedence) {
-		super(oper, functionName, precedence);
-	}
+    public PrePlusOperator(final String oper, final String functionName, final int precedence) {
+        super(oper, functionName, precedence);
+    }
 
-	public ASTNode createFunction(final IParserFactory factory,
-			final ASTNode argument) {
-		return argument;
-	}
+    @Override
+    public ASTNode createFunction(final IParserFactory factory,
+            final ASTNode argument) {
+        return argument;
+    }
 }
-  

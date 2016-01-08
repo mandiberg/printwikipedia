@@ -1,16 +1,15 @@
 package info.bliki.wiki.tags.code;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 
 /**
  * Syntax highlighting support for Java source codes
- * 
+ *
  */
 public class JavaCodeFilter extends AbstractCPPBasedCodeFilter implements SourceCodeFormatter {
 
-  private static HashMap<String, String> KEYWORD_SET = new HashMap<String, String>();
+  private static HashMap<String, String> KEYWORD_SET = new HashMap<>();
 
   private static final String[] KEYWORDS =
     {
@@ -66,7 +65,7 @@ public class JavaCodeFilter extends AbstractCPPBasedCodeFilter implements Source
       "while",
       "assert",
       "enum",
-      
+
       "boolean",
       "char",
       "byte",
@@ -106,14 +105,14 @@ public class JavaCodeFilter extends AbstractCPPBasedCodeFilter implements Source
       "Void"
       };
 
-  private static HashSet<String> OBJECT_SET = new HashSet<String>();
+  private static HashMap<String, String> OBJECT_SET = new HashMap<>();
 
   static {
     for (int i = 0; i < KEYWORDS.length; i++) {
       createHashMap(KEYWORD_SET, KEYWORDS[i]);
     }
     for (int i = 0; i < OBJECT_WORDS.length; i++) {
-      OBJECT_SET.add(OBJECT_WORDS[i]);
+      createObjectsMap(OBJECT_SET, OBJECT_WORDS[i]);
     }
   }
 
@@ -124,7 +123,7 @@ public class JavaCodeFilter extends AbstractCPPBasedCodeFilter implements Source
    * @return Returns the KEYWORD_SET.
    */
   @Override
-	public HashMap<String, String> getKeywordSet() {
+    public HashMap<String, String> getKeywordSet() {
     return KEYWORD_SET;
   }
 
@@ -136,8 +135,8 @@ public class JavaCodeFilter extends AbstractCPPBasedCodeFilter implements Source
    * @return Returns the OBJECT_SET.
    */
   @Override
-	public HashSet<String> getObjectSet() {
+    public HashMap<String, String> getObjectSet() {
     return OBJECT_SET;
   }
-  
+
 }

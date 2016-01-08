@@ -8,16 +8,22 @@ import java.io.IOException;
 /**
  * A wiki block starting with a space on each line, rendered with the HTML
  * <code>pre</code> Tag
- * 
+ *
  * @see PreTag
  */
 public class WPPreTag extends HTMLBlockTag {
-	public WPPreTag() {
-		super("pre", null);
-	}
+    public WPPreTag() {
+        super("pre", null);
+    }
 
-	@Override
-	public void renderHTML(ITextConverter converter, Appendable buf, IWikiModel model) throws IOException {
-		super.renderHTML(converter, buf, model);
-	}
+    @Override
+    public Object clone() {
+        WPPreTag wppt = new WPPreTag();
+        return wppt;
+    }
+
+    @Override
+    public void renderHTML(ITextConverter converter, Appendable buf, IWikiModel model) throws IOException {
+        super.renderHTML(converter, buf, model);
+    }
 }

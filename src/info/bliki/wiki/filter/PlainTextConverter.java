@@ -1,83 +1,59 @@
 package info.bliki.wiki.filter;
 
-import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
-import info.bliki.htmlcleaner.Utils;
-import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.model.ImageFormat;
-import info.bliki.wiki.tags.HTMLTag;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import static info.bliki.wiki.model.Configuration.RENDERER_RECURSION_LIMIT;
 
 /**
  * A converter which renders the internal tree node representation as plain text
  * without HTML tags and images
- * 
  */
 public class PlainTextConverter implements ITextConverter {
-	boolean fNoLinks;
+    private boolean renderLinks;
 
-	public PlainTextConverter(boolean noLinks) {
-		this.fNoLinks = noLinks;
-	}
+    public PlainTextConverter(boolean renderLinks) {
+        this.renderLinks = renderLinks;
+    }
+    public PlainTextConverter() {
+        this(false);
+    }
 
-	public PlainTextConverter() {
-		this(true);
-	}
+    @Override
+    public void nodesToText(List<?> nodes, Appendable resultBuffer, IWikiModel model) throws IOException {
+        assert (model != null);
+        if (nodes != null && !nodes.isEmpty()) {
+            try {
+                int level = model.incrementRecursionLevel();
 
-	public void nodesToText(List<? extends Object> nodes, Appendable resultBuffer, IWikiModel model) throws IOException {
-		if (nodes != null && !nodes.isEmpty()) {
-			try {
-				int level = model.incrementRecursionLevel();
+                if (level > RENDERER_RECURSION_LIMIT) {
+                    resultBuffer.append("Error - recursion limit exceeded rendering tags in PlainTextConverter#nodesToText().");
+                    return;
+                }
+                for (Object item : nodes) {
+                    if (item instanceof List<?>) {
+                        nodesToText((List<?>) item, resultBuffer, model);
+                    } else if (item instanceof PlainTextConvertable) {
+                        ((PlainTextConvertable) item).renderPlainText(this, resultBuffer, model);
+                    }
+                }
+            } finally {
+                model.decrementRecursionLevel();
+            }
+        }
+    }
 
-				if (level > Configuration.RENDERER_RECURSION_LIMIT) {
-					resultBuffer
-							.append("Error - recursion limit exceeded rendering tags in PlainTextConverter#nodesToText().");
-					return;
-				}
-				Iterator<? extends Object> childrenIt = nodes.iterator();
-				while (childrenIt.hasNext()) {
-					Object item = childrenIt.next();
-					if (item != null) {
-						if (item instanceof List) {
-							nodesToText((List) item, resultBuffer, model);
-						} else if (item instanceof ContentToken) {
-							ContentToken contentToken = (ContentToken) item;
-							String content = contentToken.getContent();
-							content = Utils.escapeXml(content, true, true, true);
-							resultBuffer.append(content);
-						} else if (item instanceof WPList) {
-							((WPList)item).renderPlainText(this, resultBuffer, model);
-						} else if (item instanceof WPTable) {
-							((WPTable)item).renderPlainText(this, resultBuffer, model);
-						} else if (item instanceof HTMLTag) {
-							((HTMLTag) item).getBodyString(resultBuffer);
-						} else if (item instanceof TagNode) {
-							TagNode node = (TagNode) item;
-							Map<String, Object> map = node.getObjectAttributes();
-							if (map != null && map.size() > 0) {
-							} else {
-								node.getBodyString(resultBuffer);
-							}
-						}
-					}
-				}
-			} finally {
-				model.decrementRecursionLevel();
-			}
-		}
-	}
+    @Override
+    public boolean renderLinks() {
+        return renderLinks;
+    }
 
-	public boolean noLinks() {
-		return fNoLinks;
-	}
-
-	public void imageNodeToText(TagNode imageTagNode, ImageFormat imageFormat, Appendable resultBuffer, IWikiModel model)
-			throws IOException {
-
-	}
+    @Override
+    public void imageNodeToText(TagNode imageTagNode, ImageFormat imageFormat, Appendable resultBuffer, IWikiModel model)
+            throws IOException {
+    }
 }

@@ -9,7 +9,7 @@ public class ParseData {
     private String displaytitle;
     private String text;
     private List<Link> links;
-    private List<Category> categories;
+    private List<PageInfo> categories;
     private List<Template> templates;
 
     //TODO: add all elements
@@ -38,11 +38,11 @@ public class ParseData {
         this.links = links;
     }
 
-    public List<Category> getCategories() {
+    public List<PageInfo> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<PageInfo> categories) {
         this.categories = categories;
     }
 

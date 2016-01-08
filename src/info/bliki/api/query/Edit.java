@@ -32,7 +32,7 @@ package info.bliki.api.query;
  * appendtext     - Add this text to the end of the page. Overrides text
  * undo           - Undo this revision. Overrides text, prependtext and appendtext
  * undoafter      - Undo all revisions from undo to this one. If not set, just undo one revision
- * TODO: add suuport for remain parameters 
+ * TODO: add suuport for remain parameters
  */
 public class Edit extends RequestBuilder{
 

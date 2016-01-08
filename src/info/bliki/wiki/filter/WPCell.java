@@ -15,213 +15,215 @@ import java.util.Map;
  * Represents a single cell in a wiki table (i.e. table syntax bordered by
  * <code>{| ..... |}</code> ). See: <a
  * href="http://meta.wikimedia.org/wiki/Help:Table">Help - Table</a>
- * 
+ *
  */
 public class WPCell {
-	public static final int ALIGN_NOT_SET = 0;
+    public static final int ALIGN_NOT_SET = 0;
 
-	public static final int ALIGN_LEFT = 1;
+    public static final int ALIGN_LEFT = 1;
 
-	public static final int ALIGN_RIGHT = 2;
+    public static final int ALIGN_RIGHT = 2;
 
-	public static final int ALIGN_CENTER = 3;
+    public static final int ALIGN_CENTER = 3;
 
-	public static final int ALIGN_JUSTIFY = 4;
+    public static final int ALIGN_JUSTIFY = 4;
 
-	int fStartPos;
+    int fStartPos;
 
-	int fEndPos;
+    int fAttributesStartPos = -1;
 
-	/**
-	 * The &gt;td&lt; tag should be used
-	 */
-	public final static int DEFAULT = 1;
+    int fEndPos;
 
-	/**
-	 * The &gt;th&lt; tag should be used
-	 */
-	public final static int TH = 2;
+    /**
+     * The &gt;td&lt; tag should be used
+     */
+    public final static int DEFAULT = 1;
 
-	/**
-	 * The &gt;caption&lt; tag should be used
-	 */
-	public final static int CAPTION = 4;
+    /**
+     * The &gt;th&lt; tag should be used
+     */
+    public final static int TH = 2;
 
-	/**
-	 * No table cell tag specified in the wiki table
-	 */
-	public final static int UNDEFINED = 8;
+    /**
+     * The &gt;caption&lt; tag should be used
+     */
+    public final static int CAPTION = 4;
 
-	private int fType;
+    /**
+     * No table cell tag specified in the wiki table
+     */
+    public final static int UNDEFINED = 8;
 
-	private int fAlign;
+    private int fType;
 
-	private TagStack fStack;
+    private int fAlign;
 
-	private Map<String, String> fAttributes;
+    private TagStack fStack;
 
-	public WPCell(int start) {
-		fStartPos = start;
-		fType = DEFAULT;
-		fAlign = ALIGN_NOT_SET;
-		fStack = null;
-		fAttributes = null;
-	}
+    private Map<String, String> fAttributes;
 
-	/**
-	 * @return Returns the endPos.
-	 */
-	public int getEndPos() {
-		return fEndPos;
-	}
+    public WPCell(int start) {
+        fStartPos = start;
+        fType = DEFAULT;
+        fAlign = ALIGN_NOT_SET;
+        fStack = null;
+        fAttributes = null;
+    }
 
-	/**
-	 * Create the internal TagNodes stack for a single table cell
-	 * 
-	 * @param endPos
-	 *          The endPos to set.
-	 */
-	public void createTagStack(WPTable parent, String src, IWikiModel wikiModel, int endPos) {
-		fEndPos = endPos;
-		if (fEndPos > fStartPos) {
-			String content;
-			String params = null;
-			WikipediaScanner scan = new WikipediaScanner(src, fStartPos);
-			int index = scan.indexOfAttributes();
-			if (index == (-1) || index >= fEndPos) {
-				content = src.substring(fStartPos, fStartPos + (fEndPos - fStartPos));
-			} else {
-				content = src.substring(index + 1, index + fEndPos - index);
-				params = src.substring(fStartPos, fStartPos + (index - fStartPos));
-			}
+    /**
+     * @return Returns the endPos.
+     */
+    public int getEndPos() {
+        return fEndPos;
+    }
 
-			fAttributes = Util.getAttributes(params);
-			String rawWikiText = Utils.ltrimNewline(content);
-			// find first newline position
-			// see: http://code.google.com/p/gwtwiki/issues/detail?id=15
-//			int newlineIndex = rawWikiText.indexOf('\n');
-//			if (newlineIndex >= 0) {
-//				rawWikiText = rawWikiText.substring(0, newlineIndex) + "<p>" + rawWikiText.substring(newlineIndex);
-//			}
+    /**
+     * Create the internal TagNodes stack for a single table cell
+     *
+     * @param endPos
+     *          The endPos to set.
+     */
+    public void createTagStack(WPTable parent, char[] src, IWikiModel wikiModel, int endPos) {
+        fEndPos = endPos;
+        if (fEndPos > fStartPos) {
+            String content;
+            if (fAttributesStartPos == (-1) || fAttributesStartPos >= fEndPos) {
+                content = new String(src, fStartPos, fEndPos - fStartPos);
+            } else {
+                content = new String(src, fAttributesStartPos + 1, fEndPos - fAttributesStartPos - 1);
+                String params = new String(src, fStartPos, fAttributesStartPos - fStartPos);
+                fAttributes = Util.getAttributes(params);
+            }
+            String rawWikiText = Utils.ltrimNewline(content);
 
-			AbstractParser parser = wikiModel.createNewInstance(rawWikiText);
-			fStack = parser.parseRecursiveInternal(wikiModel, true, false);
-			List<BaseToken> list = fStack.getNodeList();
-			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i) instanceof TagNode) {
-					((TagNode) list.get(i)).setParent(parent);
-				}
-			}
-		}
-	}
+            AbstractWikipediaParser parser = wikiModel.createNewInstance(rawWikiText);
+            fStack = parser.parseRecursiveInternal(wikiModel, true, false);
+            List<BaseToken> list = fStack.getNodeList();
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) instanceof TagNode) {
+                    ((TagNode) list.get(i)).setParent(parent);
+                }
+            }
+        }
+    }
 
-	/**
-	 * @return Returns the startPos.
-	 */
-	public int getStartPos() {
-		return fStartPos;
-	}
+    /**
+     * @return Returns the startPos.
+     */
+    public int getStartPos() {
+        return fStartPos;
+    }
 
-	/**
-	 * @param startPos
-	 *          The startPos to set.
-	 */
-	public void setStartPos(int startPos) {
-		fStartPos = startPos;
-	}
+    /**
+     * @param startPos
+     *          The startPos to set.
+     */
+    public void setStartPos(int startPos) {
+        fStartPos = startPos;
+    }
 
-	public void renderHTML(ITextConverter converter, Appendable buf, IWikiModel wikiModel) throws IOException {
-		if (fType != UNDEFINED) {
-			if (HTMLTag.NEW_LINES) {
-				if (fType == CAPTION) {
-					buf.append("\n<caption");
-				} else if (fType == TH) {
-					buf.append("\n<th");
-				} else {
-					buf.append("\n<td");
-				}
-			} else {
-				if (fType == CAPTION) {
-					buf.append("<caption");
-				} else if (fType == TH) {
-					buf.append("<th");
-				} else {
-					buf.append("<td");
-				}
-			}
+    /**
+     * @param attributesStartPos
+     *          the fAttributesStartPos to set
+     */
+    public void setAttributesStartPos(int attributesStartPos) {
+        if (this.fAttributesStartPos == -1) {
+            this.fAttributesStartPos = attributesStartPos;
+        }
+    }
 
-			HTMLTag.appendEscapedAttributes(buf, fAttributes);
-		}
+    public void renderHTML(ITextConverter converter, Appendable buf, IWikiModel wikiModel) throws IOException {
+        if (fType != UNDEFINED) {
+            if (HTMLTag.NEW_LINES) {
+                if (fType == CAPTION) {
+                    buf.append("\n<caption");
+                } else if (fType == TH) {
+                    buf.append("\n<th");
+                } else {
+                    buf.append("\n<td");
+                }
+            } else {
+                if (fType == CAPTION) {
+                    buf.append("<caption");
+                } else if (fType == TH) {
+                    buf.append("<th");
+                } else {
+                    buf.append("<td");
+                }
+            }
 
-		if (fStack != null) {
+            HTMLTag.appendEscapedAttributes(buf, fAttributes);
+        }
 
-			List<BaseToken> list = fStack.getNodeList();
-			if (list.isEmpty()) {
-				if (fType != UNDEFINED) {
-					buf.append(" />");
-				}
-			} else {
-				if (fType != UNDEFINED) {
-					buf.append(">");
-				}
-				converter.nodesToText(fStack.getNodeList(), buf, wikiModel);
-				if (fType != UNDEFINED) {
-					if (fType == CAPTION) {
-						buf.append("</caption>");
-					} else if (fType == TH) {
-						buf.append("</th>");
-					} else {
-						buf.append("</td>");
-					}
-				}
-			}
-		} else {
-			if (fType != UNDEFINED) {
-				buf.append(">");
-				if (fType == CAPTION) {
-					buf.append("</caption>");
-				} else if (fType == TH) {
-					buf.append("</th>");
-				} else {
-					buf.append("</td>");
-				}
-			}
-		}
-	}
+        if (fStack != null) {
 
-	public void renderPlainText(ITextConverter converter, Appendable buf, IWikiModel wikiModel) throws IOException {
-		if (fStack != null) {
-			List<BaseToken> list = fStack.getNodeList();
-			if (!list.isEmpty()) {
-				converter.nodesToText(fStack.getNodeList(), buf, wikiModel);
-			}
-		}
-	}
+            List<BaseToken> list = fStack.getNodeList();
+            if (list.isEmpty()) {
+                if (fType != UNDEFINED) {
+                    buf.append(" />");
+                }
+            } else {
+                if (fType != UNDEFINED) {
+                    buf.append(">");
+                }
+                converter.nodesToText(fStack.getNodeList(), buf, wikiModel);
+                if (fType != UNDEFINED) {
+                    if (fType == CAPTION) {
+                        buf.append("</caption>");
+                    } else if (fType == TH) {
+                        buf.append("</th>");
+                    } else {
+                        buf.append("</td>");
+                    }
+                }
+            }
+        } else {
+            if (fType != UNDEFINED) {
+                buf.append(">");
+                if (fType == CAPTION) {
+                    buf.append("</caption>");
+                } else if (fType == TH) {
+                    buf.append("</th>");
+                } else {
+                    buf.append("</td>");
+                }
+            }
+        }
+    }
 
-	/**
-	 * @return Returns the type.
-	 */
-	public int getType() {
-		return fType;
-	}
+    public void renderPlainText(ITextConverter converter, Appendable buf, IWikiModel wikiModel) throws IOException {
+        if (fStack != null) {
+            List<BaseToken> list = fStack.getNodeList();
+            if (!list.isEmpty()) {
+                converter.nodesToText(fStack.getNodeList(), buf, wikiModel);
+            }
+        }
+    }
 
-	public int getAlign() {
-		return fAlign;
-	}
+    /**
+     * @return Returns the type.
+     */
+    public int getType() {
+        return fType;
+    }
 
-	/**
-	 * @param type
-	 *          The type to set.
-	 */
-	public void setType(int type) {
-		fType = type;
-	}
+    public int getAlign() {
+        return fAlign;
+    }
 
-	public TagStack getTagStack() {
-		return fStack;
-	}
+    /**
+     * @param type
+     *          The type to set.
+     */
+    public void setType(int type) {
+        fType = type;
+    }
 
-	public Map<String, String> getNodeAttributes() {
-		return fAttributes;
-	}
+    public TagStack getTagStack() {
+        return fStack;
+    }
+
+    public Map<String, String> getNodeAttributes() {
+        return fAttributes;
+    }
 }

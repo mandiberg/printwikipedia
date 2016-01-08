@@ -13,11 +13,11 @@ package info.bliki.wiki.template.extension;
  *  The toString(Object,String) method is used when the user uses the
  *  format option: $o; format="f"$.  It checks the formatName and applies the
  *  appropriate formatting.  If the format string passed to the renderer is
- *  not recognized then simply call toString().  
- *  
+ *  not recognized then simply call toString().
+ *
  */
 public interface AttributeRenderer {
     public String toString(Object o);
-    
-	  public String toString(Object o, String formatName);
+
+      public String toString(Object o, String formatName);
 }

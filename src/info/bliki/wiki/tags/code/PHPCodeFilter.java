@@ -1,16 +1,15 @@
 package info.bliki.wiki.tags.code;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 
 /**
  * Syntax highlighting support for PHP source codes
- * 
+ *
  */
 public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceCodeFormatter {
 
-  private static HashMap<String, String> KEYWORD_SET = new HashMap<String, String>();
+  private static HashMap<String, String> KEYWORD_SET = new HashMap<>();
 
   private static final String[] KEYWORDS =
     {
@@ -92,7 +91,7 @@ public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceC
    * @return Returns the KEYWORD_SET.
    */
   @Override
-	public HashMap<String, String> getKeywordSet() {
+    public HashMap<String, String> getKeywordSet() {
     return KEYWORD_SET;
   }
 
@@ -100,19 +99,19 @@ public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceC
    * @return Returns the OBJECT_SET.
    */
   @Override
-	public HashSet<String> getObjectSet() {
+    public HashMap<String, String> getObjectSet() {
     return null;
   }
 
   @Override
-	public String filter(String input) {
+    public String filter(String input) {
     char[] source = input.toCharArray();
     int currentPosition = 0;
     int identStart = 0;
     char currentChar = ' ';
 
     HashMap<String, String> keywordsSet = getKeywordSet();
-    HashSet<String> objectsSet = getObjectSet();
+    HashMap<String, String> objectsSet = getObjectSet();
     StringBuilder result = new StringBuilder(input.length() + input.length() / 4);
     boolean identFound = false;
 //    result.append("<font color=\"#000000\">");
@@ -136,10 +135,10 @@ public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceC
             currentChar = source[currentPosition++];
             appendChar(result, currentChar);
             if (currentChar == '\\') {
-							currentChar = source[currentPosition++];
-							appendChar(result, currentChar);
-							continue;
-						}
+                            currentChar = source[currentPosition++];
+                            appendChar(result, currentChar);
+                            continue;
+                        }
             if (currentChar == '\"') {
               break;
             }
@@ -153,14 +152,14 @@ public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceC
             currentChar = source[currentPosition++];
             appendChar(result, currentChar);
             if (currentChar == '\\') {
-							currentChar = source[currentPosition++];
-							appendChar(result, currentChar);
-							continue;
-						}
+                            currentChar = source[currentPosition++];
+                            appendChar(result, currentChar);
+                            continue;
+                        }
             if (currentChar == '\'') {
               break;
             }
-          } 
+          }
           result.append(FONT_END);
           continue;
         } else if (currentChar == '/' && currentPosition < input.length() && source[currentPosition] == '/') {
@@ -218,14 +217,14 @@ public class PHPCodeFilter extends AbstractCPPBasedCodeFilter implements SourceC
     }
     return result.toString();
   }
-  
+
   @Override
-	public boolean isKeywordLowerCase() {
+    public boolean isKeywordCaseSensitive() {
     return false;
   }
-  
+
   @Override
-	public boolean isPHPTag() {
+    public boolean isPHPTag() {
     return true;
   }
 }

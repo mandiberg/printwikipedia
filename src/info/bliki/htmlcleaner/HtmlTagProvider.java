@@ -50,8 +50,12 @@ import java.util.StringTokenizer;
  * Created by: Vladimir Nikic<br/>
  * Date: November, 2006.
  */
-public class HtmlTagProvider extends HashMap implements ITagInfoProvider {
+public class HtmlTagProvider extends HashMap<String, TagInfo> implements ITagInfoProvider {
 
+    /**
+     * Auto-generated serial version UID.
+     */
+    private static final long serialVersionUID = 1542458496477964349L;
     // singleton instance, used if no other TagInfoProvider is specified
     private static HtmlTagProvider _instance;
 
@@ -90,119 +94,119 @@ public class HtmlTagProvider extends HashMap implements ITagInfoProvider {
     protected void defineTags() {
         // Structure
         addTag("div",       TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
-        addTag("span",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
+        addTag("span",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
 
         // Meta Information
-        addTag("meta",      TagInfo.CONTENT_NONE,	TagInfo.HEAD, null);
+        addTag("meta",      TagInfo.CONTENT_NONE,    TagInfo.HEAD, null);
         addTag("link",      TagInfo.CONTENT_NONE,   TagInfo.HEAD, null);
         addTag("title",     TagInfo.CONTENT_TEXT,   TagInfo.HEAD, null);
-        addTag("style",     TagInfo.CONTENT_ALL,	TagInfo.HEAD, null);
-        addTag("bgsound",   TagInfo.CONTENT_NONE, 	TagInfo.HEAD, null);
+        addTag("style",     TagInfo.CONTENT_ALL,    TagInfo.HEAD, null);
+        addTag("bgsound",   TagInfo.CONTENT_NONE,     TagInfo.HEAD, null);
 
         // Text
-        addTag("h1",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("h2",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("h3",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("h4",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("h5",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("h6",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
-        addTag("p",         TagInfo.CONTENT_ALL,  	TagInfo.BODY, "p");
-        addTag("strong",    TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("em",        TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("abbr",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("acronym",   TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("address",   TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("bdo",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("blockquote",TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("cite",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("q",       	TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("code",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("ins",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("del",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("dfn",       TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("kbd",       TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("pre",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("samp",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("listing",   TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("var",       TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("br",        TagInfo.CONTENT_NONE,	TagInfo.BODY, null);
-        addTag("wbr",       TagInfo.CONTENT_NONE,	TagInfo.BODY, null);
-        addTag("nobr",      TagInfo.CONTENT_ALL,	TagInfo.BODY, "nobr");
-        addTag("xmp",       TagInfo.CONTENT_TEXT,	TagInfo.BODY, null);
+        addTag("h1",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("h2",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("h3",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("h4",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("h5",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("h6",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "h1,h2,h3,h4,h5,h6");
+        addTag("p",         TagInfo.CONTENT_ALL,      TagInfo.BODY, "p");
+        addTag("strong",    TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("em",        TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("abbr",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("acronym",   TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("address",   TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("bdo",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("blockquote",TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("cite",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("q",           TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("code",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("ins",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("del",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("dfn",       TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("kbd",       TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("pre",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("samp",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("listing",   TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("var",       TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("br",        TagInfo.CONTENT_NONE,    TagInfo.BODY, null);
+        addTag("wbr",       TagInfo.CONTENT_NONE,    TagInfo.BODY, null);
+        addTag("nobr",      TagInfo.CONTENT_ALL,    TagInfo.BODY, "nobr");
+        addTag("xmp",       TagInfo.CONTENT_TEXT,    TagInfo.BODY, null);
 
         // Links
-        addTag("a",         TagInfo.CONTENT_ALL,  	TagInfo.BODY, "a");
-        addTag("base",      TagInfo.CONTENT_NONE,	TagInfo.HEAD, null);
+        addTag("a",         TagInfo.CONTENT_ALL,      TagInfo.BODY, "a");
+        addTag("base",      TagInfo.CONTENT_NONE,    TagInfo.HEAD, null);
 
         // Images and Objects
-        addTag("img",       TagInfo.CONTENT_NONE,	TagInfo.BODY, null);
-        addTag("area",      TagInfo.CONTENT_NONE,	TagInfo.BODY, "!map,area");
-        addTag("map",       TagInfo.CONTENT_ALL,	TagInfo.BODY, "map");
-        addTag("object",    TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("param",     TagInfo.CONTENT_NONE, 	TagInfo.BODY, null);
-        addTag("applet",    TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("xml",       TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
+        addTag("img",       TagInfo.CONTENT_NONE,    TagInfo.BODY, null);
+        addTag("area",      TagInfo.CONTENT_NONE,    TagInfo.BODY, "!map,area");
+        addTag("map",       TagInfo.CONTENT_ALL,    TagInfo.BODY, "map");
+        addTag("object",    TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("param",     TagInfo.CONTENT_NONE,     TagInfo.BODY, null);
+        addTag("applet",    TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("xml",       TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
 
         // Lists
-        addTag("ul",        TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("ol",        TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("li",        TagInfo.CONTENT_ALL,	TagInfo.BODY, "li");
-        addTag("dl",     	TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("dt",     	TagInfo.CONTENT_ALL,	TagInfo.BODY, "dt,dd");
-        addTag("dd",     	TagInfo.CONTENT_ALL,	TagInfo.BODY, "dt,dd");
-        addTag("menu",      TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("dir",       TagInfo.CONTENT_ALL,   	TagInfo.BODY, null);
+        addTag("ul",        TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("ol",        TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("li",        TagInfo.CONTENT_ALL,    TagInfo.BODY, "li");
+        addTag("dl",         TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("dt",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "dt,dd");
+        addTag("dd",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "dt,dd");
+        addTag("menu",      TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("dir",       TagInfo.CONTENT_ALL,       TagInfo.BODY, null);
 
         // Tables
-        addTag("table", 	TagInfo.CONTENT_ALL,	TagInfo.BODY, "#tr,#tbody,#thead,#tfoot,#colgroup,#caption,#tr,tr,thead,tbody,tfoot,caption,colgroup,table");
-        addTag("tr", 		TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,+tbody,^thead,^tfoot,#td,#th,tr,caption,colgroup");
-        addTag("td", 		TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,+tr,td,th,caption,colgroup");
-        addTag("th", 		TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,+tr,td,th,caption,colgroup");
-        addTag("tbody", 	TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
-        addTag("thead", 	TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
-        addTag("tfoot", 	TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
-        addTag("col", 		TagInfo.CONTENT_NONE,	TagInfo.BODY, "!colgroup");
-        addTag("colgroup",	TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,#col,td,th,tr,tbody,thead,tfoot,caption,colgroup");
-        addTag("caption",	TagInfo.CONTENT_ALL,	TagInfo.BODY, "!table,td,th,tr,tbody,thead,tfoot,caption,colgroup");
+        addTag("table",     TagInfo.CONTENT_ALL,    TagInfo.BODY, "#tr,#tbody,#thead,#tfoot,#colgroup,#caption,#tr,tr,thead,tbody,tfoot,caption,colgroup,table");
+        addTag("tr",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,+tbody,^thead,^tfoot,#td,#th,tr,caption,colgroup");
+        addTag("td",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,+tr,td,th,caption,colgroup");
+        addTag("th",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,+tr,td,th,caption,colgroup");
+        addTag("tbody",     TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
+        addTag("thead",     TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
+        addTag("tfoot",     TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,#tr,td,th,tr,tbody,thead,tfoot,caption,colgroup");
+        addTag("col",         TagInfo.CONTENT_NONE,    TagInfo.BODY, "!colgroup");
+        addTag("colgroup",    TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,#col,td,th,tr,tbody,thead,tfoot,caption,colgroup");
+        addTag("caption",    TagInfo.CONTENT_ALL,    TagInfo.BODY, "!table,td,th,tr,tbody,thead,tfoot,caption,colgroup");
 
         // Forms
-        addTag("form",     	TagInfo.CONTENT_ALL,	TagInfo.BODY, "-form,option,optgroup,textarea,select,fieldset");
-        addTag("input",     TagInfo.CONTENT_NONE,	TagInfo.BODY, "select,optgroup,option");
-        addTag("textarea",  TagInfo.CONTENT_ALL,	TagInfo.BODY, "select,optgroup,option");
+        addTag("form",         TagInfo.CONTENT_ALL,    TagInfo.BODY, "-form,option,optgroup,textarea,select,fieldset");
+        addTag("input",     TagInfo.CONTENT_NONE,    TagInfo.BODY, "select,optgroup,option");
+        addTag("textarea",  TagInfo.CONTENT_ALL,    TagInfo.BODY, "select,optgroup,option");
         addTag("select",    TagInfo.CONTENT_ALL,    TagInfo.BODY, "#option,#optgroup,option,optgroup,select");
-        addTag("option",    TagInfo.CONTENT_TEXT,	TagInfo.BODY, "!select,option");
-        addTag("optgroup",  TagInfo.CONTENT_ALL,	TagInfo.BODY, "!select,#option,optgroup");
-        addTag("button",    TagInfo.CONTENT_ALL,	TagInfo.BODY, "select,optgroup,option");
-        addTag("label",     TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("fieldset",  TagInfo.CONTENT_ALL,	TagInfo.BODY, null);
-        addTag("isindex",   TagInfo.CONTENT_NONE,	TagInfo.BODY, null);
+        addTag("option",    TagInfo.CONTENT_TEXT,    TagInfo.BODY, "!select,option");
+        addTag("optgroup",  TagInfo.CONTENT_ALL,    TagInfo.BODY, "!select,#option,optgroup");
+        addTag("button",    TagInfo.CONTENT_ALL,    TagInfo.BODY, "select,optgroup,option");
+        addTag("label",     TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("fieldset",  TagInfo.CONTENT_ALL,    TagInfo.BODY, null);
+        addTag("isindex",   TagInfo.CONTENT_NONE,    TagInfo.BODY, null);
 
         // Scripting
-        addTag("script",    TagInfo.CONTENT_ALL,  	TagInfo.HEAD_AND_BODY, null);
-        addTag("noscript",  TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
+        addTag("script",    TagInfo.CONTENT_ALL,      TagInfo.HEAD_AND_BODY, null);
+        addTag("noscript",  TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
 
         // Presentational
-        addTag("b",         TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("i",         TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("u",         TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("tt",        TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("sub",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("sup",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("big",       TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("small",     TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("strike",    TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("blink",     TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("marquee",   TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("s",     	TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("hr",        TagInfo.CONTENT_NONE,  	TagInfo.BODY, null);
-        addTag("font",      TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("basefont",  TagInfo.CONTENT_NONE, 	TagInfo.BODY, null);
-        addTag("center",    TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
+        addTag("b",         TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("i",         TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("u",         TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("tt",        TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("sub",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("sup",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("big",       TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("small",     TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("strike",    TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("blink",     TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("marquee",   TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("s",         TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("hr",        TagInfo.CONTENT_NONE,      TagInfo.BODY, null);
+        addTag("font",      TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("basefont",  TagInfo.CONTENT_NONE,     TagInfo.BODY, null);
+        addTag("center",    TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
 
-        addTag("comment",   TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("server",    TagInfo.CONTENT_ALL,  	TagInfo.BODY, null);
-        addTag("iframe",    TagInfo.CONTENT_NONE,  	TagInfo.BODY, null);
-        addTag("embed",     TagInfo.CONTENT_NONE,  	TagInfo.BODY, null);
+        addTag("comment",   TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("server",    TagInfo.CONTENT_ALL,      TagInfo.BODY, null);
+        addTag("iframe",    TagInfo.CONTENT_NONE,      TagInfo.BODY, null);
+        addTag("embed",     TagInfo.CONTENT_NONE,      TagInfo.BODY, null);
 
         getTagInfo("title").setUnique(true);
         getTagInfo("form").setIgnorePermitted(true);
@@ -270,6 +274,7 @@ public class HtmlTagProvider extends HashMap implements ITagInfoProvider {
      * @param tagName
      * @return TagInfo instance from the map, for the specified tag name.
      */
+    @Override
     public TagInfo getTagInfo(String tagName) {
         if (tagName != null) {
             return (TagInfo) get( tagName.toLowerCase() );
