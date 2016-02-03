@@ -47,7 +47,7 @@ Setting up a schema
 	Double Click on the existing Local Instance. 
 	In the top left corner click the "create new schema button" (The symbol is the 2 
 	golden pucks stacked ontop of eachother)
-	Give the schema a name and SWITCH COLLATION TO "utf8 - default collation", then 
+	Give the schema a name and SWITCH COLLATION TO "utf8mb4 - default collation", then 
 	click "Apply" in the bottom left corner
 --------------------------------------------------------------------------------------
 Structuring the schema
@@ -72,7 +72,7 @@ Building the Database
 	In the terminal window navigate to the folder where you have the "mwdumper.jar" and 
 	bz2 file stored (This can be the folder you are already in)
 	Type "java -jar mwdumper.jar --format=sql:1.5 yourbz2filename.bz2 --filter=latest --
-	filter=notalk | mysql -u root -p --default-character-set=utf8 yourschemaname" into 
+	filter=notalk | mysql -u root -p --default-character-set=utf8mb4 yourschemaname" into 
 	the terminal (replace yourbz2filename and yourschemaname with the correct names)
 	If everything is working correctly the terminal will start to print messages like 
 	"11,000 pages (367.432/sec), 11,000 revs (367.432/sec)"
