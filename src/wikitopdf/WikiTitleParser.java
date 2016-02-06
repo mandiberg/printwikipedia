@@ -16,6 +16,7 @@ import java.text.ParseException;
 import wikitopdf.pdf.PdfTitleWrapper;
 import com.lowagie.text.pdf.PdfPageEvent;
 import com.lowagie.text.pdf.PdfPageEventHelper;
+import java.util.ArrayList;
 import wikitopdf.pdf.TitlesFooter;
 
 /**
@@ -100,11 +101,10 @@ public class WikiTitleParser extends PdfPageEventHelper
         FontFactory.register(path_to_fonts+"Cybercjk.ttf","cjk");
         FontFactory.register(path_to_fonts+"IndUni-N-Roman.otf","ind");
         FontFactory.register(path_to_fonts+"lohit_or.ttf","oriya");
-//      System.out.println(FontFactory.getRegisteredFonts().toString());
 
 
 
-
+        
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
@@ -116,8 +116,12 @@ public class WikiTitleParser extends PdfPageEventHelper
         Font chinese6 = FontFactory.getFont("chinese6", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font arab1 = FontFactory.getFont("arab1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font arab2 = FontFactory.getFont("arab2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+        
+        
+        
         Font arab3 = FontFactory.getFont("arab3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font hebrew = FontFactory.getFont("hebrew", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+        
         Font cherokee = FontFactory.getFont("cherokee", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font georgian = FontFactory.getFont("georgian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font devanagari = FontFactory.getFont("devanagari", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
@@ -138,10 +142,12 @@ public class WikiTitleParser extends PdfPageEventHelper
         Font ind = FontFactory.getFont("ind", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);                    
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
-
+        
+        System.out.println(khmer);
+        System.out.println("^^this is khmer");
+        fs.addFont(hebrew);
         fs.addFont(cardo);
         //fs.addFont(dvs);
-        fs.addFont(fser);
         fs.addFont(cjk);
         fs.addFont(russ);
         fs.addFont(armenian);
@@ -155,7 +161,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         fs.addFont(arab2);
         fs.addFont(arab3);
 //                    fs.addFont(ind);
-        fs.addFont(hebrew);
+        
         fs.addFont(cherokee);
         fs.addFont(georgian);
         fs.addFont(devanagari);
@@ -175,14 +181,17 @@ public class WikiTitleParser extends PdfPageEventHelper
         fs.addFont(telugu);
         fs.addFont(oriya);
         fs.addFont(fser);
-                    
-                    
+        as.add(arab1);
+        as.add(arab2);
+        as.add(arab3);
+        as.add(hebrew);
+        
         try
         {
                 pdfWrapper.openMultiColumn();
                 if(num==1){
                     
-                    pdfWrapper.writeTitle(firstLine,fs);
+                    pdfWrapper.writeTitle(firstLine,fs,as);
                 }
                 while ((line = bufferReader.readLine()) != null)
                 {
@@ -200,12 +209,12 @@ public class WikiTitleParser extends PdfPageEventHelper
                             num++;
                             pdfWrapper = new PdfTitleWrapper(num, pagesCount,newFirst,lastLine); //get started/
                             pdfWrapper.openMultiColumn(); 
-                            pdfWrapper.writeTitle(newFirst,fs);
+                            pdfWrapper.writeTitle(newFirst,fs,as);
                             lastLine = newFirst;
                         
                     }
-                    line = line.replaceAll("[_]"," ");//replace underscores with spaces for TOC pretty.
-                    pdfWrapper.writeTitle(line,fs);
+//                    line = line.replaceAll("[_]"," ");//replace underscores with spaces for TOC pretty.
+                    pdfWrapper.writeTitle(line,fs,as);
                     lastLine = line;
                     
                 }
@@ -223,7 +232,8 @@ public class WikiTitleParser extends PdfPageEventHelper
             bufferReader.close();
         }
     }
-                    FontSelector fs = new FontSelector();
+                   public FontSelector fs = new FontSelector();
+                   public ArrayList as = new ArrayList();
 
                     
 }

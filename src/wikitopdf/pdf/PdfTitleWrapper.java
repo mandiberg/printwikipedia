@@ -1,5 +1,6 @@
 package wikitopdf.pdf;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -92,6 +94,20 @@ public class PdfTitleWrapper {
 
         
     }
+    
+    public boolean isRTL(ArrayList as, Phrase ph){
+        ArrayList chunks = ph.getChunks();
+                for(int i=0; i < chunks.size(); i++){
+                    Chunk lilchunk = (Chunk) chunks.get(i);
+                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
+                    
+                    if(as.contains(lilchunk.getFont())){
+                        return true;
+                        
+                    }
+                }
+        return false;
+    }
 
     /**
      *
@@ -99,7 +115,7 @@ public class PdfTitleWrapper {
      * @throws DocumentException
      */
 
-    public void writeTitle(String line,FontSelector fs) throws DocumentException { 
+    public void writeTitle(String line,FontSelector fs, ArrayList as) throws DocumentException { 
         
         try {
             if(pdfWriter.getCurrentPageNumber()> 420 && pdfWriter.getCurrentPageNumber() < 430){
@@ -117,15 +133,32 @@ public class PdfTitleWrapper {
                     line = line.substring(0, breaker)+"...";
 
                 }
+                PdfPTable table = new PdfPTable(1);
+                PdfPCell celly = new PdfPCell();
+                
                 Phrase ph = fs.process(line);
+                boolean run_right = isRTL(as,ph);
+                
+                
                 ph.setLeading(8);
                 Paragraph pr = new Paragraph(ph);
                 pr.setAlignment("Left");
                 pr.setFirstLineIndent(-5);
                 pr.setIndentationLeft(5);
                 
-            
-            mct.addElement(pr);
+                celly.addElement(pr);
+                celly.setBorderColor(Color.white);
+                celly.setBorderWidth(0);
+                celly.setPadding(0);
+                if(run_right){
+                    celly.setRunDirection(pdfWriter.RUN_DIRECTION_RTL);
+                }
+                
+                table.setSpacingAfter(0);
+                table.setSpacingBefore(0);
+                table.addCell(celly);
+                
+            mct.addElement(table);
             boolean add = pdfDocument.add(mct);
             if(add == false){
                 System.out.println(line);
