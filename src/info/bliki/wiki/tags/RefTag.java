@@ -38,13 +38,13 @@ public class RefTag extends HTMLTag implements IBodyTag {
         }
         String ref = (null == offset[1]) ? offset[0] : offset[1];
 
-        writer.append("<sup id=\"_ref-");
-        writer.append(Encoder.encodeDotUrl(ref));
-        writer.append("\" class=\"reference\"><a href=\"#_note-");
-        writer.append(Encoder.encodeDotUrl(value));
-        writer.append("\" title=\"\">[");
-        writer.append(offset[0]);
-        writer.append("]</a></sup>");
+//        writer.append("<sup id=\"_ref-");
+//        writer.append(Encoder.encodeDotUrl(ref));
+//        writer.append("\" class=\"reference\"><a href=\"#_note-");
+//        writer.append(Encoder.encodeDotUrl(value));
+//        writer.append("\" title=\"\">[");
+//        writer.append(offset[0]);
+//        writer.append("]</a></sup>");
     }
 
     @Override
