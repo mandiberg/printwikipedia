@@ -622,21 +622,32 @@ public class PdfPageWrapper {
 
 //             text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
-//            System.out.println(html);
+            System.out.println(html);
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
-            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H2>GALLERY</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Bibliography\">Bibliography</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Footnotes\">Footnotes</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#References\">References</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#External_links\">External links</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
+//            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SEE_ALSO\">SEE ALSO</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+
+//            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"REFERENCES\">REFERENCES</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
+//            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EXTERNAL_LINKS\">EXTERNAL LINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+//            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"FOOTNOTES\">FOOTNOTES</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            
+//            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H3><SPAN CLASS=\"MW-HEADLINE\" ID=\"BIBLIOGRAPHY\">BIBLIOGRAPHY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+//            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H\\d>GALLERY</H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s*<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"GALLERY\">GALLERY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            
+            
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Bibliography\">Bibliography</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Footnotes\">Footnotes</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#References\">References</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#External_links\">External links</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
+            
 //            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
-            html = html.replaceAll("<li class=\"toclevel-1\"><a href=\"#See_also\">See also</a>\n</li>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#See_also\">See also</a>\n</li>","");
             //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
             // text is now html (This is doing iText work)
             convertHtml2Pdf(html);
@@ -659,6 +670,7 @@ public class PdfPageWrapper {
 
             Element element = (Element) objects.get(k);
             //add objects
+            
             if (mct.isOverflow()) {
                 mct.nextColumn();
                 pdfDocument.newPage();
