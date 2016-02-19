@@ -622,7 +622,9 @@ public class PdfPageWrapper {
 
 //             text is in BBCode (This is bliki)
             String html = WikiHtmlConverter.convertToHtml(text);
-            System.out.println(html);
+//            System.out.println(text);
+//            System.out.println("\n\n\n\n\n");
+//            System.out.println(html);
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
 //            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
             html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SEE_ALSO\">SEE ALSO</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
@@ -650,6 +652,7 @@ public class PdfPageWrapper {
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#See_also\">See also</a>\n</li>","");
             //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
             // text is now html (This is doing iText work)
+            html = html.replaceAll("<hr\\s/>","");
             convertHtml2Pdf(html);
             // text has been made into pdf.
             

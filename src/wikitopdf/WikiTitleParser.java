@@ -77,7 +77,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         FontFactory.register(path_to_fonts+"G5LISL1B.TTF","chinese6");
         FontFactory.register(path_to_fonts+"Amiri-Regular.ttf","arab1");
         FontFactory.register(path_to_fonts+"DroidKufi-Regular.ttf","arab2");
-        FontFactory.register(path_to_fonts+"Alef-Regular.ttf","hebrew");
+        FontFactory.register(path_to_fonts+"Bsthebre.ttf","hebrew");
         FontFactory.register(path_to_fonts+"NotoSansCherokee-Regular.ttf","cherokee");
         FontFactory.register(path_to_fonts+"NotoSansGeorgian-Regular.ttf","georgian");
         FontFactory.register(path_to_fonts+"NotoSansDevanagari-Regular.ttf","devanagari");
@@ -107,7 +107,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
-        Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+        Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 5);
         Font chinese1 = FontFactory.getFont("chinese1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font chinese2 = FontFactory.getFont("chinese2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font chinese3 = FontFactory.getFont("chinese3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
@@ -143,14 +143,14 @@ public class WikiTitleParser extends PdfPageEventHelper
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         
-        System.out.println(khmer);
-        System.out.println("^^this is khmer");
-        fs.addFont(hebrew);
         fs.addFont(cardo);
+        
+        
         //fs.addFont(dvs);
         fs.addFont(cjk);
         fs.addFont(russ);
         fs.addFont(armenian);
+        fs.addFont(hebrew);
         fs.addFont(chinese1);
         fs.addFont(chinese2);
         fs.addFont(chinese3);
