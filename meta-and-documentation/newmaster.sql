@@ -1,5 +1,5 @@
-USE oob_test;
- CREATE  TABLE `oob_test`.`newmaster` (
+USE YOURDATABASENAME;
+ CREATE  TABLE `YOURDATABASENAME`.`newmaster` (
    `pkey` INT NOT NULL AUTO_INCREMENT ,
    `page_id` INT(10) NULL ,
    `page_title` VARCHAR(255) NULL ,
@@ -16,4 +16,4 @@ FROM `page`
 LEFT JOIN revision ON (page.page_id = revision.rev_page) 
 LEFT JOIN text ON (revision.rev_id = text.old_id)
 WHERE page.page_namespace=0
-ORDER by page.page_title;
+ORDER by page.page_title COLLATE utf8mb4_unicode_cli;
