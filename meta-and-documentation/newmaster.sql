@@ -16,4 +16,4 @@ FROM `page`
 LEFT JOIN revision ON (page.page_id = revision.rev_page) 
 LEFT JOIN text ON (revision.rev_id = text.old_id)
 WHERE page.page_namespace=0
-ORDER by page.page_title COLLATE utf8mb4_unicode_cli;
+ORDER by page.page_title COLLATE utf8mb4_unicode_ci;

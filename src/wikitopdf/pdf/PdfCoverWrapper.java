@@ -414,7 +414,7 @@ public class PdfCoverWrapper {
         else{
             lSpineTitle=beginTitle;
         }
-        if(endTitle.length()>4){
+        if(endTitle.length()>3){
             rSpineTitle = endTitle.substring(0,3);
         }
         else{
@@ -584,7 +584,7 @@ public class PdfCoverWrapper {
         else{
             lSpineTitle=beginTitle;
         }
-        if(endTitle.length()>4){
+        if(endTitle.length()>3){
             rSpineTitle = endTitle.substring(0,3);
         }
         else{

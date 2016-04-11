@@ -93,12 +93,15 @@ public class PageParserExec {
     //WikiThreadingProcessor wikiProcessor = new WikiThreadingProcessor(); // creates new object from wikithreadingprocessor.java
     //wikiProcessor.createPdf(); // calls createPdf method. does not complete this
     }catch(Exception ex){
-        WikiLogger.getLogger().severe(ex.getMessage());
+//        WikiLogger.getLogger().severe(ex.getMessage());
+ex.printStackTrace();
     }catch(Error th){
-        WikiLogger.getLogger().severe(th.getMessage() + " memory:" +
-        ByteFormatter.format(Runtime.getRuntime().freeMemory()));
+//        WikiLogger.getLogger().severe(th.getMessage() + " memory:" +
+//        ByteFormatter.format(Runtime.getRuntime().freeMemory()));
+th.printStackTrace();
     }catch(Throwable ex0){
-        WikiLogger.getLogger().severe(ex0.getMessage());
+//        WikiLogger.getLogger().severe(ex0.getMessage());
+ex0.printStackTrace();
     }
     }
     public PageParserExec() { // do we need this? is this driftwood?

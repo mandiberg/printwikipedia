@@ -102,7 +102,7 @@ public class WikiProcessor {
                         pdfWrapper.writePage(page);
                         artWritten++;
                         System.out.println("Current Article is: " + (startLimit + artWritten));
-                        if(startLimit + artWritten+1 == 11602880){//final pkey...
+                        if(startLimit + artWritten+1 == 3200021){//final pkey...
                             end_times = true;
                             break;//if you made it through then stop.
                         }
@@ -181,11 +181,13 @@ public class WikiProcessor {
 
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(ex.getMessage() + pageInfo);
+            ex.printStackTrace(System.out);
         } finally {
             sqlReader.close();
         }
 
         WikiLogger.getLogger().fine("Finished (" + startLimit + " pages)");
+        
     }
 }
 

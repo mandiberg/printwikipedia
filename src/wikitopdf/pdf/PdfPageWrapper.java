@@ -579,8 +579,10 @@ public class PdfPageWrapper {
         String x = page.getRevision().getText().toLowerCase();
         if(x.contains("wiktionary redirect"))//breaks on wiktionary redirect. just ommit it. COULD REMOVE IF AFTER UPDATING wiki parse library!
             return;
+        System.out.println("curren title" + currentTitle);
         writeTitle(currentTitle);
         writeText(page.getRevision().getText());
+//        System.out.println("i did it.");
     }
 
 
@@ -588,12 +590,26 @@ public class PdfPageWrapper {
     private void writeTitle(String line) {
         Phrase ph = null;
         Paragraph pr = null;
+        System.out.println(line);
         try {
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
+//            System.out.println("line: " + line);
             ph = tfs.process(line);
+//            System.out.println(ph.getFont().getSize() + " my bitches string here");
+//            if(ph.getFont().getSize() <1){
+//                Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13);
+//                ph.setFont(cardo);
+//            }
+//            System.out.println(ph.getFont().getSize() + " new size!");
+//            System.out.println("phrased");
+//            System.out.println(ph.toString());
             ph.setLeading(14);//changes leading between spaces in titles
+//            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 10);
+//            if(ph.getFont()==null)
+//                ph.setFont(cardo);
             pr = new Paragraph(ph);
+//            System.out.println(pr.getFont().getSize()+" paragraph size");
             pr.setSpacingBefore(8);//changes spacing before title
             pr.setSpacingAfter(4);//changes spacing after title.
 
@@ -605,12 +621,16 @@ public class PdfPageWrapper {
                 //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
 //                mct.addElement(new Phrase("\n"));
             }
-
+//            System.out.println("paragraph");
+//            System.out.println(pr);
+//            System.out.println(pr.toString());
             mct.addElement(pr);
             pdfDocument.add(mct);
         } 
         catch (Exception ex) {
             WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
+            ex.printStackTrace(System.out);
+            System.out.println("AWOOGA");
         }
     }
 
@@ -619,45 +639,60 @@ public class PdfPageWrapper {
         try {
             //review the below removed/replaced items to see if you want to include. -- no good or easy way to add gallery though. probably don't want that.
             text = text.replaceAll("<gallery[\\s\\S]*?</gallery>",""); //no gallery
-
+            text = text.replaceAll("\\s#########.+","");
+            text = text.replaceAll("\\s\\*\\*\\*\\*\\*\\*\\*\\*\\*.+","");
+//            text = text.replaceAll("<!--((.|\\s)*?)-->","");
+//            text = text.replaceAll("(?s)(== Einzelnachweise ==).*","");
+            
 //             text is in BBCode (This is bliki)
+            System.out.println(text);
+            System.out.println("\n\n\n\n\n");
             String html = WikiHtmlConverter.convertToHtml(text);
-//            System.out.println(text);
-//            System.out.println("\n\n\n\n\n");
-//            System.out.println(html);
+            System.out.println("hood knowledge");
+            System.out.println(html);
+System.out.println("i am two pg nums");
+            System.out.println(pdfDocument.getPageNumber());
+            System.out.println(pdfWriter.getPageNumber());
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
+              html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
 //            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SEE_ALSO\">SEE ALSO</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-
-//            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"REFERENCES\">REFERENCES</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
-//            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EXTERNAL_LINKS\">EXTERNAL LINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-//            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"FOOTNOTES\">FOOTNOTES</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-            
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"ANMERKUNGEN\">ANMERKUNGEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+//
+////            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
+////            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"WEBLINKS\">WEBLINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+////            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SIEHE_AUCH\">SIEHE AUCH</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+//            
 //            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H3><SPAN CLASS=\"MW-HEADLINE\" ID=\"BIBLIOGRAPHY\">BIBLIOGRAPHY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-//            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H\\d>GALLERY</H\\d>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s*<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"GALLERY\">GALLERY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"LITERATUR\">LITERATUR</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"QUELLEN\">QUELLEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
             
             
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Bibliography\">Bibliography</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Footnotes\">Footnotes</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#References\">References</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#External_links\">External links</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
+////            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H\\d>GALLERY</H\\d>).*","<b>_____________________</b><br /><br />");
+//            html = html.replaceAll("(?s)(\\s*<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"GALLERY\">GALLERY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
             
-//            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#See_also\">See also</a>\n</li>","");
-            //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
-            // text is now html (This is doing iText work)
-            html = html.replaceAll("<hr\\s/>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Siehe_auch\">Siehe auch</a>\n</li>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Literatur\">Literatur</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Anmerkungen\">Anmerkungen</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Einzelnachweise\">Einzelnachweise</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Weblinks\">Weblinks</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Quellen\">Quellen</a>\n</li>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Fu.C3.9Fnoten\">Fußnoten</a>\n</li>","");
+//            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
+//            
+////            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
+//            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#See_also\">See also</a>\n</li>","");
+//            //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
+//            // text is now html (This is doing iText work)
+//            html = html.replaceAll("<hr\\s/>","");
             convertHtml2Pdf(html);
             // text has been made into pdf.
             
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(currentTitle + " - Error: " + ex.getMessage());
+            ex.printStackTrace(System.out);
         }
     }
 
@@ -670,8 +705,9 @@ public class PdfPageWrapper {
         objects = WHTMLWorker.parseToList(reader, styles);
         
         for (int k = 0; k < objects.size(); ++k) {
-
+            
             Element element = (Element) objects.get(k);
+//            System.out.println(element.toString());
             //add objects
             
             if (mct.isOverflow()) {
@@ -688,8 +724,15 @@ public class PdfPageWrapper {
 //                ph.setLeading(8);
 //                Paragraph pr = new Paragraph(ph);
 //                System.out.println(pr.toString() + " this isthe paragraph");
+            try {
                 mct.addElement(element);
-            pdfDocument.add(mct);
+                pdfDocument.add(mct);
+            }
+            catch(Exception e) {
+//                System.out.println("ELEM CAUSING ERROR: \n\n\n");
+//                System.out.println(element);
+                e.printStackTrace();
+}
         }
     }
 

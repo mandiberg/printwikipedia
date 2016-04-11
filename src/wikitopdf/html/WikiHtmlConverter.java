@@ -1,5 +1,6 @@
 package wikitopdf.html;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +15,7 @@ public class WikiHtmlConverter {
      * @param text
      * @return
      */
-    public static String convertToHtml(String text){
+    public static String convertToHtml(String text) throws IOException{
 
         WikiPdfModel wikiModel = new WikiPdfModel();
         //txt = clearText(text);

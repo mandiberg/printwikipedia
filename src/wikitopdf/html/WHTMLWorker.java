@@ -75,6 +75,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	private boolean pendingTD = false;
 
 	private boolean pendingLI = false;
+        private boolean pendingOL = false;
         private  boolean is_cell = false;
 
 	private StyleSheet style = new StyleSheet();
@@ -247,152 +248,152 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 						.createChunk("\n", cprops));
 				return;
 			}
-			if (tag.equals(HtmlTags.HORIZONTALRULE)) {
-				// Attempting to duplicate the behavior seen on Firefox with
-				// http://www.w3schools.com/tags/tryit.asp?filename=tryhtml_hr_test
-				// where an initial break is only inserted when the preceding element doesn't
-				// end with a break, but a trailing break is always inserted.
-				boolean addLeadingBreak = true;
-				if (currentParagraph == null) {
-					currentParagraph = new Paragraph();
-					addLeadingBreak = false;
-				}
-				if (addLeadingBreak) { // Not a new paragraph
-					int numChunks = currentParagraph.getChunks().size();
-					if (numChunks == 0 ||
-							((Chunk)(currentParagraph.getChunks().get(numChunks - 1))).getContent().endsWith("\n"))
-						addLeadingBreak = false;
-				}
-				String align = (String) h.get("align");
-				int hrAlign = Element.ALIGN_CENTER;
-				if (align != null) {
-					if (align.equalsIgnoreCase("left"))
-						hrAlign = Element.ALIGN_LEFT;
-					if (align.equalsIgnoreCase("right"))
-						hrAlign = Element.ALIGN_RIGHT;
-				}
-				String width = (String) h.get("width");
-				float hrWidth = 1;
-				if (width != null) {
-					float tmpWidth = Markup.parseLength(width, Markup.DEFAULT_FONT_SIZE);
-					if (tmpWidth > 0) hrWidth = tmpWidth;
-					if (!width.endsWith("%"))
-						hrWidth = 100; // Treat a pixel width as 100% for now.
-				}
-				String size = (String) h.get("size");
-				float hrSize = 1;
-				if (size != null) {
-					float tmpSize = Markup.parseLength(size, Markup.DEFAULT_FONT_SIZE);
-					if (tmpSize > 0)
-						hrSize = tmpSize;
-				}
-				if (addLeadingBreak)
-					currentParagraph.add(Chunk.NEWLINE);
-				currentParagraph.add(new LineSeparator(hrSize, hrWidth, null, hrAlign, currentParagraph.getLeading()/2));
-				currentParagraph.add(Chunk.NEWLINE);
-				return;
-			}
+//			if (tag.equals(HtmlTags.HORIZONTALRULE)) {
+//				// Attempting to duplicate the behavior seen on Firefox with
+//				// http://www.w3schools.com/tags/tryit.asp?filename=tryhtml_hr_test
+//				// where an initial break is only inserted when the preceding element doesn't
+//				// end with a break, but a trailing break is always inserted.
+//				boolean addLeadingBreak = true;
+//				if (currentParagraph == null) {
+//					currentParagraph = new Paragraph();
+//					addLeadingBreak = false;
+//				}
+//				if (addLeadingBreak) { // Not a new paragraph
+//					int numChunks = currentParagraph.getChunks().size();
+//					if (numChunks == 0 ||
+//							((Chunk)(currentParagraph.getChunks().get(numChunks - 1))).getContent().endsWith("\n"))
+//						addLeadingBreak = false;
+//				}
+//				String align = (String) h.get("align");
+//				int hrAlign = Element.ALIGN_CENTER;
+//				if (align != null) {
+//					if (align.equalsIgnoreCase("left"))
+//						hrAlign = Element.ALIGN_LEFT;
+//					if (align.equalsIgnoreCase("right"))
+//						hrAlign = Element.ALIGN_RIGHT;
+//				}
+//				String width = (String) h.get("width");
+//				float hrWidth = 1;
+//				if (width != null) {
+//					float tmpWidth = Markup.parseLength(width, Markup.DEFAULT_FONT_SIZE);
+//					if (tmpWidth > 0) hrWidth = tmpWidth;
+//					if (!width.endsWith("%"))
+//						hrWidth = 100; // Treat a pixel width as 100% for now.
+//				}
+//				String size = (String) h.get("size");
+//				float hrSize = 1;
+//				if (size != null) {
+//					float tmpSize = Markup.parseLength(size, Markup.DEFAULT_FONT_SIZE);
+//					if (tmpSize > 0)
+//						hrSize = tmpSize;
+//				}
+//				if (addLeadingBreak)
+//					currentParagraph.add(Chunk.NEWLINE);
+//				currentParagraph.add(new LineSeparator(hrSize, hrWidth, null, hrAlign, currentParagraph.getLeading()/2));
+//				currentParagraph.add(Chunk.NEWLINE);
+//				return;
+//			}
 			if (tag.equals(HtmlTags.CHUNK) || tag.equals(HtmlTags.SPAN)) {
 				cprops.addToChain(tag, h);
 				return;
 			}
-			if (tag.equals(HtmlTags.IMAGE)) {
-				String src = (String) h.get(ElementTags.SRC);
-				if (src == null)
-					return;
-				cprops.addToChain(tag, h);
-				Image img = null;
-				if (interfaceProps != null) {
-					ImageProvider ip = (ImageProvider) interfaceProps
-							.get("img_provider");
-					if (ip != null)
-						img = ip.getImage(src, h, cprops, document);
-					if (img == null) {
-						HashMap images = (HashMap) interfaceProps
-								.get("img_static");
-						if (images != null) {
-							Image tim = (Image) images.get(src);
-							if (tim != null)
-								img = Image.getInstance(tim);
-						} else {
-							if (!src.startsWith("http")) { // relative src references only
-								String baseurl = (String) interfaceProps
-										.get("img_baseurl");
-								if (baseurl != null) {
-                                                                    src = baseurl + src;
-                                                                    img = Image.getInstance(src);
-								}
-							}
-						}
-					}
-				}
-				if (img == null) {
-					if (!src.startsWith("http")) {
-						String path = cprops.getProperty("image_path");
-						if (path == null)
-							path = "";
-						src = new File(path, src).getPath();
-					}
-					img = Image.getInstance(src);
-				}
-				String align = (String) h.get("align");
-				String width = (String) h.get("width");
-				String height = (String) h.get("height");
-				String before = cprops.getProperty("before");
-				String after = cprops.getProperty("after");
-				if (before != null)
-					img.setSpacingBefore(Float.parseFloat(before));
-				if (after != null)
-					img.setSpacingAfter(Float.parseFloat(after));
-				float actualFontSize = Markup.parseLength(cprops
-						.getProperty(ElementTags.SIZE),
-						Markup.DEFAULT_FONT_SIZE);
-				if (actualFontSize <= 0f)
-					actualFontSize = Markup.DEFAULT_FONT_SIZE;
-				float widthInPoints = Markup.parseLength(width, actualFontSize);
-				float heightInPoints = Markup.parseLength(height,
-						actualFontSize);
-				if (widthInPoints > 0 && heightInPoints > 0) {
-					img.scaleAbsolute(widthInPoints, heightInPoints);
-				} else if (widthInPoints > 0) {
-					heightInPoints = img.getHeight() * widthInPoints
-							/ img.getWidth();
-					img.scaleAbsolute(widthInPoints, heightInPoints);
-				} else if (heightInPoints > 0) {
-					widthInPoints = img.getWidth() * heightInPoints
-							/ img.getHeight();
-					img.scaleAbsolute(widthInPoints, heightInPoints);
-				}
-				img.setWidthPercentage(0);
-				if (align != null) {
-					endElement("p");
-					int ralign = Image.MIDDLE;
-					if (align.equalsIgnoreCase("left"))
-						ralign = Image.LEFT;
-					else if (align.equalsIgnoreCase("right"))
-						ralign = Image.RIGHT;
-					img.setAlignment(ralign);
-					Img i = null;
-					boolean skip = false;
-					if (interfaceProps != null) {
-						i = (Img) interfaceProps.get("img_interface");
-						if (i != null)
-							skip = i.process(img, h, cprops, document);
-					}
-					if (!skip)
-						document.add(img);
-					cprops.removeChain(tag);
-				} else {
-					cprops.removeChain(tag);
-					if (currentParagraph == null) {
-						currentParagraph = FactoryProperties
-								.createParagraph(cprops);
-					}
-					currentParagraph.add(new Chunk(img, 0, 0));
-				}
-				return;
-			}
-			endElement("p");
+//			if (tag.equals(HtmlTags.IMAGE)) {
+//				String src = (String) h.get(ElementTags.SRC);
+//				if (src == null)
+//					return;
+//				cprops.addToChain(tag, h);
+//				Image img = null;
+//				if (interfaceProps != null) {
+//					ImageProvider ip = (ImageProvider) interfaceProps
+//							.get("img_provider");
+//					if (ip != null)
+//						img = ip.getImage(src, h, cprops, document);
+//					if (img == null) {
+//						HashMap images = (HashMap) interfaceProps
+//								.get("img_static");
+//						if (images != null) {
+//							Image tim = (Image) images.get(src);
+//							if (tim != null)
+//								img = Image.getInstance(tim);
+//						} else {
+//							if (!src.startsWith("http")) { // relative src references only
+//								String baseurl = (String) interfaceProps
+//										.get("img_baseurl");
+//								if (baseurl != null) {
+//                                                                    src = baseurl + src;
+//                                                                    img = Image.getInstance(src);
+//								}
+//							}
+//						}
+//					}
+//				}
+//				if (img == null) {
+//					if (!src.startsWith("http")) {
+//						String path = cprops.getProperty("image_path");
+//						if (path == null)
+//							path = "";
+//						src = new File(path, src).getPath();
+//					}
+//					img = Image.getInstance(src);
+//				}
+//				String align = (String) h.get("align");
+//				String width = (String) h.get("width");
+//				String height = (String) h.get("height");
+//				String before = cprops.getProperty("before");
+//				String after = cprops.getProperty("after");
+//				if (before != null)
+//					img.setSpacingBefore(Float.parseFloat(before));
+//				if (after != null)
+//					img.setSpacingAfter(Float.parseFloat(after));
+//				float actualFontSize = Markup.parseLength(cprops
+//						.getProperty(ElementTags.SIZE),
+//						Markup.DEFAULT_FONT_SIZE);
+//				if (actualFontSize <= 0f)
+//					actualFontSize = Markup.DEFAULT_FONT_SIZE;
+//				float widthInPoints = Markup.parseLength(width, actualFontSize);
+//				float heightInPoints = Markup.parseLength(height,
+//						actualFontSize);
+//				if (widthInPoints > 0 && heightInPoints > 0) {
+//					img.scaleAbsolute(widthInPoints, heightInPoints);
+//				} else if (widthInPoints > 0) {
+//					heightInPoints = img.getHeight() * widthInPoints
+//							/ img.getWidth();
+//					img.scaleAbsolute(widthInPoints, heightInPoints);
+//				} else if (heightInPoints > 0) {
+//					widthInPoints = img.getWidth() * heightInPoints
+//							/ img.getHeight();
+//					img.scaleAbsolute(widthInPoints, heightInPoints);
+//				}
+//				img.setWidthPercentage(0);
+//				if (align != null) {
+//					endElement("p");
+//					int ralign = Image.MIDDLE;
+//					if (align.equalsIgnoreCase("left"))
+//						ralign = Image.LEFT;
+//					else if (align.equalsIgnoreCase("right"))
+//						ralign = Image.RIGHT;
+//					img.setAlignment(ralign);
+//					Img i = null;
+//					boolean skip = false;
+//					if (interfaceProps != null) {
+//						i = (Img) interfaceProps.get("img_interface");
+//						if (i != null)
+//							skip = i.process(img, h, cprops, document);
+//					}
+//					if (!skip)
+//						document.add(img);
+//					cprops.removeChain(tag);
+//				} else {
+//					cprops.removeChain(tag);
+//					if (currentParagraph == null) {
+//						currentParagraph = FactoryProperties
+//								.createParagraph(cprops);
+//					}
+//					currentParagraph.add(new Chunk(img, 0, 0));
+//				}
+//				return;
+//			}
+//			endElement("p");
 			if (tag.equals("h1") || tag.equals("h2") || tag.equals("h3") 
 					|| tag.equals("h4") || tag.equals("h5") || tag.equals("h6")) {
                             if(tag.equals("h3") || tag.equals("H3")){
@@ -412,6 +413,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 return;
 			}
 			if (tag.equals(HtmlTags.UNORDEREDLIST)) {
+//                            System.out.println("what is pending li in this UL?  " + pendingLI);
 				if (pendingLI)
 					endElement(HtmlTags.LISTITEM);
 				skipText = true;
@@ -431,8 +433,15 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				return;
 			}
 			if (tag.equals(HtmlTags.ORDEREDLIST)) {
-                            if (pendingLI)
-                                    endElement(HtmlTags.LISTITEM);
+//                            System.out.println("what is pending li in this OL?  " + pendingLI);
+                            //start of a new ordered list. make sure that this ordered list is not in the middle of an open LI.
+                            //new bool for being in open ordered list. 
+                            //if pendingOL is true and so is pendingLI then close LI before opening OL.
+                            pendingOL = true;
+                            if (pendingLI){
+                                endElement(HtmlTags.LISTITEM);
+                            }
+                                    
                             skipText = true;
 
                             cprops.addToChain(tag, h);
@@ -443,9 +452,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                     list.setAutoindent(false);
                                     list.setSymbolIndent(5f);
                             }
-                            Chunk lSymbol = new Chunk("");
+                            Chunk lSymbol = new Chunk("", cardo);
                             cardo.setSize(8f);
-                            lSymbol.setFont(cardo);
                             list.setListSymbol(lSymbol);
                             list.setSymbolIndent(12f);
                             stack.push(list);
@@ -497,6 +505,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                             isTD = true;
 				cprops.addToChain("table", h);
 				IncTable table = new IncTable(h);
+                                
 				stack.push(table);
 				tableState.push(new boolean[] { pendingTR, pendingTD });
 				pendingTR = pendingTD = false;
@@ -509,6 +518,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 	}
 
 	public void endElement(String tag) {
+//            System.out.println(tag);
+            
 		if (!tagsSupported.containsKey(tag))
 			return;
 		try {
@@ -560,8 +571,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				}
 			}
 			currentParagraph = null;
-			if (tag.equals(HtmlTags.UNORDEREDLIST)
-					|| tag.equals(HtmlTags.ORDEREDLIST)) {
+			if (tag.equals(HtmlTags.UNORDEREDLIST)|| tag.equals(HtmlTags.ORDEREDLIST)) {
 				if (pendingLI)
 					endElement(HtmlTags.LISTITEM);
 				skipText = false;
@@ -571,41 +581,53 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 }
 				Object obj = stack.pop();
 				if (!(obj instanceof com.lowagie.text.List)) {
+//                                    System.out.println("this is a lowagie list");
 					stack.push(obj);
 					return;
 				}
 				if (stack.empty()){
 					document.add((Element) obj);
                                         if(obj instanceof com.lowagie.text.List){
+//                                            System.out.println("i am dumpin this list in there");
                                             com.lowagie.text.List l = (com.lowagie.text.List) obj;
 
                                         }
-
-//                                        document.add((Element) new Chunk("\n"));
+                                        BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                                        Font cardo = new Font(bsCardo);
+                                        cardo.setSize(10f);
+                                        document.add((Element) new Chunk("\n",cardo));
                                 }
 				else
 					((TextElementArray) stack.peek()).add(obj);
 				return;
 			}
 			if (tag.equals(HtmlTags.LISTITEM)) {
+//                                System.out.println("I AM A LIST ITEM HERE");
 				pendingLI = false;
 				skipText = true;
 				cprops.removeChain(tag);
-				if (stack.empty())
-					return;
+				if (stack.empty()){
+                                    System.out.println("stack is empty");
+                                    return;    
+                                }
+				
 				Object obj = stack.pop();
                                 
                                 
 				if (!(obj instanceof ListItem)) {
+                                    System.out.println("obj of listitem");
 					stack.push(obj);
 					return;
 				}
 				if (stack.empty()) {
+                                    System.out.println("this doesn't make sense becuase how can you be empty and then add an item.?");
 					document.add((Element) obj);
 					return;
 				}
 				Object list = stack.pop();
 				if (!(list instanceof com.lowagie.text.List)) {
+                                    System.out.println("i am a pending lowagi text list.");
+                                    //what is this?
 					stack.push(list);
 					return;
 				}
@@ -663,14 +685,19 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                             IncTable table = (IncTable) stack.pop();
                             
                             PdfPTable tb = table.buildTable();
+                            tb.setTotalWidth(102);
                             tb.setWidthPercentage(100);
                             tb.setSpacingBefore(20f);
                             tb.setSplitRows(true);
                             if (stack.empty()){
-                                String s_space = "\n";
-                                Phrase space = whtmlfs.process(s_space);
-                                space.setLeading(4f);//add spacing before the Htags.
-                                document.add(space);
+                                BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                                Font cardo = new Font(bsCardo);
+                                cardo.setSize(10f);
+                                document.add(new Phrase("\n",cardo));
+//                                String s_space = "\n";
+//                                Phrase space = whtmlfs.process(s_space);
+//                                space.setLeading(4f);//add spacing before the Htags.
+//                                document.add(space);
                                 document.add(tb);
                             }
                             else{

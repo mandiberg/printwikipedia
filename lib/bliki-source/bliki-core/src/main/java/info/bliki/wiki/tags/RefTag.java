@@ -26,11 +26,11 @@ public class RefTag extends HTMLTag implements IBodyTag {
 		List<Object> children = node.getChildren();
 		int len = children.size();
 		StringBuilder buf = null;
-		if (len == 0) {
-			buf = new StringBuilder();
-		} else {
-			buf = new StringBuilder(len * 64);
-		}
+//		if (len == 0) {
+//			buf = new StringBuilder();
+//		} else {
+//			buf = new StringBuilder(len * 64);
+//		}
 		renderHTMLWithoutTag(converter, buf, model);
 		Map<String, String> map = getAttributes();
 		String value = (String) map.get("name");

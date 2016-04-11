@@ -193,13 +193,18 @@ public class SQLProcessor {
     }
 
     private String changeText(String wikiText) {
-        String strPattern = "#redirect\\s*\\[\\[(.*)\\]\\]";
+        String strPatternDE = "#WEITERLEITUNG \\s*\\[\\[(.*)\\]\\]";
+        String strPatternENG = "#redirect\\s*\\[\\[(.*)\\]\\]";
+        Pattern pde = Pattern.compile(strPatternDE, Pattern.CASE_INSENSITIVE);
+        Matcher mde = pde.matcher(wikiText);
+        Pattern peng = Pattern.compile(strPatternENG, Pattern.CASE_INSENSITIVE);
+        Matcher meng = peng.matcher(wikiText);
 
-        Pattern p = Pattern.compile(strPattern, Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(wikiText);
-
-        if (m.find()) {
-            wikiText = "See: " + m.group(1);
+        if (mde.find()) {
+            wikiText = "See: " + mde.group(1);
+        }
+        else if(meng.find()){
+            wikiText = "See: " + meng.group(1);
         }
 
         return wikiText;
