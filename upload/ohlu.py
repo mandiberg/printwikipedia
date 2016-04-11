@@ -569,7 +569,7 @@ class Browser:
                 print "zoom out for barcode"
                 self.zoomit("out")
                 print "dl pdf on this page" 
-                self.applyBarcode()
+                # self.applyBarcode()
                 print "back to normal"
                 self.zoomit("in")
                 print "ftp modified pre-image ready to be sent on up"
@@ -625,7 +625,7 @@ class Browser:
         def uploadCover(self): #9 cold potentially upload these like was done to mod####.pdf ... would save *some time and then could iterate through and find like in #7
                 print "uploading cover"
                 r_cover_upload = self.execution(self.cover_upload,50,"text")
-                r_cover_upload.send_keys(self.local.cFolder +"/"+"bcVolume&&&"+self.volume.num+".pdf")
+                r_cover_upload.send_keys(self.local.cFolder +"/"+"Volume&&&"+self.volume.num+".pdf")
                 self.execution(self.c_up_button,60,"click")
                 print "wait for upload to complete..."
                 self.execution(self.next_disable,50,"click")
