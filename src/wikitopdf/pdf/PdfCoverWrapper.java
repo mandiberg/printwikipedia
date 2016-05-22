@@ -364,7 +364,7 @@ public class PdfCoverWrapper {
             Logger.getLogger(TitlesFooter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void spineOnly(PdfContentByte cb, String coverType, String fileName) throws DocumentException{ //for generating the spines.
+    public void spineOnly(PdfContentByte cb, String coverType, String fileName, boolean eurotation) throws DocumentException{ //for generating the spines.
         
         int c = 57391;
         String wiki_w = Character.toString((char)c);//generating the wiki W. different from the normal capitalized w
@@ -389,12 +389,28 @@ public class PdfCoverWrapper {
             main_spine = "";
         }
         spine_y = spine_height-35;
-        
         int sc_title_size = 35;
+        int rotate = 270;
         cb.beginText();
         cb.setFontAndSize(bflib,hc_title_size);
         cb.setTextMatrix(50, 595);
-        cb.showTextAligned(0,main_spine,half_spine-9,spine_y,270);
+//        float x_spine = 544f;
+        float x_spine = 1344;
+        if(eurotation){
+            rotate=90;
+            x_spine = half_spine+9;
+//            x_spine = x_spine+207;
+          //  if(coverType == "output"){
+           //     spine_y = 498;
+                spine_y = 438;
+           // }
+            if(coverType == "contrib"){
+           //     spine_y = 242;
+            }
+        }
+//        cb.showTextAligned(0,main_spine,half_spine-9,spine_y,rotate);
+        cb.showTextAligned(0,main_spine,x_spine,spine_y,rotate);
+        
         //^rotates the string to show up at 270 degree angle.
         cb.endText();
 
@@ -519,6 +535,7 @@ public class PdfCoverWrapper {
         String wiki_w = Character.toString((char)c);
         PdfContentByte scb = spineWriter.getDirectContent();
         PdfContentByte cb = pdfWriter.getDirectContent();
+        boolean eurotation = true;
         try {
             wikiFontSelector.getTitleFontSelector().process("");
             times = wikiFontSelector.getCommonFont().getBaseFont();
@@ -529,11 +546,12 @@ public class PdfCoverWrapper {
             main_title_font = new Font(spine_base,17);
             sc_main_title_font = new Font(spine_base, 20);
             dis_font = new Font(spine_base,6);
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         if(make_spine)
-            spineOnly(scb,coverType,fileName);
+            spineOnly(scb,coverType,fileName,eurotation);
         cb.beginText();
         cb.setFontAndSize(bflib, 73f);
         cb.setTextMatrix(711.8f, pdfDocument.top()-280);
@@ -565,8 +583,19 @@ public class PdfCoverWrapper {
         cb.beginText();
         cb.setFontAndSize(bflib,hc_title_size);
         cb.setTextMatrix(50, 595);
-
-        cb.showTextAligned(0,main_spine,544.5f,spine_y,270);
+        int rotate = 270;
+        float x_spine = 544f;
+        if(eurotation){
+            rotate = 90;
+            x_spine = x_spine+17;
+            if(coverType == "output"){
+                spine_y = 498;
+            }
+            if(coverType == "contrib"){
+                spine_y = 242;
+            }
+        }
+        cb.showTextAligned(0,main_spine,x_spine,spine_y,rotate);
         // ^rotate text.
         cb.endText();
         String[] titleArr = fileName.split("&&&");
@@ -606,18 +635,22 @@ public class PdfCoverWrapper {
         first_abbr = new Paragraph(fs_abbr.process(lSpineTitle.toUpperCase()));
         scnd_abbr = new Paragraph(fs_abbr.process(rSpineTitle.toUpperCase()));
         spine_to = new Paragraph("TO",spine_to_font);
-        dis_text = new Paragraph("This work is not endorsed by the "+wiki_w+"ikimedia Foundation",dis_font); //for the ISBN
-        
-        PdfPCell disclaim;
-        disclaim = new PdfPCell(dis_text);
-        disclaim.setBorderWidth(0f); // if you need to get a bearing on where this is being placed: change this border width to 1 or more.
-        disclaim.setHorizontalAlignment(Element.ALIGN_LEFT);
-        disclaim.setVerticalAlignment(Element.ALIGN_BOTTOM);
-        disclaim.setColspan(1);
-        disclaim.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-173f));
-        tabled.addCell(disclaim);
-        ColumnText columnd = new ColumnText(pdfWriter.getDirectContent());
-        columnd.addElement(tabled);
+//        dis_text = new Paragraph("This work is not endorsed by the "+wiki_w+"ikimedia Foundation",dis_font); //for the ISBN
+        cb.beginText();
+        BaseFont spine_base = bflib;
+        cb.setFontAndSize(spine_base, 6);
+        cb.showTextAligned(0,"This work is not endorsed by the "+wiki_w+"ikimedia Foundation",444f,105f,90f);
+        cb.endText();
+//        PdfPCell disclaim;
+//        disclaim = new PdfPCell(dis_text);
+//        disclaim.setBorderWidth(0f); // if you need to get a bearing on where this is being placed: change this border width to 1 or more.
+//        disclaim.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        disclaim.setVerticalAlignment(Element.ALIGN_BOTTOM);
+//        disclaim.setColspan(1);
+//        disclaim.setMinimumHeight(pdfDocument.top()+(pdfDocument.bottom()-173f));
+//        tabled.addCell(disclaim);
+//        ColumnText columnd = new ColumnText(pdfWriter.getDirectContent());
+//        columnd.addElement(tabled);
         
         //llx, lly,urx,ury 
         float llx_hc_volnum = 510.64f;
@@ -625,8 +658,8 @@ public class PdfCoverWrapper {
         float llx_sc_volnum = 391f;
         float urx_sc_volnum = 506f;
         float lly_sc_volnum = 830f;
-        columnd.setSimpleColumn (llx_hc_volnum-241, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
-        columnd.go();
+//        columnd.setSimpleColumn (llx_hc_volnum-241, pdfDocument.bottom()-122, urx_hc_volnum, pdfDocument.top()-45f);
+//        columnd.go();
         
         
         //spine section for volume number

@@ -35,6 +35,7 @@ import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.xml.simpleparser.SimpleXMLDocHandler;
 import com.lowagie.text.xml.simpleparser.SimpleXMLParser;
@@ -63,6 +64,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
      *
      */
     private DocListener document;
+    public PdfWriter writer;
 
 	private Paragraph currentParagraph;
 
@@ -93,14 +95,16 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
         
         private FontSelector whtmlfs = new FontSelector();
         private FontSelector whtmlprefs = new FontSelector();
+        private ArrayList whtmlas = new ArrayList();
 
 	private FactoryProperties factoryProperties = new FactoryProperties();
         
 	/** Creates a new instance of WHTMLWorker
 	 * @param document A class that implements <CODE>DocListener</CODE>
 	 * */
-	public WHTMLWorker(DocListener document) {
+	public WHTMLWorker(DocListener document, PdfWriter pdfWriter) {
 		this.document = document;
+                this.writer = pdfWriter;
 	}
 
         /**
@@ -165,9 +169,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
          * @return
          * @throws IOException
          */
-        public static ArrayList parseToList(Reader reader, StyleSheet style)
+        public static ArrayList parseToList(Reader reader, StyleSheet style, PdfWriter pdfWriter)
 			throws IOException {
-		return parseToList(reader, style, null);
+		return parseToList(reader, style, null,pdfWriter);
 	}
 
         /**
@@ -179,9 +183,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
          * @throws IOException
          */
         public static ArrayList parseToList(Reader reader, StyleSheet style,
-                                            HashMap interfaceProps) throws IOException {
+                                            HashMap interfaceProps, PdfWriter pdfWriter) throws IOException {
                 
-		WHTMLWorker worker = new WHTMLWorker(null);
+		WHTMLWorker worker = new WHTMLWorker(null, pdfWriter);
 		if (style != null)
 			worker.style = style;
 		worker.document = worker;
@@ -217,6 +221,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 			return;
 		try {
                     whtmlfs = PdfPageWrapper.fs;
+                    whtmlas = PdfPageWrapper.as;
                     whtmlprefs = PdfPageWrapper.pfs;
                     BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font cardo = new Font(bsCardo);
@@ -244,8 +249,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				if (currentParagraph == null) {
 					currentParagraph = new Paragraph();
 				}
-				currentParagraph.add(factoryProperties
-						.createChunk("\n", cprops));
+//				currentParagraph.add(factoryProperties
+//						.createChunk("\n", cprops));
+                                currentParagraph.add(new Chunk("\n",cardo));
 				return;
 			}
 //			if (tag.equals(HtmlTags.HORIZONTALRULE)) {
@@ -512,6 +518,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				skipText = true;
 				return;
 			}
+
 		} catch (Exception e) {
 			throw new ExceptionConverter(e);
 		}
@@ -638,11 +645,19 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 Phrase tempph = new Phrase();
                                 for(int i = 0; i < (cks.size()-1);i++){
                                     String tmp = cks.get(i).toString();
+                                    PdfPTable pp = null;
                                     if(isTD)
                                         tempph = whtmlprefs.process(tmp);
                                     else
                                         tempph = whtmlfs.process(tmp);
-                                    lph.add(tempph);//add temp phrase to larger phrase to set leading outside and add to listitem
+                                    if( isRTL(whtmlas,tempph) ) {
+                                        System.out.println("yes i am rtl");
+                                        pp = arabicText(tempph,writer);
+                                    }
+                                    if(pp!=null)
+                                        lph.add(pp);
+                                    else
+                                        lph.add(tempph);//add temp phrase to larger phrase to set leading outside and add to listitem
 
                                 }
                                 
@@ -694,10 +709,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 Font cardo = new Font(bsCardo);
                                 cardo.setSize(10f);
                                 document.add(new Phrase("\n",cardo));
-//                                String s_space = "\n";
-//                                Phrase space = whtmlfs.process(s_space);
-//                                space.setLeading(4f);//add spacing before the Htags.
-//                                document.add(space);
                                 document.add(tb);
                             }
                             else{
@@ -793,7 +804,15 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
                     ph.setLeading(4f);
-                    currentParagraph.add(ph);
+                    PdfPTable pp = null;
+                    if( isRTL(whtmlas,ph) ) {
+                        System.out.println("yes i am rtl");
+                        pp = arabicText(ph,writer);
+                    }
+                    if(pp!=null)
+                        currentParagraph.add(pp);
+                    else
+                        currentParagraph.add(ph);
                     isPRE = false;
 //			return;
 		}
@@ -801,25 +820,82 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
 //                    ph.setLeading(4f);
-                    currentParagraph.add(ph);
+                    PdfPTable pp = null;
+                    if( isRTL(whtmlas,ph) ) {
+                        System.out.println("yes i am rtl");
+                        pp = arabicText(ph,writer);
+                    }
+                    if(pp!=null)
+                        currentParagraph.add(pp);
+                    else
+                        currentParagraph.add(ph);
                     isH3 = false;
                 }
                 else if(isTD){
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
                     ph.setLeading(4f);
-                    currentParagraph.add(ph);
+                    PdfPTable pp = null;
+                    if( isRTL(whtmlas,ph) ) {
+                        System.out.println("yes i am rtl");
+                        pp = arabicText(ph,writer);
+                    }
+                    if(pp!=null)
+                        currentParagraph.add(pp);
+                    else
+                        currentParagraph.add(ph);
 //                    isTD = false;
                 }
                 else{
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     
-                Phrase ph = whtmlfs.process(buf.toString());
                 
-		currentParagraph.add(ph);
+                Phrase ph = whtmlfs.process(buf.toString());
+                PdfPTable pp = null;
+                if( isRTL(whtmlas,ph) ) {
+                    System.err.println("yes i am rtl");
+                    pp = arabicText(ph,writer);
+                }
+                if(pp!=null){
+                    System.err.println(ph.toString());
+                    System.err.println("this was arabic");
+                    currentParagraph.add(pp);
+                }
+                else
+                    currentParagraph.add(ph);
                 }
 		
 	}
+        public boolean isRTL(ArrayList as, Phrase ph){
+        ArrayList chunks = ph.getChunks();
+                for(int i=0; i < chunks.size(); i++){
+                    Chunk lilchunk = (Chunk) chunks.get(i);
+                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
+                    System.out.println("the fonts:");
+                    System.out.println(ane);
+                    if(as.contains(lilchunk.getFont())){
+                        return true;
+                        
+                    }
+                }
+        
+        return false;
+    }
+        public PdfPTable arabicText(Phrase ph, PdfWriter pdfWriter){
+            Paragraph pr = new Paragraph(ph);
+            PdfPTable table = new PdfPTable(1);
+            PdfPCell celly = new PdfPCell();
+            celly.addElement(pr);
+            celly.setBorderColor(Color.white);
+            celly.setBorderWidth(0);
+            celly.setPadding(0);
+            celly.setRunDirection(pdfWriter.RUN_DIRECTION_RTL);
+            table.setSpacingAfter(0);
+            table.setSpacingBefore(0);
+            table.addCell(celly);  
+            System.out.println("yes you are arabic.");
+            return table;
+        }
 
 	public boolean add(Element element) throws DocumentException {
 		objectList.add(element);
@@ -888,7 +964,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
          *
          */
         public static final String tagsSupportedString = "ol ul li a pre span br p div body i u sub sup em strong s strike"
-			+ " h1 h2 h3 h4 h5 h6 hr"
+			+ " h1 h2 h3 h4 h5 h6"
                         + " table td tr th dd dl";
                         //+ " b font table tr td th";
 

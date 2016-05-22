@@ -77,7 +77,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         FontFactory.register(path_to_fonts+"G5LISL1B.TTF","chinese6");
         FontFactory.register(path_to_fonts+"Amiri-Regular.ttf","arab1");
         FontFactory.register(path_to_fonts+"DroidKufi-Regular.ttf","arab2");
-        FontFactory.register(path_to_fonts+"Bsthebre.ttf","hebrew");
+        FontFactory.register(path_to_fonts+"Alef-Regular.ttf","hebrew");
         FontFactory.register(path_to_fonts+"NotoSansCherokee-Regular.ttf","cherokee");
         FontFactory.register(path_to_fonts+"NotoSansGeorgian-Regular.ttf","georgian");
         FontFactory.register(path_to_fonts+"NotoSansDevanagari-Regular.ttf","devanagari");
@@ -107,7 +107,7 @@ public class WikiTitleParser extends PdfPageEventHelper
         
         Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font roboto = FontFactory.getFont("roboto", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
-        Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 5);
+        Font russ = FontFactory.getFont("russ", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font chinese1 = FontFactory.getFont("chinese1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font chinese2 = FontFactory.getFont("chinese2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font chinese3 = FontFactory.getFont("chinese3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
@@ -116,12 +116,8 @@ public class WikiTitleParser extends PdfPageEventHelper
         Font chinese6 = FontFactory.getFont("chinese6", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font arab1 = FontFactory.getFont("arab1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font arab2 = FontFactory.getFont("arab2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
-        
-        
-        
         Font arab3 = FontFactory.getFont("arab3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font hebrew = FontFactory.getFont("hebrew", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
-        
         Font cherokee = FontFactory.getFont("cherokee", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font georgian = FontFactory.getFont("georgian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font devanagari = FontFactory.getFont("devanagari", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
@@ -143,24 +139,53 @@ public class WikiTitleParser extends PdfPageEventHelper
         Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
         
-        fs.addFont(cardo);
         
+//        
+//        Font arab3 = FontFactory.getFont("arab3", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font hebrew = FontFactory.getFont("hebrew", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        
+//        Font cherokee = FontFactory.getFont("cherokee", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font georgian = FontFactory.getFont("georgian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font devanagari = FontFactory.getFont("devanagari", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font nanum = FontFactory.getFont("nanum", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font jap = FontFactory.getFont("jap", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font khmer = FontFactory.getFont("khmer", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font thai = FontFactory.getFont("thai", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font tamil = FontFactory.getFont("tamil", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font armenian = FontFactory.getFont("armenian", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font sinhala = FontFactory.getFont("sinhala", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font ops = FontFactory.getFont("ops", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font bengali = FontFactory.getFont("bengali", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font punj = FontFactory.getFont("punj", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font fsans = FontFactory.getFont("fsans", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font dvs = FontFactory.getFont("dvs", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);                    
+//        Font telugu = FontFactory.getFont("telugu", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font cjk = FontFactory.getFont("cjk", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);                    
+//        Font ind = FontFactory.getFont("ind", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);                    
+//        Font oriya = FontFactory.getFont("oriya", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+//        Font fser = FontFactory.getFont("fser", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 7);
+        
+        fs.addFont(cardo);
+       
+        fs.addFont(fontGlyph);
+        fs.addFont(arab1);
+        fs.addFont(arab2);
+        fs.addFont(arab3);
+        fs.addFont(hebrew);
+//                    fs.addFont(ind);
         
         //fs.addFont(dvs);
+        fs.addFont(fser);
+        
         fs.addFont(cjk);
         fs.addFont(russ);
         fs.addFont(armenian);
-        fs.addFont(hebrew);
         fs.addFont(chinese1);
         fs.addFont(chinese2);
         fs.addFont(chinese3);
         fs.addFont(chinese4);
         fs.addFont(chinese5);
         fs.addFont(chinese6);
-        fs.addFont(arab1);
-        fs.addFont(arab2);
-        fs.addFont(arab3);
-//                    fs.addFont(ind);
         
         fs.addFont(cherokee);
         fs.addFont(georgian);
@@ -171,7 +196,6 @@ public class WikiTitleParser extends PdfPageEventHelper
         fs.addFont(thai);
         fs.addFont(tamil);
         fs.addFont(ops);
-        fs.addFont(fontGlyph);
         fs.addFont(helv);
         fs.addFont(roboto);
         fs.addFont(sinhala);
@@ -181,10 +205,23 @@ public class WikiTitleParser extends PdfPageEventHelper
         fs.addFont(telugu);
         fs.addFont(oriya);
         fs.addFont(fser);
+//        fs.addFont(emojiAn);
+//        fs.addFont(emojiAp);
+//        fs.addFont(garif);
         as.add(arab1);
         as.add(arab2);
         as.add(arab3);
         as.add(hebrew);
+        System.out.println("the fonts.");
+        System.out.println(arab1);
+        System.out.println(arab2);
+        System.out.println(arab3);
+        System.out.println(hebrew);
+        System.out.println(as.size());
+        
+        if(as.contains(arab3))
+            System.out.println("awooo");
+        
         
         try
         {

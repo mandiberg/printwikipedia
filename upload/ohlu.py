@@ -625,7 +625,7 @@ class Browser:
         def uploadCover(self): #9 cold potentially upload these like was done to mod####.pdf ... would save *some time and then could iterate through and find like in #7
                 print "uploading cover"
                 r_cover_upload = self.execution(self.cover_upload,50,"text")
-                r_cover_upload.send_keys(self.local.cFolder +"/"+"Volume&&&"+self.volume.num+".pdf")
+                r_cover_upload.send_keys(self.local.cFolder +"/"+"volume&&&"+self.volume.num+".pdf")
                 self.execution(self.c_up_button,60,"click")
                 print "wait for upload to complete..."
                 self.execution(self.next_disable,50,"click")
@@ -766,7 +766,7 @@ class Local:
         def immigration(self,volume,driver,i_fail=False,err_type=""): #end of one lulucruise and the start of new cruise.
                 driver.quit()
                 if i_fail==True: #if this failed then write about how.
-                        gen_error = open("error_file.txt","a")
+                        gen_error = open("error_filede.txt","a")
                         gen_error.write(self.volume.num+ " " + self.volume.title+" upload:"+ upload_type+" reason: "+err_type+"\n")
                         gen_error.close()
                 else:
@@ -812,9 +812,9 @@ class Local:
                 try:
                     session = ftplib.FTP(ftp_host,lulu_email,lulu_pass)
                     session.cwd(self.volume.round_folder)
-                    print self.inFolder+self.volume.round_folder+'/mod'+self.volume.num+'.pdf'
-                    file = open(self.inFolder+self.volume.round_folder+'/mod'+self.volume.num+'.pdf','rb') # file to send
-                    session.storbinary('STOR mod'+self.volume.num+".pdf", file) # send the file
+                    print self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf'
+                    file = open(self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf','rb') # file to send
+                    session.storbinary('STOR pre'+self.volume.num+".pdf", file) # send the file
                     file.close() # close file and FTP
                     session.quit()
                 except:

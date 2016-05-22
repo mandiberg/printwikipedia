@@ -75,7 +75,7 @@ class Browser:
                 self.uid = "//*[@id='loginEmail']" #id/name for logging in
                 self.pw = "//*[@id='loginPassword']" #password area
                 self.logbutt = "//*[@id='loginSubmit']" #submit button
-                self.my_page = "700"
+                self.my_page = "516"
                 self.next = "//*[@id='fNext']"
                 self.next_disable = "//*[@id='fNext' and not (@disabled)]"
                 self.book_title = "//*[@id='title']"#get and put title
@@ -597,7 +597,7 @@ class Browser:
                 print "zoom out for barcode"
                 self.zoomit("out")
                 print "dl pdf on this page" 
-                self.applyBarcode()
+                # self.applyBarcode()
                 print "back to normal"
                 self.zoomit("in")
                 print "ftp modified pre-image ready to be sent on up"
@@ -650,7 +650,8 @@ class Browser:
         def uploadCover(self):
                 print "uploading cover"
                 r_cover_upload = self.execution(self.cover_upload,50,"text")
-                r_cover_upload.send_keys(self.local.cFolder +"/"+"bcVolume&&&"+self.volume.num+".pdf")
+                #no barcode no bcvolume
+                r_cover_upload.send_keys(self.local.cFolder +"/"+"volume&&&"+self.volume.num+".pdf")
                 self.execution(self.c_up_button,80,"click")
                 print "wait for upload to complete..."
 
@@ -791,7 +792,7 @@ class Local:
                 def getFolders():#sets these vars.
                         self.pwd = os.path.abspath(os.getcwd())
                         self.outFolder= self.pwd+"/out"
-                        self.inFolder= self.pwd+"/in"
+                        self.inFolder= self.pwd+"/in-de"
                         self.cFolder = self.pwd+"/covers"
                 getFolders()
         def immigration(self,volume,driver,i_fail=False,err_type=""):#move file from one folder to another. give next file over. This is done so there isn't such a long read for the 6k file run through.
@@ -817,18 +818,6 @@ class Local:
                     for i in crash_list:
                         if i > nextCheck:
                             nextCheck = i
-                            if nextCheck<1400:
-                                lulu_email = 'printwikipedia@printwikipedia.com'
-                            elif nextCheck > 1400 and nextCheck < 2540:
-                                lulu_email = 'printwikipedia+1@printwikipedia.com'
-                            elif nextCheck > 2540 and nextCheck < 4420:
-                                lulu_email = 'printwikipedia+2@printwikipedia.com'
-                            elif nextCheck > 4420 and nextCheck < 5120:
-                                lulu_email = 'printwikipedia+3@printwikipedia.com'
-                            elif nextCheck > 5120 and nextCheck < 6280:
-                                lulu_email = 'printwikipedia+4@printwikipedia.com'
-                            elif nextCheck > 6280:
-                                lulu_email = 'printwikipedia+5@printwikipedia.com'
                             break
                     volume.num = int(nextCheck)
                 print "this is volnum " + str(volume.num)
@@ -885,11 +874,14 @@ class Local:
                        return False
                 else:
                     try:
+                        print " hell o welcome to false"
+                        # de pwiki barcode turned off. applybarcode function is off. use mod not pre for these uploaded files.
                         session = ftplib.FTP(ftp_host,lulu_email,lulu_pass)
                         session.cwd(self.volume.round_folder)
-                        print self.inFolder+self.volume.round_folder+'/mod'+self.volume.num+'.pdf'
-                        file = open(self.inFolder+self.volume.round_folder+'/mod'+self.volume.num+'.pdf','rb') # file to send
-                        session.storbinary('STOR mod'+self.volume.num+".pdf", file) # send the file
+                        print session
+                        print self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf'
+                        file = open(self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf','rb') # file to send
+                        session.storbinary('STOR pre'+self.volume.num+".pdf", file) # send the file
                         file.close() # close file and FTP
                         session.quit()
                     except:

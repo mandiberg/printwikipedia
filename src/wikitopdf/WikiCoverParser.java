@@ -46,9 +46,9 @@ public class WikiCoverParser {
  * 
  */
         
-          String use_folder = "output";
+//          String use_folder = "output";
 //        String use_folder = "temp";
-//        String use_folder = "contrib";
+        String use_folder = "contrib";
         File folder = new File(use_folder);
         File[] listOfFiles = folder.listFiles();
 
@@ -63,6 +63,8 @@ public class WikiCoverParser {
                 try
                 {
                     System.err.println(listOfFiles[i].getName());//make sure you're on the right path here.
+                    if(listOfFiles[i].getName()==".DS_Store")
+                        continue;
                     num = Integer.parseInt(listOfFiles[i].getName().split("&&&")[0]);
                     pdfWrapper = new PdfCoverWrapper(num, pagesCount);
                     pdfWrapper.addCover(listOfFiles[i].getName(), use_folder); // will parse file name inside pdfWrapper

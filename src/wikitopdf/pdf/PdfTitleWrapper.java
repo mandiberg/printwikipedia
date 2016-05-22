@@ -99,9 +99,13 @@ public class PdfTitleWrapper {
         ArrayList chunks = ph.getChunks();
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
+                    System.out.println(chunks.get(i).toString());
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    
+                    System.out.println(lilchunk.getFont());
                     if(as.contains(lilchunk.getFont())){
+                        System.out.println("this is get font omg");
+                        System.out.println(lilchunk.getFont());
+//                        System.out.println()
                         return true;
                         
                     }
@@ -119,7 +123,7 @@ public class PdfTitleWrapper {
         
         try {
             if(pdfWriter.getCurrentPageNumber()> 420 && pdfWriter.getCurrentPageNumber() < 430){
-                System.out.println(line);
+//                System.out.println(line);
             }
                 
                 int breaker = 0;//shortens title based on length of string so as not to go over the page headers.
@@ -161,11 +165,11 @@ public class PdfTitleWrapper {
             mct.addElement(table);
             boolean add = pdfDocument.add(mct);
             if(add == false){
-                System.out.println(line);
-                System.out.println(line);
-                System.out.println(line);
-                System.out.println(line);
-                System.out.println(line);
+//                System.out.println(line);
+//                System.out.println(line);
+//                System.out.println(line);
+//                System.out.println(line);
+//                System.out.println(line);
                 System.exit(1);
                 
             }
@@ -245,7 +249,7 @@ public class PdfTitleWrapper {
             wikiFontSelector.getTitleFontSelector().process("");
             times = wikiFontSelector.getCommonFont().getBaseFont();
             Font pght = new Font(bflib,16);
-            Paragraph pgh = new Paragraph("Table of Contents\nVolume "+String.valueOf((PdfTitleWrapper.num+1)),pght);
+            Paragraph pgh = new Paragraph("Contributor Appendix\n\nVolume "+String.valueOf((PdfTitleWrapper.num+1)),pght);
             PdfPCell cell = new PdfPCell(pgh);
             cell.setBorderWidth(0f);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);

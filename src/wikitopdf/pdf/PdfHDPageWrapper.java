@@ -120,7 +120,7 @@ public class PdfHDPageWrapper {
         StyleSheet styles = WikiStyles.getHDStyles();
 
         ArrayList objects;
-        objects = WHTMLWorker.parseToList(reader, styles);
+        objects = WHTMLWorker.parseToList(reader, styles,pdfWriter);
 
         for (int k = 0; k < objects.size(); ++k) {
             Element element = (Element) objects.get(k);

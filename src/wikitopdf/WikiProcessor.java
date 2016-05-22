@@ -102,7 +102,7 @@ public class WikiProcessor {
                         pdfWrapper.writePage(page);
                         artWritten++;
                         System.out.println("Current Article is: " + (startLimit + artWritten));
-                        if(startLimit + artWritten+1 == 3200021){//final pkey...
+                        if(startLimit + artWritten+1 == 8110166){//final pkey...
                             end_times = true;
                             break;//if you made it through then stop.
                         }
@@ -149,14 +149,14 @@ public class WikiProcessor {
                 outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
                         outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
-                File oldFileNoUnderscore = new File(tempName);
+//                File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
-
+                
                 if(!(oldFile.renameTo(newFile))){
                     System.out.println("File not renamed first time");
-                    if (!(oldFileNoUnderscore.renameTo(newFile))){
-                        System.out.println("File not renamed second time, matching" );
-                    }
+//                    if (!(oldFileNoUnderscore.renameTo(newFile))){
+//                        System.out.println("File not renamed second time, matching" );
+//                    }
                 }
              
                 //Timing
@@ -172,18 +172,20 @@ public class WikiProcessor {
                 //Info
                 pageInfo = "([" + pdfWrapper.getCurrentArticleID() + "] " + 
                         pdfWrapper.getCurrentTitle() + ")";
-                WikiLogger.getLogger().fine("Retrieved " + startLimit + "/" + artCount + " articles " + pageInfo);
-                WikiLogger.getLogger().info("Free memory: " + ByteFormatter.format(runtime.freeMemory()));
+//                WikiLogger.getLogger().fine("Retrieved " + startLimit + "/" + artCount + " articles " + pageInfo);
+//                WikiLogger.getLogger().info("Free memory: " + ByteFormatter.format(runtime.freeMemory()));
                 //here's some closing code at the end of each volume
-                pdfWrapper = null;
-                sqlReader = null;
+//                pdfWrapper = null;
+//                sqlReader = null;
             } //End of all volumes/PDFs
 
         } catch (Exception ex) {
             WikiLogger.getLogger().severe(ex.getMessage() + pageInfo);
             ex.printStackTrace(System.out);
-        } finally {
-            sqlReader.close();
+        } 
+        finally {
+            if(sqlReader!=null)
+                sqlReader.close();
         }
 
         WikiLogger.getLogger().fine("Finished (" + startLimit + " pages)");

@@ -303,7 +303,7 @@ public class TitlesFooter extends PdfPageEventHelper
             //Cut if title very long
             text = text.length() > 20 ? text.substring(0, 20) + "..." : text;
             Phrase ph = hfs.process(text.toUpperCase());
-            System.out.println(text + " in even page.");
+//            System.out.println(text + " in even page.");
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, ph, document.left(), document.top()-43, 0);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, pnum, document.left(), document.bottom() - 34, 0);
             cb.restoreState();
@@ -315,7 +315,7 @@ public class TitlesFooter extends PdfPageEventHelper
             text = lineList.get(lineC - 1);
             text = text.length() > 20 ? text.substring(0, 20) + "..." : text;
             Phrase ph = hfs.process(text.toUpperCase());
-            System.out.println(text + " in odd page.");
+//            System.out.println(text + " in odd page.");
             if(writer.getPageNumber()!=1){
                 ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, ph, document.right(), document.top()-43, 0);
                 ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, pnum, document.right(), document.bottom() - 34, 0);

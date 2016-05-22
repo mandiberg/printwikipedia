@@ -1,5 +1,6 @@
 package wikitopdf.pdf;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -17,6 +18,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import wikitopdf.utils.WikiLogger;
 import wikitopdf.utils.WikiSettings;
 import wikitopdf.html.WHTMLWorker;
@@ -68,9 +72,10 @@ public class PdfPageWrapper {
                 new FileOutputStream( WikiSettings.getInstance().getOutputFolder() +
                             "/" + prefn));
 
-        header = new PageHeaderEvent(pageNum,pdfDocument);
+        
         pdfWriter.setPageEvent(header);
-
+        header = new PageHeaderEvent(pageNum,pdfDocument);
+        
         pdfDocument.open();
 
         _wikiFontSelector = new WikiFontSelector();
@@ -161,12 +166,12 @@ public class PdfPageWrapper {
         docu.newPage();//get second page for the copyright text
 //        jknewPage(docu);
 
-        String copyrightText = "CC BY-SA 3.0 2015, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
+        String copyrightText = "CC BY-SA 3.0 2016, Wikipedia contributors; see Appendix for a complete list of contributors. Please see http://creativecommons.org/licenses/by-sa/3.0/ for full license.\r\r"+
                 "Edited, compiled and designed by Michael Mandiberg (User:Theredproject).\r\r"+ 
                 "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/Trademark_policy\r\r"+
                 "Wikipedia is a trademark of the Wikimedia Foundation and is used with the permission of the Wikimedia Foundation. This work is not endorsed by or affiliated with the Wikimedia Foundation.\r\r"+
                 "Cover set in Linux Libertine. Book set in Cardo, with the following 36 typefaces added to handle the many languages contained within: Alef, Amiri, Android Emoji, Bitstream CyberCJK, Casy EA, cwTeXFangSong, cwTeXHei, cwTeXKai, cwTeXMing, cwTeXYen, DejaVu Sans, Droid Arabic Kufi, FreeSans, FreeSerif, GurbaniAkharSlim, IndUni-N, Junicode, Lohit Gujarati, Lohit Oriya, MAC C Times, MS Gothic, NanumGothic, Noto Kufi Arabic, Noto Sans, Noto Sans Bengali, Noto Sans Cherokee, Noto Sans Devanagari, Noto Sans Georgian, Noto Sans Japanese, Noto Sans Sinhala, Noto Sans Tamil UI, Noto Sans Telugu, Noto Sans Thai, Noto Serif Armenian, Open Sans, Roboto.\r\r"+
-                "Produced with support from Eyebeam, The Banff Centre, the City University of New York, and Lulu.com. Designed and built with assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
+                "Produced with support from Eyebeam, The Banff Centre, the City University of New York, and Lulu.com, The Wikimedia Foundation, and Denny Gallery. Designed and built with assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
                 "PrintWikipedia.com\r\rGitHub.com/mandiberg/printwikipedia\r\rPrinted by Lulu.com";
         PdfPTable cpTable = new PdfPTable(1);
         try { //setting copyright text and adding to page
@@ -289,6 +294,11 @@ public class PdfPageWrapper {
         //fs.addFont(dvs);
         tfs.addFont(fser);
         tfs.addFont(cjk);
+        tfs.addFont(arab1);
+        tfs.addFont(arab2);
+        tfs.addFont(arab3);
+//                    fs.addFont(ind);
+        tfs.addFont(hebrew);
         tfs.addFont(russ);
         tfs.addFont(armenian);
         tfs.addFont(chinese1);
@@ -297,11 +307,7 @@ public class PdfPageWrapper {
         tfs.addFont(chinese4);
         tfs.addFont(chinese5);
         tfs.addFont(chinese6);
-        tfs.addFont(arab1);
-        tfs.addFont(arab2);
-        tfs.addFont(arab3);
-//                    fs.addFont(ind);
-        tfs.addFont(hebrew);
+        
         tfs.addFont(cherokee);
         tfs.addFont(georgian);  
         tfs.addFont(devanagari);
@@ -323,6 +329,10 @@ public class PdfPageWrapper {
 //        tfs.addFont(emojiAn);
 //        tfs.addFont(emojiAp);
         tfs.addFont(garif);
+        as.add(arab1);
+        as.add(arab2);
+        as.add(arab3);
+        as.add(hebrew);
     }
     public void preFontGet(){
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
@@ -410,6 +420,11 @@ public class PdfPageWrapper {
         //fs.addFont(dvs);
         pfs.addFont(fser);
         pfs.addFont(cjk);
+        pfs.addFont(arab1);
+        pfs.addFont(arab2);
+        pfs.addFont(arab3);
+//                    fs.addFont(ind);
+        pfs.addFont(hebrew);
         pfs.addFont(russ);
         pfs.addFont(armenian);
         pfs.addFont(chinese1);
@@ -418,11 +433,7 @@ public class PdfPageWrapper {
         pfs.addFont(chinese4);
         pfs.addFont(chinese5);
         pfs.addFont(chinese6);
-        pfs.addFont(arab1);
-        pfs.addFont(arab2);
-        pfs.addFont(arab3);
-//                    fs.addFont(ind);
-        pfs.addFont(hebrew);
+        
         pfs.addFont(cherokee);
         pfs.addFont(georgian);  
         pfs.addFont(devanagari);
@@ -443,7 +454,11 @@ public class PdfPageWrapper {
         pfs.addFont(fser);
 //        pfs.addFont(emojiAn);
 //        pfs.addFont(emojiAp);
-        fs.addFont(garif);
+        pfs.addFont(garif);
+        as.add(arab1);
+        as.add(arab2);
+        as.add(arab3);
+        as.add(hebrew);
         
     }
             public void fontGet() throws DocumentException, IOException{
@@ -537,6 +552,11 @@ public class PdfPageWrapper {
         //fs.addFont(dvs);
         fs.addFont(fser);
         fs.addFont(cjk);
+        fs.addFont(arab1);
+        fs.addFont(arab2);
+        fs.addFont(arab3);
+//                    fs.addFont(ind);
+        fs.addFont(hebrew);
         fs.addFont(russ);
         fs.addFont(armenian);
         fs.addFont(chinese1);
@@ -545,11 +565,7 @@ public class PdfPageWrapper {
         fs.addFont(chinese4);
         fs.addFont(chinese5);
         fs.addFont(chinese6);
-        fs.addFont(arab1);
-        fs.addFont(arab2);
-        fs.addFont(arab3);
-//                    fs.addFont(ind);
-        fs.addFont(hebrew);
+        
         fs.addFont(cherokee);
         fs.addFont(georgian);
         fs.addFont(devanagari);
@@ -571,6 +587,14 @@ public class PdfPageWrapper {
 //        fs.addFont(emojiAn);
 //        fs.addFont(emojiAp);
         fs.addFont(garif);
+        System.out.println(arab1);
+        System.out.println(arab2);
+        System.out.println(arab3);
+        System.out.println(hebrew);
+        as.add(arab1);
+        as.add(arab2);
+        as.add(arab3);
+        as.add(hebrew);
     }
     
     public void writePage(WikiPage page) {
@@ -584,10 +608,40 @@ public class PdfPageWrapper {
         writeText(page.getRevision().getText());
 //        System.out.println("i did it.");
     }
+    public PdfPTable arabicHeader(Phrase ph, PdfWriter pdfWriter){
+        Paragraph pr = new Paragraph(ph);
+        pr.setSpacingBefore(8);//changes spacing before title
+        pr.setSpacingAfter(4);//changes spacing after title.
+        PdfPTable table = new PdfPTable(1);
+        PdfPCell celly = new PdfPCell();
+        celly.addElement(pr);
+        celly.setBorderColor(Color.white);
+        celly.setBorderWidth(0);
+        celly.setPadding(0);
+        celly.setRunDirection(pdfWriter.RUN_DIRECTION_RTL);
+        table.setSpacingAfter(0);
+        table.setSpacingBefore(0);
+        table.addCell(celly);  
+        return table;
 
-
+    }
+    public boolean isRTL(ArrayList as, Phrase ph){
+        ArrayList chunks = ph.getChunks();
+                for(int i=0; i < chunks.size(); i++){
+                    Chunk lilchunk = (Chunk) chunks.get(i);
+                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
+                    System.out.println("the fonts:");
+                    System.out.println(ane);
+                    if(as.contains(lilchunk.getFont())){
+                        return true;
+                        
+                    }
+                }
+        return false;
+    }
     //Write title of article to document
     private void writeTitle(String line) {
+        PdfPTable pp = null;
         Phrase ph = null;
         Paragraph pr = null;
         System.out.println(line);
@@ -596,6 +650,7 @@ public class PdfPageWrapper {
             header.setCurrentTitle(line);
 //            System.out.println("line: " + line);
             ph = tfs.process(line);
+            
 //            System.out.println(ph.getFont().getSize() + " my bitches string here");
 //            if(ph.getFont().getSize() <1){
 //                Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13);
@@ -608,6 +663,10 @@ public class PdfPageWrapper {
 //            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 10);
 //            if(ph.getFont()==null)
 //                ph.setFont(cardo);
+            if(isRTL(as,ph)){
+                System.out.println("yes i am rtl");
+                pp = arabicHeader(ph,pdfWriter);
+            }
             pr = new Paragraph(ph);
 //            System.out.println(pr.getFont().getSize()+" paragraph size");
             pr.setSpacingBefore(8);//changes spacing before title
@@ -624,7 +683,21 @@ public class PdfPageWrapper {
 //            System.out.println("paragraph");
 //            System.out.println(pr);
 //            System.out.println(pr.toString());
-            mct.addElement(pr);
+            
+            if(pp!=null){
+                System.out.println("this is pp");
+                System.out.println(pp);
+                System.out.println(pp.isComplete());
+                System.out.println(pp.isContent());
+            }
+            
+            if(pp!=null){
+             System.out.println("this is not null pp");
+             mct.addElement(pp);   
+            }
+            else{
+                mct.addElement(pr);
+            }
             pdfDocument.add(mct);
         } 
         catch (Exception ex) {
@@ -636,38 +709,77 @@ public class PdfPageWrapper {
 
     //Write article text using defined styles
     private void writeText(String text) {
+        boolean append_refs = false;
+        boolean is_refs = false;
         try {
             //review the below removed/replaced items to see if you want to include. -- no good or easy way to add gallery though. probably don't want that.
             text = text.replaceAll("<gallery[\\s\\S]*?</gallery>",""); //no gallery
             text = text.replaceAll("\\s#########.+","");
             text = text.replaceAll("\\s\\*\\*\\*\\*\\*\\*\\*\\*\\*.+","");
+            text = text.replaceAll("(?i)\\[\\[kategorie.+",""); //remove kategorie at the end.
+            text = text.replaceAll("(?i)\\[\\[Datei.+","");
+            text = text.replaceAll("(?i)\\[\\[bild.+","");
+            text = text.replaceAll("(?i)\\[\\[file.+","");
+            text = text.replaceAll("(?s)(?i)==\\s*siehe\\s*auch\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*literatur\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*weblinks\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*quellen\\s*==\\s(.+?)==", "==");
+            String strPatternDE = "#WEITERLEITUNG\\s*\\[\\[(.*)\\]\\]";
+            String strPatternENG = "#redirect\\s*\\[\\[(.*)\\]\\]";
+            Pattern pde = Pattern.compile(strPatternDE, Pattern.CASE_INSENSITIVE);
+            Matcher mde = pde.matcher(text);
+            Pattern peng = Pattern.compile(strPatternENG, Pattern.CASE_INSENSITIVE);
+            Matcher meng = peng.matcher(text);
+
+            if (mde.find()) {
+                text = "Siehe: " + mde.group(1);
+            }
+            else if(meng.find()){
+                text = "Siehe: " + meng.group(1);
+            }
+
+            
 //            text = text.replaceAll("<!--((.|\\s)*?)-->","");
 //            text = text.replaceAll("(?s)(== Einzelnachweise ==).*","");
             
 //             text is in BBCode (This is bliki)
+//            String reflistStr = "<H2><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H2>";
+//            Pattern pde = Pattern.compile(reflistStr, Pattern.CASE_INSENSITIVE);
+//            Matcher mref = pde.matcher(text);
+//
+//            if (mref.find()) {
+//                append_refs = true;
+//            }
             System.out.println(text);
             System.out.println("\n\n\n\n\n");
             String html = WikiHtmlConverter.convertToHtml(text);
-            System.out.println("hood knowledge");
+            if(WikiHtmlConverter.getModelReferences() == null){
+                is_refs=false;
+            }
+            else{
+                is_refs=true;
+            }
+            
             System.out.println(html);
-System.out.println("i am two pg nums");
-            System.out.println(pdfDocument.getPageNumber());
-            System.out.println(pdfWriter.getPageNumber());
+
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
-              html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
+
+              
 //            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"ANMERKUNGEN\">ANMERKUNGEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+//            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"ANMERKUNGEN\">ANMERKUNGEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
 //
 ////            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
+            if(!is_refs)
+                html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
 ////            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"WEBLINKS\">WEBLINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"WEBLINKS\">WEBLINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
 ////            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SIEHE_AUCH\">SIEHE AUCH</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SIEHE_AUCH\">SIEHE AUCH</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
 //            
 //            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"LITERATUR\">LITERATUR</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"QUELLEN\">QUELLEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"LITERATUR\">LITERATUR</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"QUELLEN\">QUELLEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
             
             
 ////            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H\\d>GALLERY</H\\d>).*","<b>_____________________</b><br /><br />");
@@ -675,8 +787,9 @@ System.out.println("i am two pg nums");
             
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Siehe_auch\">Siehe auch</a>\n</li>","");
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Literatur\">Literatur</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Anmerkungen\">Anmerkungen</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Einzelnachweise\">Einzelnachweise</a>\n</li>", "");
+//            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Anmerkungen\">Anmerkungen</a>\n</li>", "");
+            if(!is_refs)
+                html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Einzelnachweise\">Einzelnachweise</a>\n</li>", "");
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Weblinks\">Weblinks</a>\n</li>", "");
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Quellen\">Quellen</a>\n</li>","");
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Fu.C3.9Fnoten\">Fußnoten</a>\n</li>","");
@@ -687,6 +800,7 @@ System.out.println("i am two pg nums");
 //            //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
 //            // text is now html (This is doing iText work)
 //            html = html.replaceAll("<hr\\s/>","");
+
             convertHtml2Pdf(html);
             // text has been made into pdf.
             
@@ -702,7 +816,7 @@ System.out.println("i am two pg nums");
         StyleSheet styles = WikiStyles.getStyles();
         ArrayList objects;
         //parse that text!
-        objects = WHTMLWorker.parseToList(reader, styles);
+        objects = WHTMLWorker.parseToList(reader, styles, pdfWriter);
         
         for (int k = 0; k < objects.size(); ++k) {
             
@@ -726,6 +840,7 @@ System.out.println("i am two pg nums");
 //                System.out.println(pr.toString() + " this isthe paragraph");
             try {
                 mct.addElement(element);
+                
                 pdfDocument.add(mct);
             }
             catch(Exception e) {
@@ -810,4 +925,5 @@ System.out.println("i am two pg nums");
     private String currentTitle = "";
     private int currentArticleID;
     private BaseFont bflib;
+    public static ArrayList as = new ArrayList();
 }

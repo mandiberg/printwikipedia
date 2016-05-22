@@ -2,11 +2,13 @@
  */
 package wikitopdf.pdf;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
@@ -17,7 +19,9 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wikitopdf.utils.WikiLogger;
@@ -158,6 +162,10 @@ public class PageHeaderEvent extends PdfPageEventHelper {
                 hfs.addFont(telugu);
                 hfs.addFont(oriya);
                 hfs.addFont(fser);
+                as.add(arab1);
+                as.add(arab2);
+                as.add(arab3);
+                as.add(hebrew);
                 
 
             contentPage = writer.getDirectContent();
@@ -180,7 +188,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 
     @Override
     public void onStartPage(PdfWriter writer, Document document){
-
+       System.err.println("in onstartpage" + writer.getPageNumber());
        pageNum = writer.getPageNumber() + startPage;
        
        if (writer.getPageNumber()<2)
@@ -189,7 +197,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
        if ((writer.getPageNumber() % 2) == 0 ) {
            try {
                writeHeader(currentTitle, document.left(),//-5.5f,
-                        document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_LEFT,document);
+                        document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_LEFT,document,writer);
            } catch (DocumentException ex) {
                Logger.getLogger(PageHeaderEvent.class.getName()).log(Level.SEVERE, null, ex);
            }
@@ -202,6 +210,8 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 
     @Override
     public void onEndPage(PdfWriter writer, Document document) {
+        System.out.println("current page num");
+        System.out.println(writer.getPageNumber());
         pageNum = writer.getPageNumber() + startPage;
         contentPage.saveState();
 
@@ -224,7 +234,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
 
                     try {
                         writeHeader(currentTitle, document.right(),//-5.5f,
-                            document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_RIGHT,document);
+                            document.getPageSize().getHeight() - 27, PdfContentByte.ALIGN_RIGHT,document,writer);
 
                     } catch (DocumentException ex) {
                         Logger.getLogger(PageHeaderEvent.class.getName()).log(Level.SEVERE, null, ex);
@@ -255,16 +265,51 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     public int getPageNum(){
         return pageNum;
     }
+    public boolean isRTL(ArrayList as, Phrase ph){
+        ArrayList chunks = ph.getChunks();
+                for(int i=0; i < chunks.size(); i++){
+                    Chunk lilchunk = (Chunk) chunks.get(i);
+                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
+                    
+                    if(as.contains(lilchunk.getFont())){
+                        return true;
+                        
+                    }
+                }
+        return false;
+    }
+    public PdfPTable arabicHeader(Phrase ph, PdfWriter pdfWriter){
+        Paragraph pr = new Paragraph(ph);
+        PdfPTable table = new PdfPTable(1);
+        PdfPCell celly = new PdfPCell();
+        celly.addElement(pr);
+        celly.setBorderColor(Color.white);
+        celly.setBorderWidth(0);
+        celly.setPadding(0);
+        celly.setRunDirection(pdfWriter.RUN_DIRECTION_RTL);
+        table.setSpacingAfter(0);
+        table.setSpacingBefore(0);
+        table.addCell(celly);  
+        return table;
 
-    private void writeHeader(String text, float x, float y, int align, Document document) throws DocumentException{ //place the title and page number appropriately.
+    }
+    private void writeHeader(String text, float x, float y, int align, Document document,PdfWriter pdfWriter) throws DocumentException{ //place the title and page number appropriately.
         //not liking that this is done using content bytes. should be using pdfpcell/table with phrase.
+//        PdfPTable pp = null;
         int sign = (align == PdfContentByte.ALIGN_LEFT) ? -1 : 1;
         Phrase ph = hfs.process(text.toUpperCase());
+//        if(isRTL(as,ph)){
+//            pp = arabicHeader(ph,pdfWriter);
+//        }
+        
         Phrase pnum = hfs.process(String.valueOf(pageNum));
         pnum.setFont(pnumbers);
         if(document.getPageNumber() % 2 == 0){
             
-            ColumnText.showTextAligned(contentPage, Element.ALIGN_LEFT, ph, x, y, 0);
+//            if(pp != null)
+//                ColumnText.showTextAligned(contentPage, Element.ALIGN_LEFT, ph, x, y, 0);
+//            else
+                ColumnText.showTextAligned(contentPage, Element.ALIGN_LEFT, ph, x, y, 0);
             ColumnText.showTextAligned(contentPage, Element.ALIGN_LEFT, pnum, x, document.bottom()-23, 0);
         }
         else{
@@ -289,5 +334,6 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     private Document docu = null;
     private String currentTitle = "";
     public FontSelector hfs = new FontSelector();
+    public ArrayList as = new ArrayList();
     public Font pnumbers = null;
 }
