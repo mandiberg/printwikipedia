@@ -73,8 +73,9 @@ public class PdfPageWrapper {
                             "/" + prefn));
 
         
-        pdfWriter.setPageEvent(header);
         header = new PageHeaderEvent(pageNum,pdfDocument);
+        pdfWriter.setPageEvent(header);
+        
         
         pdfDocument.open();
 

@@ -190,6 +190,11 @@ public class PdfCoverWrapper {
             //fs.addFont(dvs);
             fs.addFont(fser);
             fs.addFont(cjk);
+            fs.addFont(arab1);
+            fs.addFont(arab2);
+            fs.addFont(arab3);
+    //                    fs.addFont(ind);
+            fs.addFont(hebrew);
             fs.addFont(russ);
             fs.addFont(armenian);
             fs.addFont(chinese1);
@@ -198,11 +203,7 @@ public class PdfCoverWrapper {
             fs.addFont(chinese4);
             fs.addFont(chinese5);
             fs.addFont(chinese6);
-            fs.addFont(arab1);
-            fs.addFont(arab2);
-            fs.addFont(arab3);
-    //                    fs.addFont(ind);
-            fs.addFont(hebrew);
+            
             fs.addFont(cherokee);
             fs.addFont(georgian);
             fs.addFont(devanagari);
@@ -322,6 +323,11 @@ public class PdfCoverWrapper {
             //fs.addFont(dvs);
             fs_abbr.addFont(fser);
             fs_abbr.addFont(cjk);
+            fs_abbr.addFont(arab1);
+            fs_abbr.addFont(arab2);
+            fs_abbr.addFont(arab3);
+    //                    fs.addFont(ind);
+            fs_abbr.addFont(hebrew);
             fs_abbr.addFont(russ);
             fs_abbr.addFont(armenian);
             fs_abbr.addFont(chinese1);
@@ -330,11 +336,6 @@ public class PdfCoverWrapper {
             fs_abbr.addFont(chinese4);
             fs_abbr.addFont(chinese5);
             fs_abbr.addFont(chinese6);
-            fs_abbr.addFont(arab1);
-            fs_abbr.addFont(arab2);
-            fs_abbr.addFont(arab3);
-    //                    fs.addFont(ind);
-            fs_abbr.addFont(hebrew);
             fs_abbr.addFont(cherokee);
             fs_abbr.addFont(georgian);
             fs_abbr.addFont(devanagari);
@@ -383,7 +384,7 @@ public class PdfCoverWrapper {
         }
         else if(coverType == "contrib"){
             main_spine = wiki_w+"ikipedia Contributor Appendix";
-            hc_title_size = 31;
+            hc_title_size = 29;
         }
         else{
             main_spine = "";
@@ -405,7 +406,7 @@ public class PdfCoverWrapper {
                 spine_y = 438;
            // }
             if(coverType == "contrib"){
-           //     spine_y = 242;
+                spine_y = 242;
             }
         }
 //        cb.showTextAligned(0,main_spine,half_spine-9,spine_y,rotate);

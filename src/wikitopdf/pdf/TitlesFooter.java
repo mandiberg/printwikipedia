@@ -158,6 +158,11 @@ public class TitlesFooter extends PdfPageEventHelper
             //fs.addFont(dvs);
             hfs.addFont(fser);
             hfs.addFont(cjk);
+            hfs.addFont(arab1);
+            hfs.addFont(arab2);
+            hfs.addFont(arab3);
+    //                    fs.addFont(ind);
+            hfs.addFont(hebrew);
             hfs.addFont(russ);
             hfs.addFont(armenian);
             hfs.addFont(chinese1);
@@ -166,11 +171,6 @@ public class TitlesFooter extends PdfPageEventHelper
             hfs.addFont(chinese4);
             hfs.addFont(chinese5);
             hfs.addFont(chinese6);
-            hfs.addFont(arab1);
-            hfs.addFont(arab2);
-            hfs.addFont(arab3);
-    //                    fs.addFont(ind);
-            hfs.addFont(hebrew);
             hfs.addFont(cherokee);
             hfs.addFont(georgian);
             hfs.addFont(devanagari);
