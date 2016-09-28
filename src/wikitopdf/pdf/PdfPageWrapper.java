@@ -99,6 +99,7 @@ public class PdfPageWrapper {
         if(previous_objects.size()>0){
 
             header.setCurrentTitle(last_title);
+            writeTitle(last_title+" (CONT.)");
             for (int k = 0; k < previous_objects.size(); ++k) {
             
                 Element element = (Element) previous_objects.get(k);
@@ -679,21 +680,12 @@ public class PdfPageWrapper {
                 return;
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
-//            System.out.println("line: " + line);
+
             ph = tfs.process(line);
             
-//            System.out.println(ph.getFont().getSize() + " my bitches string here");
-//            if(ph.getFont().getSize() <1){
-//                Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13);
-//                ph.setFont(cardo);
-//            }
-//            System.out.println(ph.getFont().getSize() + " new size!");
-//            System.out.println("phrased");
-//            System.out.println(ph.toString());
+
             ph.setLeading(14);//changes leading between spaces in titles
-//            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 10);
-//            if(ph.getFont()==null)
-//                ph.setFont(cardo);
+
             if(isRTL(as,ph)){
                 System.out.println("yes i am rtl");
                 pp = arabicHeader(ph,pdfWriter);
@@ -707,14 +699,7 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-            if (pdfWriter.getCurrentPageNumber() > 1) { //9/2015 not sure what these does. or why it's commented out...
-                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
-//                mct.addElement(new Phrase("\n"));
-            }
-//            System.out.println("paragraph");
-//            System.out.println(pr);
-//            System.out.println(pr.toString());
-            
+
             if(pp!=null){
                 System.out.println("this is pp");
                 System.out.println(pp);
