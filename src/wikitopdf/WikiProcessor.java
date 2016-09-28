@@ -5,6 +5,7 @@ import wikitopdf.utils.ByteFormatter;
 import wikitopdf.utils.WikiSettings;
 import wikitopdf.utils.WikiLogger;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileFilter;
@@ -44,6 +45,7 @@ public class WikiProcessor {
         Date oldTime;
         long lastTime;
         long totalTime = 0;
+        
         String tempName;
         String outputName = "";
         File oldFile;
@@ -83,11 +85,13 @@ public class WikiProcessor {
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
                 pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in _output.pdf file.
+                
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
                 
                 // While still entires in database and still writing pages to this volume 
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
+                    
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
 
@@ -97,7 +101,7 @@ public class WikiProcessor {
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
                         if(!pdfWrapper.checkOpen())
                             break;
-                        
+
                         WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
@@ -139,7 +143,17 @@ public class WikiProcessor {
                 
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
+                
+                
+                ArrayList objects = pdfWrapper.remaining_objects;
+                System.out.println("84584848848484848484");
+                if(objects.size()>0){
+                     for (int k = 0; k < objects.size(); ++k) {
+                        Element f = (Element) objects.get(k);
+                        System.out.println(f.toString());
 
+                    }
+                }
 
 //              PdfStamp stamp = new PdfStamp();
 //              stamp.stampDir(cPageNum);

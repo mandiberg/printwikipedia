@@ -89,6 +89,7 @@ public class PdfPageWrapper {
           addPrologue(cVolNum, preDoc, preWriter); //creates copyright two pages.
         
         openMultiColumn();
+        
     }
 
     
@@ -633,8 +634,6 @@ public class PdfPageWrapper {
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    System.out.println("the fonts:");
-                    System.out.println(ane);
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         
@@ -649,7 +648,7 @@ public class PdfPageWrapper {
         Paragraph pr = null;
         System.out.println(line);
         try {
-            if(pdfWriter.getPageNumber() >= 69)
+             if(pdfWriter.getPageNumber() >= 68 && pdfWriter.getVerticalPosition(true) < -1800.5)
                 return;
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
@@ -755,8 +754,8 @@ public class PdfPageWrapper {
 //            if (mref.find()) {
 //                append_refs = true;
 //            }
-            System.out.println(text);
-            System.out.println("\n\n\n\n\n");
+//            System.out.println(text);
+//            System.out.println("\n\n\n\n\n");
             String html = WikiHtmlConverter.convertToHtml(text);
             if(WikiHtmlConverter.getModelReferences() == null){
                 is_refs=false;
@@ -765,7 +764,7 @@ public class PdfPageWrapper {
                 is_refs=true;
             }
             
-            System.out.println(html);
+//            System.out.println(html);
 
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
 
@@ -820,7 +819,7 @@ public class PdfPageWrapper {
         StringReader reader = new StringReader(htmlSource);
         StyleSheet styles = WikiStyles.getStyles();
         ArrayList objects;
-        ArrayList remaining_objects = new ArrayList();
+        
         //parse that text!
         objects = WHTMLWorker.parseToList(reader, styles, pdfWriter);
         
@@ -845,11 +844,15 @@ public class PdfPageWrapper {
 //                Paragraph pr = new Paragraph(ph);
 //                System.out.println(pr.toString() + " this isthe paragraph");
             try {
-                if(pdfWriter.getPageNumber() >=69){
+                System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
+                if(pdfWriter.getPageNumber() >= 68 && pdfWriter.getVerticalPosition(true) < -1800.5){
+//                    pdfWriter.setPageEmpty(true);
+//                    mct.resetCurrentColumn();
                     System.out.println("in converthtmlwo2nbdfud return");
                     remaining_objects.add(objects.get(k-1));
                     Element f = (Element) objects.get(k-1);
-                        System.out.println(f.toString());
+                    System.out.println(f.toString());
+                    System.out.println(pdfWriter.getVerticalPosition(true));
                     for (int y=0; y < objects.size()-k; y++){
                         remaining_objects.add(objects.get(k+y));
                         Element d = (Element) objects.get(k+y);
@@ -861,6 +864,7 @@ public class PdfPageWrapper {
                 }
                     
                 mct.addElement(element);
+                
                 
                 pdfDocument.add(mct);
             }
@@ -945,6 +949,7 @@ public class PdfPageWrapper {
     private String prefn = "";
     private String currentTitle = "";
     private int currentArticleID;
+    public ArrayList remaining_objects = new ArrayList();
     private BaseFont bflib;
     public static ArrayList as = new ArrayList();
 }

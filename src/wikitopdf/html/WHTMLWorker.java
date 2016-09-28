@@ -871,8 +871,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    System.out.println("the fonts:");
-                    System.out.println(ane);
+                    
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         
