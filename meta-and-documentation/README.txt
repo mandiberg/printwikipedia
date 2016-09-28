@@ -8,6 +8,15 @@ that everypart of the project is in the same directory but it makes things easie
 manage.)
 
 **************************************************************************************
+
+Using a wiki dump
+	This page provides some of the past dumps of wikipedia http://dumps.wikimedia.org/enwiki/
+	The latest and largest dump is located at this address: http://dumps.wikimedia.org/enwiki/enwiki-latest-pages-articles.xml.bz2
+	The best way to download this is by using nohup and wget to make sure it goes through (these are very large files!)
+	like so: nohup wget -bcq <<http address of your file>> 
+
+--------------------------------------------------------------------------------------
+
 Setting up the database
 
 This first thing you will want to start doing is setting up the database, as it will 
@@ -61,7 +70,13 @@ Structuring the schema
 	
 	Alternately, do it via a query in MySQLWorkbench
 	Type "USE thenameyougaveyourschema;"
-	Then paste in the contents of structure.sql
+	Then paste in the contents of structure.sql and run the code by clicking the lightning bolt button on the top menu.
+
+	*********** \.does not open file in mysql ************
+
+
+
+
 --------------------------------------------------------------------------------------
 Building the Database
 	**************
@@ -102,12 +117,7 @@ Working with the test Database snippet
 	**this is the sped up database**
 
 --------------------------------------------------------------------------------------
-Using a wiki dump
-	This page provides some of the past dumps of wikipedia http://dumps.wikimedia.org/enwiki/
-	The latest and largest dump is located at this address: http://dumps.wikimedia.org/enwiki/enwiki-latest-pages-articles.xml.bz2
-	The best way to download this is by using nohup and wget to make sure it goes through (these are very large files!)
-	like so: nohup wget -bcq <<http address of your file>> 
---------------------------------------------------------------------------------------
+
 
 **************************************************************************************
 Database for Table of Contents
@@ -120,7 +130,7 @@ The Table of Contents database is much smaller and easier. It is really just a l
 Setting up the project to run
 --------------------------------------------------------------------------------------
 Housekeeping
-There is a list of things you will need to have in your project directory inorder to be able to successfully run printwiki:
+There is a list of things you will need to have in your project (dist) directory inorder to be able to successfully run printwiki:
 1. The "fonts" directory: 
 	This is found in your GitHub repository. Simply copy it to the directory where you 
 	will be running printwiki from.

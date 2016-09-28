@@ -16,7 +16,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.firefox.webdriver import FirefoxProfile
-from browsermobproxy import Server
+# from browsermobproxy import Server
 import selenium
 import os
 import sys
@@ -25,13 +25,16 @@ import time
 from time import sleep
 import re
 import json
-import smtplib
+# import smtplib
 from datetime import datetime
-from email.mime.text import MIMEText
+# from email.mime.text import MIMEText
 import tweepy
 import math
 
+from selenium.webdriver.common.action_chains import ActionChains
+
 execfile("pass.py") #need to run this first to get credentials for this upload
+
 sys.setrecursionlimit(4800) #try not to crash please~
 if make_log is True: #send output to logfile.
         log_file = open("log.txt","w")
@@ -67,7 +70,9 @@ class Browser:
                 self.local = Local(self.volume)
                 self.t_start = datetime.now()
                 self.service_type = "//*[@id='productline_3']"
-                self.book_size = "//*[@id='preset_1037_73']"
+                self.service_type2 = "//*[@id='productline_3']/img"
+                self.book_size = "//*[@id='preset_1040_0']"
+                self.book_size2 = "//*[@id='preset_1040_0']/img"
                 self.binding = "//*[@id='binding_4']"
                 self.pg_count = "//*[@id='pagecount']"
                 self.uid = "//*[@id='loginEmail']" #id/name for logging in
@@ -109,7 +114,7 @@ class Browser:
                 profile.set_preference("toolkit.startup.max_resumed_crashes", "-1")
                 self.driver = webdriver.Firefox(profile) #start ff w/profile
                 self.driver.set_window_position(6920,0)#browser size and position.
-                self.driver.set_window_size(220,220)
+                self.driver.set_window_size(3460,1120)
                 print "opening new browser to automate upload of: " + self.volume.title + " on Firefox"
                 self.driver.get("http://www.lulu.com/author/wizard/index.php?fWizard=hardcover")#navigate to author page
                 print "cur time= " + str(self.t_start)
@@ -118,7 +123,9 @@ class Browser:
                 self.luluCruise() #start!
         
                 
-        
+        def sleep_inc(self,slumber_number):
+            slum_num = slumber_number*sleep_multiplier # sleep multiplier is in pass.py
+            sleep(slum_num)
 
         def count_pages(self,filename): #get number of pages for particular pdf.
             rxcountpages = re.compile(r"/Type\s*/Page([^s]|$)", re.MULTILINE|re.DOTALL)
@@ -495,6 +502,13 @@ class Browser:
                 print cur_title
                 return cur_title
 
+        def evalWizTitle(self):
+            titlexpath = "/html/body/div[1]/div[3]/div[2]/div[1]/div[1]/h2"
+
+            wiz_title = self.execution(titlexpath,20,"text").text
+            print wiz_title
+            return wiz_title
+
         def zoomit(self,in_or_out): #for zooming in to make the file look bigger for projector. zooming back out is so the barcode's location is in the same place 
                 if self.execution('/html',10,"find") is True:
                     html = self.driver.find_element_by_tag_name("html")
@@ -514,13 +528,18 @@ class Browser:
 #the following are the different stages of upload.
         def loginPage(self): #stage 1.
                 print "zoomin"
-                self.zoomit("in")
-                if self.evalPageTitle() != "sign up & log in":
+                # self.zoomit("in")
+                # self.sleep_inc(5)
+                if self.evalPageTitle() != "registrieren und anmelden" and self.evalPageTitle() != "sign up & log in":
                         self.webFailure("got ahead of myself")
+                
                 r_uid = self.execution(self.uid,15,"text")
+
                 r_uid.send_keys(lulu_email)
+                self.sleep_inc(2)
                 r_pw = self.execution(self.pw,15,"text")
                 r_pw.send_keys(lulu_pass)
+                self.sleep_inc(1)
                 self.execution(self.logbutt,20,"click") #submit by clicking
                 self.stage+=1
                 print "successfully logged in, now get to creating the book"
@@ -528,10 +547,19 @@ class Browser:
         def bookOptions(self): #2
                 print "setting book options"
                 print "serv type"
+                self.sleep_inc(1)
                 self.execution(self.service_type,20,"click")
+                self.execution(self.service_type2,20,"click")
+                # self.execution(self.service_type,20,"click")
                 print "size"
+                self.sleep_inc(2)
+                element_hover = self.driver.find_element_by_id("preset_1040_0")
+                hover = ActionChains(self.driver).move_to_element(element_hover)
+                hover.perform()
                 self.execution(self.book_size,20,"click")
+                self.execution(self.book_size2,20,"click")
                 print "pg count"
+                self.sleep_inc(2)
                 self.existingText(self.execution(self.pg_count,10,"text"),self.pdf_pages)#clear this thing and put in 700
                 self.execution(self.binding,10,"click")
                 print "clicked binding"
@@ -549,17 +577,23 @@ class Browser:
                         lulu_title = "Contributor Appendix: Volume "+self.volume.num+", "+self.volume.title
                 elif upload_type == "toc":
                         lulu_title = "Table of Contents: Volume "+self.volume.num+", "+self.volume.title
+                self.sleep_inc(2)
                 self.existingText(self.execution(self.book_title,10,"text"),unicode(lulu_title, 'utf-8'))
+                self.sleep_inc(2)
                 self.existingText(self.execution(self.fname,10,"text"),author_fn)
+                self.sleep_inc(2)
                 self.existingText(self.execution(self.lname,10,"text"),author_ln)
                 print "snag the fcid"
                 self.driver.execute_script('document.getElementById("projectDetailsContent").style.display="block"') #show the meta info.
                 self.volume.fcid = self.execution(self.project_id,30,"text").text
                 print self.volume.fcid
+                self.sleep_inc(2)
+
                 self.execution(self.next,10,"click")
                 self.stage+=1
                 self.luluCruise()
         def isbn1(self): #4
+                
                 print "get to isbn page"
                 self.execution(self.next,10,"click")
                 print "only necessary for this page"
@@ -567,14 +601,16 @@ class Browser:
                 self.luluCruise()
         def isbn2(self): #5 barcode and ftp.
                 print "zoom out for barcode"
-                self.zoomit("out")
+                # self.zoomit("out")
                 print "dl pdf on this page" 
+                self.sleep_inc(1)
                 # self.applyBarcode()
                 print "back to normal"
-                self.zoomit("in")
+                # self.zoomit("in")
                 print "ftp modified pre-image ready to be sent on up"
                 if self.local.ftpIt() is False:
                     self.webFailure()
+                self.sleep_inc(2)
                 self.execution(self.next,10,"click")
                 self.stage+=1
                 self.luluCruise()
@@ -586,14 +622,15 @@ class Browser:
                 self.execution(checkbox,30,"click")
                 self.execution(self.submit_button,40,"click")#click submit
                 print "file selected soundly"
-                sleep(1)
+                self.sleep_inc(2)
                 self.stage+=1
                 self.luluCruise()
         def selectFiles2(self): #7 select actual pdf
                 self.execution(self.myFiles,30,"click")
+                self.sleep_inc(1)
                 self.jsIterateFiles(False)
-                print "got your file and sleep 2"
-                sleep(3)
+                print "got your file and sleep"
+                self.sleep_inc(3)
                 self.driver.switch_to_default_content()
                 print "open js file for c2"
                 self.driver.execute_script(open("./getFiles.js").read())
@@ -617,12 +654,21 @@ class Browser:
 
         def makingYour(self): #8 wait for that nightmarish gears animation to finish. there's a greasemonkey script that skips to next page.
                 print "gears animation! lookit 'em go!"
-                self.execution(self.next_disable,65,"click")
-                print "let our greasey monkey screw the wizard"
+                self.execution(self.next_disable,70,"click")
+                # print "let our greasey monkey screw the wizard"
                 self.stage+=1
                 self.luluCruise()
 
         def uploadCover(self): #9 cold potentially upload these like was done to mod####.pdf ... would save *some time and then could iterate through and find like in #7
+                self.sleep_inc(2)
+                print self.evalWizTitle()
+                # exit()
+                if self.evalWizTitle() == "Making Your Print-Ready Cover" or self.evalWizTitle() == "Ihr druckfertiges Cover wird erstellt":
+                    print "it is the print ready cover here after failure."
+                    self.execution(self.next,30,"click")
+                    self.stage+=1
+                    self.luluCruise()
+                    # sleep(2)
                 print "uploading cover"
                 r_cover_upload = self.execution(self.cover_upload,50,"text")
                 r_cover_upload.send_keys(self.local.cFolder +"/"+"volume&&&"+self.volume.num+".pdf")
@@ -635,21 +681,24 @@ class Browser:
 
         def pubOptions(self): #10
                 if self.execution("//*[@id='category']",10,"find")==False:
-                    sleep(3)
+                    self.sleep_inc(3)
                 catSelect=self.driver.find_element_by_xpath("//*[@id='category']")
                 catOptions = catSelect.find_elements_by_tag_name("option")
                 if upload_type=="reg":
-                	pub_option = "Poetry"
+ #                   pub_option = "Gedichte & Reime"
+                    pub_option = ["Poetry","Gedichte & Reime"]
                 else:
-                	pub_option = "Reference"
+                	pub_option = ["Reference"]
                 for option in catOptions:
-                        if option.text==pub_option:
-                                print "found particular option in select"
-                                option.click()
-                                break
+                        if option.text in pub_option:
+                            print "found particular option in select"
+                            option.click()
+                            break
                 print "keywords"
+                self.sleep_inc(2)
                 r_keywords = self.execution(self.keywords,150,"text")
                 r_keywords.send_keys("Poetry, Reference, Wikipedia, Mandiberg")
+                self.sleep_inc(2)
                 r_desc = self.execution(self.description,100,"text")
                 #use twitter class to shorten strings appropriately
                 title_arr = self.local.tweeter.proportionally_shorten_strings(self.volume.title.split(" --- ")[0],self.volume.title.split(" --- ")[1],100)
@@ -660,20 +709,25 @@ class Browser:
                 elif upload_type == "toc":
                         desc_title = "Table of Contents: Volume "+self.volume.num+", "+title_arr[0]+" --- "+title_arr[1]+"\n\n"
 
-                r_desc.send_keys(unicode(desc_title+"Print Wikipedia is a both a utilitarian visualization of the largest accumulation of human knowledge and a poetic gesture towards the inhuman scale of big data. Michael Mandberg wrote software that parses the entirety of the English-language Wikipedia database and programmatically lays out nearly 7500 volumes, complete with covers, and then uploads them to Lulu.com for print-on-demand. Print Wikipedia draws attention to the sheer size of the encyclopedia's content and the impossibility of rendering Wikipedia as a material object in fixed form: Once a volume is printed it is already out of date. It is also a work of found poetry built on what is likely the largest appropriation ever made. As we become increasingly more dependent on information and source material on the Internet today, Mandiberg explores the accessibility of its vastness.", 'utf-8','ignore'))
-
+                r_desc.send_keys(unicode(desc_title+"Print Wikipedia is a both a utilitarian visualization of the largest accumulation of human knowledge and a poetic gesture towards the inhuman scale of big data. Michael Mandiberg wrote software transforms all of Wikipedia in thousands of print on print-on-demand volumes, drawing attention to the sheer size of the encyclopedia's content and the impossibility of rendering Wikipedia as a poetic material object in fixed form: Once a volume is printed it is already out of date. This German version encompases 3406 volumes that were uploaded in May and June 2016.\n\nEine gängige Größenordnung für Enzyklopädien sind die Bände ihrer Ausgaben. Michael Mandiberg hat die aktuelle Version der deutschsprachigen Wikipedia in enzyklopädische Artikel umgerechnet und eine ganze Bibliothek des Wissens geschaffen: 3.406 Bände.", 'utf-8','ignore'))
+                self.sleep_inc(3)
                 r_copy = self.execution(self.copyright,30,"text")
+                self.sleep_inc(1)
                 r_copy.send_keys("Wikipedia Contributors")
                 lisc_select =self.execution(self.license,30,"text")
                 liscOptions = lisc_select.find_elements_by_tag_name("option")
                 for option in liscOptions:
-                        if option.text=="Creative Commons Attribution-ShareAlike 2.0":
+                        if option.text=="Creative Commons Attribution-ShareAlike 2.0" or option.text=="Creative Commons Namensnennung-Weitergabe unter gleichen Bedingungen 2.0":
+#                        if option.text=="Creative Commons Namensnennung-Weitergabe unter gleichen Bedingungen 2.0":
                                 option.click()
                                 break
                 r_edition =self.execution(self.edition,30,"text")
-                r_edition.send_keys('01')
+                self.sleep_inc(2)
+                r_edition.send_keys('02')
                 r_publisher = self.execution(self.publisher,30,"text")
+                self.sleep_inc(2)
                 r_publisher.send_keys("Michael Mandiberg")
+                self.sleep_inc(2)
                 self.execution(self.next,30,"click")
                 self.stage+=1
                 self.luluCruise()
@@ -681,7 +735,7 @@ class Browser:
         def changePrice(self): #11
                 print 'set price now'
                 if self.execution(self.setPrice,20,"find") is False:
-                    sleep(3)
+                    self.sleep_inc(3)
                 r_price = self.driver.find_element_by_xpath(self.setPrice)# self.execution(self.setPrice,30,"text")
                 #unfortunately this needs to be done like this. clear() doesn't work because of some javascript monitor that lulu uses.
                 r_price.send_keys(Keys.BACK_SPACE)
@@ -690,8 +744,11 @@ class Browser:
                 r_price.send_keys(Keys.BACK_SPACE)
                 r_price.send_keys(Keys.BACK_SPACE)
                 r_price.send_keys(Keys.BACK_SPACE)
-                r_price.send_keys(Keys.NUMPAD8)
-                r_price.send_keys(Keys.NUMPAD0)
+                self.sleep_inc(2)
+                r_price.send_keys(Keys.NUMPAD7)
+                self.sleep_inc(1)
+                r_price.send_keys(Keys.NUMPAD5)
+                self.sleep_inc(1)
                 self.execution(self.next,50,"click")
                 self.stage+=1
                 self.luluCruise()
@@ -699,6 +756,7 @@ class Browser:
         def review(self): #12
                 print "almost there. just lemme review the order here"
                 print "book " +self.volume.title+ " pushed to lulu okay."
+                self.sleep_inc(5)
                 self.execution(self.next,50,"click")
                 self.stage+=1
                 self.luluCruise()
@@ -706,9 +764,11 @@ class Browser:
         def isbnNSku(self): #13 last one. gets isbn if you need it. goes to next page and gets sku. been having trouble recently with sku.
                 lulu_isbn = self.execution(self.x_lulu_isbn,20,"text")
                 self.volume.isbn = lulu_isbn.text
+                self.sleep_inc(4)
                 self.execution(self.next,50,"click")
                 print "go to the sale page to grab the SKU code."
                 self.execution(self.x_sell,20,"click")
+                self.sleep_inc(3)
                 self.volume.sku = self.execution(self.sku_x,30,"text").get_attribute('value')
                 print self.volume.sku +  " sku"
                 print "begin next book at vol #"+self.volume.num
@@ -718,7 +778,7 @@ class Browser:
                 self.t_now = datetime.now()
                 self.t_diff = self.t_now-self.t_start
                 print str(self.t_diff) + " on stage " + str(self.stage)
-                if int(self.volume.num) % 5 == 0:
+                if int(self.volume.num) % 2 == 0:
                     time_monitor = open("time_log.txt","a")
                     time_monitor.write(str(self.volume.num)+ " " + self.volume.title+str(self.t_diff) + " on stage " + str(self.stage)+"\n")
                     time_monitor.close()
@@ -773,20 +833,33 @@ class Local:
                         print "make string and append to json1.txt" #write to json so you have a log of what's worked and can make a pretty site later :3
                         json_s = '{"lulu_id":"'+str(volume.fcid)+'","sku":"'+str(volume.sku)+'","volume":"'+str(volume.num)+'","name":"'+str(volume.title)+'"},'
                         print json_s
-                        json_f = open("7-3.json","a")
+                        json_f = open("de_succ.json","a")
                         json_f.write(json_s)
                         json_f.close()
                         # no more tweeting!
                         # self.tweeter.go_tweet(volume.num, volume.title, author_fn, author_ln, volume.sku)
                 is_ignore=False
                 nextCheck=int(volume.num)+1
-
-                if nextCheck % 20 == 0: #get the correct folder.
+                print "this is nextcheck before crashlist" + str(nextCheck)
+                if len(crash_list)>0:
+                    if nextCheck not in crash_list:
+                        for i in crash_list:
+                            if i > nextCheck:
+                                nextCheck = i
+                                print "make nextcheck i  " + str(i)
+                                break
+                        volume.num = int(nextCheck)
+                    print "this is volnum " + str(volume.num)
+                    volume.num = int(volume.num)
+                    if volume.num not in crash_list:
+                        exit()
+                # if nextCheck % 20 == 0: #get the correct folder.
                     print "nextcheck went to the next round_folder"
                     tmp_fol = volume.roundDown()
                     tmp_fol=tmp_fol.strip('/')
                     tmp_fol=int(tmp_fol)
-                    tmp_fol+=20
+                    if nextCheck % 20 == 0:
+                        tmp_fol+=20
                     volume.round_folder = str('{0:04d}'.format(tmp_fol))
                     print volume.round_folder 
 
@@ -812,15 +885,17 @@ class Local:
                 try:
                     session = ftplib.FTP(ftp_host,lulu_email,lulu_pass)
                     session.cwd(self.volume.round_folder)
-                    print self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf'
+                    print self.volume.round_folder+'/pre'+self.volume.num+'.pdf'
                     file = open(self.inFolder+self.volume.round_folder+'/pre'+self.volume.num+'.pdf','rb') # file to send
                     session.storbinary('STOR pre'+self.volume.num+".pdf", file) # send the file
                     file.close() # close file and FTP
                     session.quit()
-                except:
+                except Exception, e:
                     print "ftp mess up"
+                    print str(e)
                     return False
                 # except ftplib.error_temp:
+                #     print ftplib.
                 #     print "ftp temporary error"
                 #     sleep(5)
                 #     self.ftpIt
@@ -830,10 +905,11 @@ class Local:
 
 class Tweeter:
         #keys, tokens for @PrintWikipedia account
-        consumer_key = "BhvUb8DUsRsrXh5ODEBt2VhQT"
-        consumer_secret = "etbxqJI4pYlbFbHADpvdkx8G7SxDg058pa4pJYrIEDlNJJR7gn"
-        access_token = "3219884864-AAPlg5nZvjJtbNTbYCMnY5FqJrTpCwylXnyLmll"
-        access_token_secret = "rMJ35vSCi4jkU5SWbj6Ihe5mU5amGL9MebOPpLbzCUTOM"
+        consumer_key = pw_consumer_key
+        consumer_secret = pw_consumer_secret
+        access_token = pw_access_token
+        access_token_secret = pw_access_token_secret
+ 
         #basic authorization for read/write, see: http://tweepy.readthedocs.org/en/v3.3.0/auth_tutorial.html
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
@@ -885,6 +961,15 @@ class Tweeter:
         def format_text(self, num, title, fn, ln, sku): #format incoming object into a string for tweet
                 #tweets should look like: Uploaded Volume XXXX, "From - To" http://URLHERE
                 #http://www.lulu.com/shop/michael-mandiberg/product-22187323.html
+                if upload_type == "reg":
+                        mtl_text = "Uploaded Volume_XXXX,__-____ "
+                        wo_link = "Volume"
+                elif upload_type == "contrib":
+                        mtl_text = "Uploaded Contributor Appendix_XXXX,__-____"
+                        wo_link = "Contributor Appendix"
+                elif upload_type == "toc":
+                        mtl_text = "Uploaded Table of Contents_XXXX,__-____"
+                        wo_link = "Table of Contents"
                 reload(sys)
                 sys.setdefaultencoding('utf-8')
                 title_from = title.split(" --- ")[0]
@@ -892,9 +977,9 @@ class Tweeter:
                 config = self.api.configuration()
                 #for testing, when we go over rate limit...
                 #config = {'short_url_length' : 22}
-                max_titles_length = 140 - (len('Uploaded Table of Contents_XXXX,__-____') + config['short_url_length'])
+                max_titles_length = 140 - (len(mtl_text) + config['short_url_length'])
                 titles = self.proportionally_shorten_strings(title_from, title_to, max_titles_length)
-                text_sans_url = ('Uploaded Table of Contents %s, "%s - %s" ' % (num, titles[0], titles[1]))#.decode('latin-1')
+                text_sans_url = ('Uploaded '+wo_link+' %s, "%s - %s" ' % (num, titles[0], titles[1]))#.decode('latin-1')
                 fn = re.sub(r'\s', '-', fn.lower())
                 ln = re.sub(r'\s', '-', ln.lower())
                 url = "http://www.lulu.com/shop/%s-%s/product-%s.html" % (fn, ln, sku)
@@ -907,6 +992,7 @@ class Tweeter:
                 return text
 
         def go_tweet(self, num, title, fn, ln, sku):
+                print "CHIRP CHIRP"
                 self.tweet(self.format_text(num, title, fn, ln, sku))
 
 b = Browser(input_file) #fireitup
