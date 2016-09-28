@@ -45,6 +45,7 @@ public class WikiProcessor {
         Date oldTime;
         long lastTime;
         long totalTime = 0;
+        ArrayList objects = new ArrayList();
         
         String tempName;
         String outputName = "";
@@ -84,7 +85,7 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in _output.pdf file.
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
@@ -145,15 +146,14 @@ public class WikiProcessor {
                 pdfWrapper.close();
                 
                 
-                ArrayList objects = pdfWrapper.remaining_objects;
-                System.out.println("84584848848484848484");
-                if(objects.size()>0){
-                     for (int k = 0; k < objects.size(); ++k) {
-                        Element f = (Element) objects.get(k);
-                        System.out.println(f.toString());
-
-                    }
-                }
+                objects = pdfWrapper.remaining_objects;
+//                if(objects.size()>0){
+//                     for (int k = 0; k < objects.size(); ++k) {
+//                        Element f = (Element) objects.get(k);
+//                        System.out.println(f.toString());
+//
+//                    }
+//                }
 
 //              PdfStamp stamp = new PdfStamp();
 //              stamp.stampDir(cPageNum);

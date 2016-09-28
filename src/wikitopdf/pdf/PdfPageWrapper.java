@@ -48,7 +48,7 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum) throws DocumentException, IOException { 
+    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
         System.out.println("i am start page " + pageNum);
@@ -60,7 +60,9 @@ public class PdfPageWrapper {
         tFontGet();//title/entryheading font
         fontGet();//regular font
         preFontGet();//smaller font for quotes/<pre> tags. -- not sure if this is working or being rendered.
-
+//        System.out.println("\n\n\n\n\nturkey");
+//        System.out.println(previous_objects.size());
+//        System.out.println("\n\n\n\n\nturkey");
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
 
         preDoc = new Document(new Rectangle(432,648));
