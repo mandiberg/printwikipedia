@@ -1,3 +1,5 @@
+//pdfpagewrapper
+
 package wikitopdf.pdf;
 
 import com.lowagie.text.Chunk;
@@ -647,6 +649,8 @@ public class PdfPageWrapper {
         Paragraph pr = null;
         System.out.println(line);
         try {
+            if(pdfWriter.getPageNumber() >= 69)
+                return;
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
 //            System.out.println("line: " + line);
@@ -816,6 +820,7 @@ public class PdfPageWrapper {
         StringReader reader = new StringReader(htmlSource);
         StyleSheet styles = WikiStyles.getStyles();
         ArrayList objects;
+        ArrayList remaining_objects = new ArrayList();
         //parse that text!
         objects = WHTMLWorker.parseToList(reader, styles, pdfWriter);
         
@@ -840,6 +845,21 @@ public class PdfPageWrapper {
 //                Paragraph pr = new Paragraph(ph);
 //                System.out.println(pr.toString() + " this isthe paragraph");
             try {
+                if(pdfWriter.getPageNumber() >=69){
+                    System.out.println("in converthtmlwo2nbdfud return");
+                    remaining_objects.add(objects.get(k-1));
+                    Element f = (Element) objects.get(k-1);
+                        System.out.println(f.toString());
+                    for (int y=0; y < objects.size()-k; y++){
+                        remaining_objects.add(objects.get(k+y));
+                        Element d = (Element) objects.get(k+y);
+                        System.out.println(d.toString());
+                        
+                    }
+                    
+                    return;
+                }
+                    
                 mct.addElement(element);
                 
                 pdfDocument.add(mct);
