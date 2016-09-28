@@ -223,7 +223,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     whtmlfs = PdfPageWrapper.fs;
                     whtmlas = PdfPageWrapper.as;
                     whtmlprefs = PdfPageWrapper.pfs;
-                    BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    BaseFont bsCardo = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font cardo = new Font(bsCardo);
                     cardo.setSize(10f);
 			style.applyStyle(tag, h);
@@ -599,7 +599,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                             com.lowagie.text.List l = (com.lowagie.text.List) obj;
 
                                         }
-                                        BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                                        BaseFont bsCardo = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                                         Font cardo = new Font(bsCardo);
                                         cardo.setSize(10f);
                                         document.add((Element) new Chunk("\n",cardo));
@@ -705,7 +705,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                             tb.setSpacingBefore(20f);
                             tb.setSplitRows(true);
                             if (stack.empty()){
-                                BaseFont bsCardo = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                                BaseFont bsCardo = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                                 Font cardo = new Font(bsCardo);
                                 cardo.setSize(10f);
                                 document.add(new Phrase("\n",cardo));

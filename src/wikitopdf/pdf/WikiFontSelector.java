@@ -22,7 +22,7 @@ public class WikiFontSelector {
     @SuppressWarnings("static-access")
     private FontSelector getFontSelector() throws DocumentException, IOException {
         //General font, uses for latin chars
-        BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo104s.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        BaseFont bsFontLatin = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         //uses for non-latin chars
         BaseFont bsFontGlyph = BaseFont.createFont("fonts/msgothic.ttc,0", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         BaseFont bsHelv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);

@@ -113,7 +113,7 @@ public class PdfCoverWrapper {
             helv.setSize(7f);
 
             FontFactory.register(path_to_fonts+ "LinLibertine_Rah.ttf","liber");
-            FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+            FontFactory.register(path_to_fonts+"Cardo_no_hebrew.ttf","cardo");
             FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
             FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
             FontFactory.register(path_to_fonts+"cwTeXKai-zhonly.tff","chinese3");
@@ -246,7 +246,7 @@ public class PdfCoverWrapper {
             helv.setSize(7f);
             
             FontFactory.register(path_to_fonts+ "LinLibertine_Rah.ttf","liber");
-            FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+            FontFactory.register(path_to_fonts+"Cardo_no_hebrew.ttf","cardo");
             FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
             FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
             FontFactory.register(path_to_fonts+"cwTeXKai-zhonly.tff","chinese3");

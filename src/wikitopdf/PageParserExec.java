@@ -68,7 +68,7 @@ public class PageParserExec {
         } else if(wikiProcess.equals("toc")){
             System.out.println("Running " + wikiProcess + " "+ System.getProperty("user.dir"));
               //change this to be whatever you wish to iterate through to make TOC formatted pdfs
-              String fileName = "alphautf8de.txt";
+              String fileName = "blahlist.txt";
 //            String fileName = "alphabetlzed_nov_usernames_final.txt";
             
             WikiTitleParser parser = new WikiTitleParser();

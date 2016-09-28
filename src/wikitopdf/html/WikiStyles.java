@@ -17,7 +17,7 @@ public class WikiStyles {
      */
     public static StyleSheet getStyles(){
 
-        FontFactory.register("fonts/Cardo104s.ttf");
+        FontFactory.register("fonts/Cardo_no_hebrew.ttf");
         //FontFactory.register("fonts/Verdana.ttf");
         //FontFactory.register("fonts/Junicode-Regular.ttf");
         //FontFactory.register("fonts/msgothic.ttc");

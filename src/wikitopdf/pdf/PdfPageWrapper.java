@@ -210,7 +210,7 @@ public class PdfPageWrapper {
      */
     public void tFontGet(){
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
-        FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+        FontFactory.register(path_to_fonts+"Cardo_no_hebrew.ttf","cardo");
         FontFactory.register(path_to_fonts+"msgothic.tcc.0","fontGlyph");
         FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
         FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
@@ -337,7 +337,7 @@ public class PdfPageWrapper {
     }
     public void preFontGet(){
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
-        FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+        FontFactory.register(path_to_fonts+"Cardo_no_hebrew.ttf","cardo");
         FontFactory.register(path_to_fonts+"msgothic.tcc.0","fontGlyph");
         FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
         FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
@@ -464,7 +464,7 @@ public class PdfPageWrapper {
     }
             public void fontGet() throws DocumentException, IOException{
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
-        FontFactory.register(path_to_fonts+"Cardo104s.ttf","cardo");
+        FontFactory.register(path_to_fonts+"Cardo_no_hebrew.ttf","cardo");
         FontFactory.register(path_to_fonts+"msgothic.tcc.0","fontGlyph");
         FontFactory.register(path_to_fonts+"cwTeXFangSong-zhonly.ttf","chinese1");
         FontFactory.register(path_to_fonts+"cwTeXHei-zhonly.ttf","chinese2");
