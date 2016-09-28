@@ -48,7 +48,7 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects) throws DocumentException, IOException { 
+    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
         System.out.println("i am start page " + pageNum);
@@ -91,10 +91,35 @@ public class PdfPageWrapper {
           addPrologue(cVolNum, preDoc, preWriter); //creates copyright two pages.
         
         openMultiColumn();
+        addPreviousObjects(previous_title,previous_objects);
         
     }
 
-    
+    public void addPreviousObjects(String last_title, ArrayList previous_objects) throws DocumentException    {
+        if(previous_objects.size()>0){
+
+            header.setCurrentTitle(last_title);
+            for (int k = 0; k < previous_objects.size(); ++k) {
+            
+                Element element = (Element) previous_objects.get(k);
+    //            System.out.println(element.toString());
+                //add objects
+
+                if (mct.isOverflow()) {
+                    mct.nextColumn();
+                    pdfDocument.newPage();
+                }
+
+                    mct.addElement(element);
+
+
+                    pdfDocument.add(mct);
+
+
+        }
+        
+        }
+     }
     
     public void openMultiColumn() {
 

@@ -45,6 +45,7 @@ public class WikiProcessor {
         Date oldTime;
         long lastTime;
         long totalTime = 0;
+        String last_title = "";
         ArrayList objects = new ArrayList();
         
         String tempName;
@@ -85,7 +86,8 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects); // Start with page ID indicated in _output.pdf file.
+                
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
@@ -112,7 +114,8 @@ public class WikiProcessor {
                             break;//if you made it through then stop.
                         }
                     }
-                    outputName = outputName +  pages.get(artWritten - 1).getTitle();
+                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");;
+                    outputName = outputName + last_title;
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
                     outputName = outputName.replace(":", "");
@@ -160,8 +163,7 @@ public class WikiProcessor {
 //              stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
                 totalPageNum += cPageNum+1;
                 //Renaming Added May 24 by CE, renames outputfile         
-                outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
-                        outputName  + "&&&.pdf";
+                outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
 //                File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
