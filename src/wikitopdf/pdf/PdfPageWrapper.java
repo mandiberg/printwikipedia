@@ -845,16 +845,7 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-//this is where i first tried to add font stack and it worked well and fast but it could not parse everything correctly. only one font size was applied :\
 
-//            
-//            String temp_elem = element.toString();
-//            temp_elem = temp_elem.substring(1, temp_elem.length()-1);
-//            Phrase ph = fs.process(temp_elem);
-            
-//                ph.setLeading(8);
-//                Paragraph pr = new Paragraph(ph);
-//                System.out.println(pr.toString() + " this isthe paragraph");
             try {
                 System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
                 if(pdfWriter.getPageNumber() >= 68 && pdfWriter.getVerticalPosition(true) < -1800.5){
