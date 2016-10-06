@@ -183,26 +183,24 @@ public class WikiProcessor {
 //                        System.out.println("File not renamed second time, matching" );
 //                    }
                 }
-                //check if the page limit is exceeded.
-                
+                //check if the page limit is exceeded, chop, create new file, delete old file and rename new to old with correct page#
                 
                 if(pdfWrapper.getPageNumb()>hard_page_limit){
                     String abs_path_newFile = newFile.getAbsolutePath();
-                    System.out.println("limit exceded here is file: " + abs_path_newFile);
+                    
                     PdfReader reader = new PdfReader(newFile.getAbsolutePath());
+                    //make hardpagelimit a string for seeking to cut.
                     String hpl_str = Integer.toString(hard_page_limit);
                     reader.selectPages("0-" + hpl_str) ;
-                    System.out.println("new stamper");
                     PdfStamper pdfstamper = new PdfStamper(reader,new FileOutputStream("./output/tmp_chop_file.pdf"));
-                    System.out.println("close stamper");
+
                     pdfstamper.close();
-                    System.out.println("delete newfile");
                     newFile.delete();
-                    System.out.println("make new file chop pdf");
+
                     File f = new File("./output/tmp_chop_file.pdf");
-                    System.out.println("rename");
+
                     f.renameTo(new File(outputName));
-                    System.out.println("if you don't see me i failed!");
+
                 }
                 
                 //Timing
