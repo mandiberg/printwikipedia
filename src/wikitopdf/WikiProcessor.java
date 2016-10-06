@@ -87,7 +87,7 @@ public class WikiProcessor {
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
                 
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title); // Start with page ID indicated in _output.pdf file.
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, pdfPageLimit); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();

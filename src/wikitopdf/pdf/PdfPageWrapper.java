@@ -48,9 +48,10 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title) throws DocumentException, IOException { 
+    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title, int soft_page_limit) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
+         hard_page_limit = soft_page_limit + 2;
         System.out.println("i am start page " + pageNum);
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
@@ -676,7 +677,7 @@ public class PdfPageWrapper {
         Paragraph pr = null;
         System.out.println(line);
         try {
-             if(pdfWriter.getPageNumber() >= 68 && pdfWriter.getVerticalPosition(true) < -1800.5)
+             if(pdfWriter.getPageNumber() >= hard_page_limit )
                 return;
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
@@ -848,7 +849,7 @@ public class PdfPageWrapper {
 
             try {
                 System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
-                if(pdfWriter.getCurrentPageNumber() >= 71 ){
+                if(pdfWriter.getCurrentPageNumber() >= hard_page_limit ){
 //                    pdfWriter.setPageEmpty(true);
 //                    mct.resetCurrentColumn();
                     System.out.println("in converthtmlwo2nbdfud return");
@@ -957,4 +958,5 @@ public class PdfPageWrapper {
     public ArrayList remaining_objects = new ArrayList();
     private BaseFont bflib;
     public static ArrayList as = new ArrayList();
-}
+    private int hard_page_limit = 0;
+}   
