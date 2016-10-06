@@ -105,8 +105,6 @@ public class WikiProcessor {
                     
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
-                    System.out.println("size of object before for loop in 2nd while " + objects.size());
-                    System.out.println("size of REMAINING object from page wrapper before for loop in 2nd while " + pdfWrapper.remaining_objects.size());
                     if(carry_over_art){
                         outputName = last_title+"&&&";
                     }
