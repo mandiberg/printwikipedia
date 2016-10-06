@@ -1,3 +1,5 @@
+//pdfpagewrapper
+
 package wikitopdf.pdf;
 
 import com.lowagie.text.Chunk;
@@ -46,9 +48,10 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum) throws DocumentException, IOException { 
+    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title, int incoming_hard_page_limit) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
+        hard_page_limit = incoming_hard_page_limit;
         System.out.println("i am start page " + pageNum);
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
@@ -58,7 +61,9 @@ public class PdfPageWrapper {
         tFontGet();//title/entryheading font
         fontGet();//regular font
         preFontGet();//smaller font for quotes/<pre> tags. -- not sure if this is working or being rendered.
-
+//        System.out.println("\n\n\n\n\nturkey");
+//        System.out.println(previous_objects.size());
+//        System.out.println("\n\n\n\n\nturkey");
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
 
         preDoc = new Document(new Rectangle(432,648));
@@ -87,9 +92,36 @@ public class PdfPageWrapper {
           addPrologue(cVolNum, preDoc, preWriter); //creates copyright two pages.
         
         openMultiColumn();
+        addPreviousObjects(previous_title,previous_objects);
+        
     }
 
-    
+    public void addPreviousObjects(String last_title, ArrayList previous_objects) throws DocumentException    {
+        if(previous_objects.size()>0){
+
+            header.setCurrentTitle(last_title);
+            writeTitle(last_title+" (CONT.)");
+            for (int k = 0; k < previous_objects.size(); ++k) {
+            
+                Element element = (Element) previous_objects.get(k);
+    //            System.out.println(element.toString());
+                //add objects
+
+                if (mct.isOverflow()) {
+                    mct.nextColumn();
+                    pdfDocument.newPage();
+                }
+
+                    mct.addElement(element);
+
+
+                    pdfDocument.add(mct);
+
+
+        }
+        
+        }
+     }
     
     public void openMultiColumn() {
 
@@ -631,8 +663,6 @@ public class PdfPageWrapper {
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    System.out.println("the fonts:");
-                    System.out.println(ane);
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         
@@ -645,25 +675,18 @@ public class PdfPageWrapper {
         PdfPTable pp = null;
         Phrase ph = null;
         Paragraph pr = null;
-        System.out.println(line);
+        System.out.println(line+ "and i am the hard limit " + hard_page_limit);
         try {
+             if(pdfWriter.getPageNumber() >= hard_page_limit )
+                return;
             line = line.replaceAll("_", " ").toUpperCase();
             header.setCurrentTitle(line);
-//            System.out.println("line: " + line);
+
             ph = tfs.process(line);
             
-//            System.out.println(ph.getFont().getSize() + " my bitches string here");
-//            if(ph.getFont().getSize() <1){
-//                Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13);
-//                ph.setFont(cardo);
-//            }
-//            System.out.println(ph.getFont().getSize() + " new size!");
-//            System.out.println("phrased");
-//            System.out.println(ph.toString());
+
             ph.setLeading(14);//changes leading between spaces in titles
-//            Font cardo = FontFactory.getFont("cardo", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 10);
-//            if(ph.getFont()==null)
-//                ph.setFont(cardo);
+
             if(isRTL(as,ph)){
                 System.out.println("yes i am rtl");
                 pp = arabicHeader(ph,pdfWriter);
@@ -677,14 +700,7 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-            if (pdfWriter.getCurrentPageNumber() > 1) { //9/2015 not sure what these does. or why it's commented out...
-                //Double paragraph helvetica problem is here other is in WikiHtmlConverter.java
-//                mct.addElement(new Phrase("\n"));
-            }
-//            System.out.println("paragraph");
-//            System.out.println(pr);
-//            System.out.println(pr.toString());
-            
+
             if(pp!=null){
                 System.out.println("this is pp");
                 System.out.println(pp);
@@ -751,8 +767,8 @@ public class PdfPageWrapper {
 //            if (mref.find()) {
 //                append_refs = true;
 //            }
-            System.out.println(text);
-            System.out.println("\n\n\n\n\n");
+//            System.out.println(text);
+//            System.out.println("\n\n\n\n\n");
             String html = WikiHtmlConverter.convertToHtml(text);
             if(WikiHtmlConverter.getModelReferences() == null){
                 is_refs=false;
@@ -761,7 +777,7 @@ public class PdfPageWrapper {
                 is_refs=true;
             }
             
-            System.out.println(html);
+//            System.out.println(html);
 
             //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
 
@@ -816,6 +832,7 @@ public class PdfPageWrapper {
         StringReader reader = new StringReader(htmlSource);
         StyleSheet styles = WikiStyles.getStyles();
         ArrayList objects;
+        
         //parse that text!
         objects = WHTMLWorker.parseToList(reader, styles, pdfWriter);
         
@@ -829,20 +846,34 @@ public class PdfPageWrapper {
                 mct.nextColumn();
                 pdfDocument.newPage();
             }
-//this is where i first tried to add font stack and it worked well and fast but it could not parse everything correctly. only one font size was applied :\
 
-//            
-//            String temp_elem = element.toString();
-//            temp_elem = temp_elem.substring(1, temp_elem.length()-1);
-//            Phrase ph = fs.process(temp_elem);
-            
-//                ph.setLeading(8);
-//                Paragraph pr = new Paragraph(ph);
-//                System.out.println(pr.toString() + " this isthe paragraph");
             try {
+                System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
+                if(pdfWriter.getPageNumber() >= hard_page_limit ){
+//                    pdfWriter.setPageEmpty(true);
+//                    mct.resetCurrentColumn();
+                    System.out.println("in converthtmlwo2nbdfud return");
+
+                    System.out.println(pdfWriter.getVerticalPosition(true));
+                    for (int y=0; y < objects.size()-k; y++){
+                        remaining_objects.add(objects.get(k+y));
+                        Element d = (Element) objects.get(k+y);
+                        System.out.println(d.toString());
+                        
+                    }
+                    
+                    return;
+                }
+                System.out.println(element.toString());
+                
                 mct.addElement(element);
                 
+                
+                
+                
                 pdfDocument.add(mct);
+                
+                System.out.println(pdfWriter.getVerticalPosition(true));
             }
             catch(Exception e) {
 //                System.out.println("ELEM CAUSING ERROR: \n\n\n");
@@ -925,6 +956,9 @@ public class PdfPageWrapper {
     private String prefn = "";
     private String currentTitle = "";
     private int currentArticleID;
+    public ArrayList remaining_objects = new ArrayList();
     private BaseFont bflib;
     public static ArrayList as = new ArrayList();
-}
+    private int hard_page_limit;
+    
+}   

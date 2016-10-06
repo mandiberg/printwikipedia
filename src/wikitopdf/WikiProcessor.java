@@ -5,6 +5,7 @@ import wikitopdf.utils.ByteFormatter;
 import wikitopdf.utils.WikiSettings;
 import wikitopdf.utils.WikiLogger;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileFilter;
@@ -16,6 +17,9 @@ import wikitopdf.pdf.PdfPageWrapper;
 import wikitopdf.pdf.PdfStamp;
 import wikitopdf.wiki.WikiPage;
 import wikitopdf.wiki.WikiRevision;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -31,10 +35,12 @@ public class WikiProcessor {
         boolean end_times = false;
         int pageBunch = WikiSettings.getInstance().getArticleBunch();
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
+        int hard_page_limit = pdfPageLimit+2;
         String pageInfo = "";
         int startLimit = WikiSettings.getInstance().getStartPage();
         int timeLimit = WikiSettings.getInstance().getTimeLimit();
         boolean isInProggress = true;
+        boolean carry_over_art = false;
         int totalPageNum = 3;
         int cPageNum = 0;
         int artWritten = 0;
@@ -44,6 +50,9 @@ public class WikiProcessor {
         Date oldTime;
         long lastTime;
         long totalTime = 0;
+        String last_title = "";
+        ArrayList objects = new ArrayList();
+        
         String tempName;
         String outputName = "";
         File oldFile;
@@ -82,32 +91,50 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum); // Start with page ID indicated in _output.pdf file.
+                if(objects.size()>0){
+                    carry_over_art = true;
+                }
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, hard_page_limit); // Start with page ID indicated in _output.pdf file.
+                
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
                 
                 // While still entires in database and still writing pages to this volume 
+                
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
+                    
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
-
-                    outputName = pages.get(0).getTitle()+"&&&";
+                    if(carry_over_art){
+                        outputName = last_title+"&&&";
+                    }
+                    else{
+                        outputName = pages.get(0).getTitle()+"&&&";
+                    }
+                    
                     
                     Iterator<WikiPage> i = pages.iterator();
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
                         if(!pdfWrapper.checkOpen())
                             break;
-                        
+
                         WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
+                        if(pdfWrapper.remaining_objects.size()>0){
+                            break;
+                        }
+                        
                         System.out.println("Current Article is: " + (startLimit + artWritten));
                         if(startLimit + artWritten+1 == 8110166){//final pkey...
                             end_times = true;
                             break;//if you made it through then stop.
                         }
                     }
-                    outputName = outputName +  pages.get(artWritten - 1).getTitle();
+                    
+                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");    
+                    
+                    outputName = outputName + last_title;
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
                     outputName = outputName.replace(":", "");
@@ -139,15 +166,23 @@ public class WikiProcessor {
                 
                 cPageNum = pdfWrapper.getPageNumb();
                 pdfWrapper.close();
-
-
+                
+                
+                objects = pdfWrapper.remaining_objects;
+//                if(objects.size()>0){
+//                     for (int k = 0; k < objects.size(); ++k) {
+//                        Element f = (Element) objects.get(k);
+//                        System.out.println(f.toString());
+//
+//                    }
+//                }
+                
 //              PdfStamp stamp = new PdfStamp();
 //              stamp.stampDir(cPageNum);
 //              stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
                 totalPageNum += cPageNum+1;
                 //Renaming Added May 24 by CE, renames outputfile         
-                outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + 
-                        outputName  + "&&&.pdf";
+                outputName = "./output/" + String.format("%04d", cVolNum) + "&&&" + outputName  + "&&&.pdf";
                 oldFile = new File(tempName);
 //                File oldFileNoUnderscore = new File(tempName);
                 newFile = new File(outputName);
@@ -158,7 +193,26 @@ public class WikiProcessor {
 //                        System.out.println("File not renamed second time, matching" );
 //                    }
                 }
-             
+                //check if the page limit is exceeded, chop, create new file, delete old file and rename new to old with correct page#
+                
+                if(pdfWrapper.getPageNumb()>hard_page_limit){
+                    String abs_path_newFile = newFile.getAbsolutePath();
+                    
+                    PdfReader reader = new PdfReader(newFile.getAbsolutePath());
+                    //make hardpagelimit a string for seeking to cut.
+                    String hpl_str = Integer.toString(hard_page_limit);
+                    reader.selectPages("0-" + hpl_str) ;
+                    PdfStamper pdfstamper = new PdfStamper(reader,new FileOutputStream("./output/tmp_chop_file.pdf"));
+
+                    pdfstamper.close();
+                    newFile.delete();
+
+                    File f = new File("./output/tmp_chop_file.pdf");
+
+                    f.renameTo(new File(outputName));
+
+                }
+                
                 //Timing
                 oldTime = newTime;
                 newTime = new Date();
