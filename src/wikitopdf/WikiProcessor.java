@@ -40,6 +40,7 @@ public class WikiProcessor {
         int startLimit = WikiSettings.getInstance().getStartPage();
         int timeLimit = WikiSettings.getInstance().getTimeLimit();
         boolean isInProggress = true;
+        boolean carry_over_art = false;
         int totalPageNum = 3;
         int cPageNum = 0;
         int artWritten = 0;
@@ -90,7 +91,9 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
-                
+                if(objects.size()>0){
+                    carry_over_art = true;
+                }
                 pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, hard_page_limit); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
@@ -102,8 +105,15 @@ public class WikiProcessor {
                     
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
-
-                    outputName = pages.get(0).getTitle()+"&&&";
+                    System.out.println("size of object before for loop in 2nd while " + objects.size());
+                    System.out.println("size of REMAINING object from page wrapper before for loop in 2nd while " + pdfWrapper.remaining_objects.size());
+                    if(carry_over_art){
+                        outputName = last_title+"&&&";
+                    }
+                    else{
+                        outputName = pages.get(0).getTitle()+"&&&";
+                    }
+                    
                     
                     Iterator<WikiPage> i = pages.iterator();
                     for(; i.hasNext() && pdfWrapper.getPageNumb() < pdfPageLimit; ) { 
@@ -123,7 +133,9 @@ public class WikiProcessor {
                             break;//if you made it through then stop.
                         }
                     }
-                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");
+                    
+                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");    
+                    
                     outputName = outputName + last_title;
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
