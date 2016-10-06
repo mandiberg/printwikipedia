@@ -48,10 +48,10 @@ public class PdfPageWrapper {
      * @throws DocumentException
      * @throws IOException
      */
-    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title, int soft_page_limit) throws DocumentException, IOException { 
+    public PdfPageWrapper(int index, int cVolNum, int pageNum, ArrayList previous_objects, String previous_title, int incoming_hard_page_limit) throws DocumentException, IOException { 
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
-         hard_page_limit = soft_page_limit + 2;
+        hard_page_limit = incoming_hard_page_limit;
         System.out.println("i am start page " + pageNum);
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
@@ -675,7 +675,7 @@ public class PdfPageWrapper {
         PdfPTable pp = null;
         Phrase ph = null;
         Paragraph pr = null;
-        System.out.println(line);
+        System.out.println(line+ "and i am the hard limit " + hard_page_limit);
         try {
              if(pdfWriter.getPageNumber() >= hard_page_limit )
                 return;
@@ -849,7 +849,7 @@ public class PdfPageWrapper {
 
             try {
                 System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
-                if(pdfWriter.getCurrentPageNumber() >= hard_page_limit ){
+                if(pdfWriter.getPageNumber() >= hard_page_limit ){
 //                    pdfWriter.setPageEmpty(true);
 //                    mct.resetCurrentColumn();
                     System.out.println("in converthtmlwo2nbdfud return");
@@ -872,6 +872,7 @@ public class PdfPageWrapper {
                 
                 
                 pdfDocument.add(mct);
+                
                 System.out.println(pdfWriter.getVerticalPosition(true));
             }
             catch(Exception e) {
@@ -958,5 +959,6 @@ public class PdfPageWrapper {
     public ArrayList remaining_objects = new ArrayList();
     private BaseFont bflib;
     public static ArrayList as = new ArrayList();
-    private int hard_page_limit = 0;
+    private int hard_page_limit;
+    
 }   

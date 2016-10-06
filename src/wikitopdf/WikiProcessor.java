@@ -17,6 +17,9 @@ import wikitopdf.pdf.PdfPageWrapper;
 import wikitopdf.pdf.PdfStamp;
 import wikitopdf.wiki.WikiPage;
 import wikitopdf.wiki.WikiRevision;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -32,6 +35,7 @@ public class WikiProcessor {
         boolean end_times = false;
         int pageBunch = WikiSettings.getInstance().getArticleBunch();
         int pdfPageLimit = WikiSettings.getInstance().getPageLimit();
+        int hard_page_limit = pdfPageLimit+2;
         String pageInfo = "";
         int startLimit = WikiSettings.getInstance().getStartPage();
         int timeLimit = WikiSettings.getInstance().getTimeLimit();
@@ -87,7 +91,7 @@ public class WikiProcessor {
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
                 
-                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, pdfPageLimit); // Start with page ID indicated in _output.pdf file.
+                pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, hard_page_limit); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
                 sqlReader = new SQLProcessor();
@@ -162,7 +166,7 @@ public class WikiProcessor {
 //
 //                    }
 //                }
-
+                
 //              PdfStamp stamp = new PdfStamp();
 //              stamp.stampDir(cPageNum);
 //              stamp.writeFooter(pdfWrapper.getOutputFileName(), totalPageNum++);
@@ -179,7 +183,28 @@ public class WikiProcessor {
 //                        System.out.println("File not renamed second time, matching" );
 //                    }
                 }
-             
+                //check if the page limit is exceeded.
+                
+                
+                if(pdfWrapper.getPageNumb()>hard_page_limit){
+                    String abs_path_newFile = newFile.getAbsolutePath();
+                    System.out.println("limit exceded here is file: " + abs_path_newFile);
+                    PdfReader reader = new PdfReader(newFile.getAbsolutePath());
+                    String hpl_str = Integer.toString(hard_page_limit);
+                    reader.selectPages("0-" + hpl_str) ;
+                    System.out.println("new stamper");
+                    PdfStamper pdfstamper = new PdfStamper(reader,new FileOutputStream("./output/tmp_chop_file.pdf"));
+                    System.out.println("close stamper");
+                    pdfstamper.close();
+                    System.out.println("delete newfile");
+                    newFile.delete();
+                    System.out.println("make new file chop pdf");
+                    File f = new File("./output/tmp_chop_file.pdf");
+                    System.out.println("rename");
+                    f.renameTo(new File(outputName));
+                    System.out.println("if you don't see me i failed!");
+                }
+                
                 //Timing
                 oldTime = newTime;
                 newTime = new Date();
