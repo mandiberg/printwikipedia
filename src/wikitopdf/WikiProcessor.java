@@ -93,6 +93,7 @@ public class WikiProcessor {
                 sqlReader = new SQLProcessor();
                 
                 // While still entires in database and still writing pages to this volume 
+                
                 while (pdfWrapper.getPageNumb() < pdfPageLimit && isInProggress) { 
                     
                     // Get all article entries from the database
@@ -108,13 +109,17 @@ public class WikiProcessor {
                         WikiPage page = i.next();
                         pdfWrapper.writePage(page);
                         artWritten++;
+                        if(pdfWrapper.remaining_objects.size()>0){
+                            break;
+                        }
+                        
                         System.out.println("Current Article is: " + (startLimit + artWritten));
                         if(startLimit + artWritten+1 == 8110166){//final pkey...
                             end_times = true;
                             break;//if you made it through then stop.
                         }
                     }
-                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");;
+                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");
                     outputName = outputName + last_title;
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");

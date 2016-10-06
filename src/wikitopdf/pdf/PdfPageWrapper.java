@@ -848,13 +848,11 @@ public class PdfPageWrapper {
 
             try {
                 System.out.println("i am in pagewrapper getpn   " + pdfWriter.getPageNumber() );
-                if(pdfWriter.getPageNumber() >= 68 && pdfWriter.getVerticalPosition(true) < -1800.5){
+                if(pdfWriter.getCurrentPageNumber() >= 71 ){
 //                    pdfWriter.setPageEmpty(true);
 //                    mct.resetCurrentColumn();
                     System.out.println("in converthtmlwo2nbdfud return");
-                    remaining_objects.add(objects.get(k-1));
-                    Element f = (Element) objects.get(k-1);
-                    System.out.println(f.toString());
+
                     System.out.println(pdfWriter.getVerticalPosition(true));
                     for (int y=0; y < objects.size()-k; y++){
                         remaining_objects.add(objects.get(k+y));
@@ -865,11 +863,15 @@ public class PdfPageWrapper {
                     
                     return;
                 }
-                    
+                System.out.println(element.toString());
+                
                 mct.addElement(element);
                 
                 
+                
+                
                 pdfDocument.add(mct);
+                System.out.println(pdfWriter.getVerticalPosition(true));
             }
             catch(Exception e) {
 //                System.out.println("ELEM CAUSING ERROR: \n\n\n");
