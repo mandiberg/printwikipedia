@@ -99,12 +99,11 @@ public class PdfTitleWrapper {
         ArrayList chunks = ph.getChunks();
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
-                    System.out.println(chunks.get(i).toString());
+//                    System.out.println(chunks.get(i).toString());
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    System.out.println(lilchunk.getFont());
+//                    System.out.println(lilchunk.getFont());
                     if(as.contains(lilchunk.getFont())){
-                        System.out.println("this is get font omg");
-                        System.out.println(lilchunk.getFont());
+//                        System.out.println(lilchunk.getFont());
 //                        System.out.println()
                         return true;
                         
