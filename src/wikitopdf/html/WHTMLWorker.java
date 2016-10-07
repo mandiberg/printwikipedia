@@ -834,8 +834,8 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
         ArrayList chunks = ph.getChunks();
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
+                    System.out.println("begin lil chunk " + lilchunk.toString() + " end lil chunk");
                     String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    System.out.println(lilchunk.getFont() + " lil font in is rtl in whtml worker" );
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         

@@ -779,8 +779,8 @@ public class PdfPageWrapper {
 //            if (mref.find()) {
 //                append_refs = true;
 //            }
-//            System.out.println(text);
-//            System.out.println("\n\n\n\n\n");
+            System.out.println(text);
+            System.out.println("\n\n\n\n\n");
             String html = WikiHtmlConverter.convertToHtml(text);
             if(WikiHtmlConverter.getModelReferences() == null){
                 is_refs=false;
