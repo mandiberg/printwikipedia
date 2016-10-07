@@ -675,7 +675,6 @@ public class PdfPageWrapper {
         PdfPTable pp = null;
         Phrase ph = null;
         Paragraph pr = null;
-        System.out.println(line+ "and i am the hard limit " + hard_page_limit);
         try {
              if(pdfWriter.getPageNumber() >= hard_page_limit )
                 return;
@@ -688,7 +687,6 @@ public class PdfPageWrapper {
             ph.setLeading(14);//changes leading between spaces in titles
 
             if(isRTL(as,ph)){
-                System.out.println("yes i am rtl");
                 pp = arabicHeader(ph,pdfWriter);
             }
             pr = new Paragraph(ph);
@@ -701,12 +699,6 @@ public class PdfPageWrapper {
                 pdfDocument.newPage();
             }
 
-            if(pp!=null){
-                System.out.println("this is pp");
-                System.out.println(pp);
-                System.out.println(pp.isComplete());
-                System.out.println(pp.isContent());
-            }
             
             if(pp!=null){
              System.out.println("this is not null pp");
@@ -733,43 +725,43 @@ public class PdfPageWrapper {
             text = text.replaceAll("<gallery[\\s\\S]*?</gallery>",""); //no gallery
             text = text.replaceAll("\\s#########.+","");
             text = text.replaceAll("\\s\\*\\*\\*\\*\\*\\*\\*\\*\\*.+","");
-            text = text.replaceAll("(?i)\\[\\[kategorie.+",""); //remove kategorie at the end.
+            text = text.replaceAll("(?i)\\[\\[Categorie.+",""); //remove kategorie at the end.
             text = text.replaceAll("(?i)\\[\\[Datei.+","");
             text = text.replaceAll("(?i)\\[\\[bild.+","");
             text = text.replaceAll("(?i)\\[\\[file.+","");
-            text = text.replaceAll("(?s)(?i)==\\s*siehe\\s*auch\\s*==\\s(.+?)==", "==");
-            text = text.replaceAll("(?s)(?i)==\\s*literatur\\s*==\\s(.+?)==", "==");
-            text = text.replaceAll("(?s)(?i)==\\s*weblinks\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*zie\\s*ook\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*literatuur\\s*==\\s(.+?)==", "==");
+            text = text.replaceAll("(?s)(?i)==\\s*externe\\s*link\\s*==\\s(.+?)==", "==");
             text = text.replaceAll("(?s)(?i)==\\s*quellen\\s*==\\s(.+?)==", "==");
             String strPatternDE = "#WEITERLEITUNG\\s*\\[\\[(.*)\\]\\]";
             String strPatternENG = "#redirect\\s*\\[\\[(.*)\\]\\]";
+            String strPatternNL = "#DOORVERWIJZING\\s*\\[\\[(.*)\\]\\]";
             Pattern pde = Pattern.compile(strPatternDE, Pattern.CASE_INSENSITIVE);
             Matcher mde = pde.matcher(text);
             Pattern peng = Pattern.compile(strPatternENG, Pattern.CASE_INSENSITIVE);
             Matcher meng = peng.matcher(text);
+            Pattern pnl = Pattern.compile(strPatternNL, Pattern.CASE_INSENSITIVE);
+            Matcher mnl = pnl.matcher(text);
 
             if (mde.find()) {
-                text = "Siehe: " + mde.group(1);
+                text = "Zie: " + mde.group(1);
             }
             else if(meng.find()){
-                text = "Siehe: " + meng.group(1);
+                text = "Zie: " + meng.group(1);
+            }
+            else if(mnl.find()){
+                text = "Zie: " + mnl.group(1);
             }
 
             
-//            text = text.replaceAll("<!--((.|\\s)*?)-->","");
-//            text = text.replaceAll("(?s)(== Einzelnachweise ==).*","");
+            System.out.println(text);
+            System.out.println("\n\n\n\n\n");
             
-//             text is in BBCode (This is bliki)
-//            String reflistStr = "<H2><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H2>";
-//            Pattern pde = Pattern.compile(reflistStr, Pattern.CASE_INSENSITIVE);
-//            Matcher mref = pde.matcher(text);
-//
-//            if (mref.find()) {
-//                append_refs = true;
-//            }
-//            System.out.println(text);
-//            System.out.println("\n\n\n\n\n");
+            
+            
             String html = WikiHtmlConverter.convertToHtml(text);
+            
+            
             if(WikiHtmlConverter.getModelReferences() == null){
                 is_refs=false;
             }
@@ -777,46 +769,32 @@ public class PdfPageWrapper {
                 is_refs=true;
             }
             
-//            System.out.println(html);
+            System.out.println(html);
 
-            //these are being replaced both in the TOC of each entry and in the actual document. Easiest to remove here. kind of heavy on processor though...
 
-              
-//            html = html.replaceAll("(?s)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
-//            html = html.replaceAll("(?s)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"ANMERKUNGEN\">ANMERKUNGEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-//
-////            html = html.replaceAll("(?s)(<a id=\"References\" name=\"References\"></a><H2>REFERENCES</H2>).*", "<b>_____________________</b><br /><br />");
             if(!is_refs)
-                html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
-////            html = html.replaceAll("(?s)(\\s+<a id=\"External_links\" name=\"External_links\"></a><H2>EXTERNAL LINKS</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(?i)(<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>).*", "<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"WEBLINKS\">WEBLINKS</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+                html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H\\d>).*","<<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"EXTERNE_LINK(s?)\">EXTERNE LINK(s?)</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
 ////            html = html.replaceAll("(?s)(\\s+<a id=\"Footnotes\" name=\"Footnotes\"></a><H2>FOOTNOTES</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"SIEHE_AUCH\">SIEHE AUCH</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"ZIE_OOK\">ZIE OOK</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
 //            
 //            html = html.replaceAll("(?s)(\\s+<a id=\"Bibliography\" name=\"Bibliography\"></a><H2>BIBLIOGRAPHY</H2>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"LITERATUR\">LITERATUR</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-            html = html.replaceAll("(?s)(?i)(\\s+<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"QUELLEN\">QUELLEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"LITERATUUR\">LITERATUUR</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"QUELLEN\">QUELLEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+            html = html.replaceAll("(?s)(?i)((\\s*?)<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"VOETNOTEN\">VOETNOTEN</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
+           
             
-            
-////            html = html.replaceAll("(?s)(\\s*<a\\s+id=\"Gallery\"\\s*name=\"Gallery\">\\s*</a>\\s*<H\\d>GALLERY</H\\d>).*","<b>_____________________</b><br /><br />");
-//            html = html.replaceAll("(?s)(\\s*<H\\d><SPAN CLASS=\"MW-HEADLINE\" ID=\"GALLERY\">GALLERY</SPAN></H\\d>).*","<b>_____________________</b><br /><br />");
-            
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Siehe_auch\">Siehe auch</a>\n</li>","");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Literatur\">Literatur</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Zie_ook\">Zie ook</a>\n</li>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Literatuur\">Literatuur</a>\n</li>", "");
 //            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Anmerkungen\">Anmerkungen</a>\n</li>", "");
             if(!is_refs)
                 html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Einzelnachweise\">Einzelnachweise</a>\n</li>", "");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Weblinks\">Weblinks</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Externe_link(s?)\">Externe link(s?)</a>\n</li>", "");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Bronvermelding\">Bronvermelding</a>\n</li>", "");
+            
             html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Quellen\">Quellen</a>\n</li>","");
-            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Fu.C3.9Fnoten\">Fußnoten</a>\n</li>","");
-//            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Gallery\">Gallery</a>\n</li>", "");
-//            
-////            html = html.replaceAll("<a id=\"See_also\" name=\"See_also\"></a><H2>SEE ALSO</H2>", "");
-//            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#See_also\">See also</a>\n</li>","");
-//            //html = html.replaceAll("(\\s+<a id) (?:(</a>))","");//removes anchor tags before H2 sections
-//            // text is now html (This is doing iText work)
-//            html = html.replaceAll("<hr\\s/>","");
+            html = html.replaceAll("<li class=\"toclevel-\\d\"><a href=\"#Voetnoten\">Voetnoten</a>\n</li>","");
+
 
             convertHtml2Pdf(html);
             // text has been made into pdf.
