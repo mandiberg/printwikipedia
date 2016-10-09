@@ -58,12 +58,14 @@ public class PdfPageWrapper {
         outputFileName = outputFileName.replace("/","\\");
         prefn = "/../copyright/pre"+String.format("%04d", cVolNum)+".pdf";
 //      WHTMLWorker.fontGet();//start font thing for the new page.
+        as.clear();
         tFontGet();//title/entryheading font
         fontGet();//regular font
         preFontGet();//smaller font for quotes/<pre> tags. -- not sure if this is working or being rendered.
 //        System.out.println("\n\n\n\n\nturkey");
 //        System.out.println(previous_objects.size());
 //        System.out.println("\n\n\n\n\nturkey");
+        
         pdfDocument = new Document(new Rectangle(432, 648));//6" x 9"
 
         preDoc = new Document(new Rectangle(432,648));
@@ -362,10 +364,12 @@ public class PdfPageWrapper {
 //        tfs.addFont(emojiAn);
 //        tfs.addFont(emojiAp);
         tfs.addFont(garif);
-        as.add(arab1);
-        as.add(arab2);
-        as.add(arab3);
-        as.add(hebrew);
+        if(!as.contains(arab1)){
+            as.add(arab1);
+            as.add(arab2);
+            as.add(arab3);
+            as.add(hebrew);
+        }
     }
     public void preFontGet(){
         String path_to_fonts = "/Users/wiki/repos/printwikipedia/dist/fonts/";
@@ -488,10 +492,13 @@ public class PdfPageWrapper {
 //        pfs.addFont(emojiAn);
 //        pfs.addFont(emojiAp);
         pfs.addFont(garif);
-        as.add(arab1);
-        as.add(arab2);
-        as.add(arab3);
-        as.add(hebrew);
+        
+        if(!as.contains(arab1)){
+            as.add(arab1);
+            as.add(arab2);
+            as.add(arab3);
+            as.add(hebrew);
+        }
         
     }
             public void fontGet() throws DocumentException, IOException{
@@ -534,7 +541,7 @@ public class PdfPageWrapper {
         FontFactory.register(path_to_fonts+"AppleColorEmoji.ttf","emojiAp");
         FontFactory.register(path_to_fonts+"android-emoji.ttf","emojiAn");
         FontFactory.register(path_to_fonts+"casy_ea.ttf","garif");
-
+        System.out.println(FontFactory.getRegisteredFonts());
 
         int font_size = 8;
         
@@ -581,13 +588,13 @@ public class PdfPageWrapper {
         
 
         fs.addFont(cardo);
-        fs.addFont(fontGlyph);
-        //fs.addFont(dvs);
-        fs.addFont(fser);
-        fs.addFont(cjk);
         fs.addFont(arab1);
         fs.addFont(arab2);
         fs.addFont(arab3);
+        //fs.addFont(dvs);
+        fs.addFont(fser);
+        fs.addFont(cjk);
+        
 //                    fs.addFont(ind);
         fs.addFont(hebrew);
         fs.addFont(russ);
@@ -611,6 +618,7 @@ public class PdfPageWrapper {
         fs.addFont(helv);
         fs.addFont(roboto);
         fs.addFont(sinhala);
+        fs.addFont(fontGlyph);
         fs.addFont(bengali);
         fs.addFont(punj);
         fs.addFont(fsans);
@@ -620,14 +628,18 @@ public class PdfPageWrapper {
 //        fs.addFont(emojiAn);
 //        fs.addFont(emojiAp);
         fs.addFont(garif);
+        
         System.out.println(arab1);
         System.out.println(arab2);
         System.out.println(arab3);
         System.out.println(hebrew);
-        as.add(arab1);
-        as.add(arab2);
-        as.add(arab3);
-        as.add(hebrew);
+        if(!as.contains(arab1)){
+                as.add(arab1);
+                as.add(arab2);
+                as.add(arab3);
+                as.add(hebrew);
+        }
+
     }
     
     public void writePage(WikiPage page) {
@@ -759,6 +771,19 @@ public class PdfPageWrapper {
             
             
             
+<<<<<<< HEAD
+=======
+//             text is in BBCode (This is bliki)
+//            String reflistStr = "<H2><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H2>";
+//            Pattern pde = Pattern.compile(reflistStr, Pattern.CASE_INSENSITIVE);
+//            Matcher mref = pde.matcher(text);
+//
+//            if (mref.find()) {
+//                append_refs = true;
+//            }
+            System.out.println(text);
+            System.out.println("\n\n\n\n\n");
+>>>>>>> master
             String html = WikiHtmlConverter.convertToHtml(text);
             
             
@@ -842,7 +867,6 @@ public class PdfPageWrapper {
                     
                     return;
                 }
-                System.out.println(element.toString());
                 
                 mct.addElement(element);
                 
@@ -851,7 +875,6 @@ public class PdfPageWrapper {
                 
                 pdfDocument.add(mct);
                 
-                System.out.println(pdfWriter.getVerticalPosition(true));
             }
             catch(Exception e) {
 //                System.out.println("ELEM CAUSING ERROR: \n\n\n");
