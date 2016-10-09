@@ -31,6 +31,7 @@ import com.lowagie.text.html.simpleparser.IncCell;
 import com.lowagie.text.html.simpleparser.IncTable;
 import com.lowagie.text.html.simpleparser.StyleSheet;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
@@ -814,7 +815,9 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 PdfPTable pp = null;
                 if( isRTL(whtmlas,ph) ) {
                     System.err.println("yes i am rtl");
-                    pp = arabicText(ph,writer);
+                    System.err.println("soup ");
+                    ph = processToArabic(ph,writer, whtmlas);
+                      pp = arabicText(ph,writer);
                 }
                 if(pp!=null){
                     System.err.println(ph.toString());
@@ -834,8 +837,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
         ArrayList chunks = ph.getChunks();
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
-                    System.out.println("begin lil chunk " + lilchunk.toString() + " end lil chunk");
-                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
+//                    System.out.println("begin lil chunk " + lilchunk.toString() + " end lil chunk");
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         
@@ -843,6 +845,29 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 }
         
         return false;
+    }
+        
+    public Phrase processToArabic(Phrase ph, PdfWriter pdfWriter, ArrayList as) {
+        Phrase arab_phrase = new Phrase();
+        
+        ArrayList chunks = ph.getChunks();
+        for(int i=0; i < chunks.size(); i++){
+            Chunk lilchunk = (Chunk) chunks.get(i);
+                    
+                    if(as.contains(lilchunk.getFont())){
+
+                        arab_phrase.add("\u202B");
+                        arab_phrase.add(lilchunk);
+                        arab_phrase.add("\u200F"+"\u202C");
+//                        arab_phrase.add();
+                        continue;                        
+                    }
+                     
+            arab_phrase.add(lilchunk);
+        }
+        System.out.println("here is my arab phrase yo.");
+        System.out.println(arab_phrase);
+        return arab_phrase;
     }
         public PdfPTable arabicText(Phrase ph, PdfWriter pdfWriter){
             Paragraph pr = new Paragraph(ph);
@@ -856,6 +881,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
             table.setSpacingAfter(0);
             table.setSpacingBefore(0);
             table.addCell(celly);  
+            table.completeRow();
             System.out.println("yes you are arabic.");
             return table;
         }
