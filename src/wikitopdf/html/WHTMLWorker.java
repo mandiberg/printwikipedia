@@ -31,6 +31,7 @@ import com.lowagie.text.html.simpleparser.IncCell;
 import com.lowagie.text.html.simpleparser.IncTable;
 import com.lowagie.text.html.simpleparser.StyleSheet;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.FontSelector;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import wikitopdf.pdf.PdfPageWrapper;
 
 /**
@@ -222,6 +225,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		try {
                     whtmlfs = PdfPageWrapper.fs;
                     whtmlas = PdfPageWrapper.as;
+                    System.out.println("here is count of as " + whtmlas.size() );
                     whtmlprefs = PdfPageWrapper.pfs;
                     BaseFont bsCardo = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font cardo = new Font(bsCardo);
@@ -249,56 +253,10 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				if (currentParagraph == null) {
 					currentParagraph = new Paragraph();
 				}
-//				currentParagraph.add(factoryProperties
-//						.createChunk("\n", cprops));
                                 currentParagraph.add(new Chunk("\n",cardo));
 				return;
 			}
-//			if (tag.equals(HtmlTags.HORIZONTALRULE)) {
-//				// Attempting to duplicate the behavior seen on Firefox with
-//				// http://www.w3schools.com/tags/tryit.asp?filename=tryhtml_hr_test
-//				// where an initial break is only inserted when the preceding element doesn't
-//				// end with a break, but a trailing break is always inserted.
-//				boolean addLeadingBreak = true;
-//				if (currentParagraph == null) {
-//					currentParagraph = new Paragraph();
-//					addLeadingBreak = false;
-//				}
-//				if (addLeadingBreak) { // Not a new paragraph
-//					int numChunks = currentParagraph.getChunks().size();
-//					if (numChunks == 0 ||
-//							((Chunk)(currentParagraph.getChunks().get(numChunks - 1))).getContent().endsWith("\n"))
-//						addLeadingBreak = false;
-//				}
-//				String align = (String) h.get("align");
-//				int hrAlign = Element.ALIGN_CENTER;
-//				if (align != null) {
-//					if (align.equalsIgnoreCase("left"))
-//						hrAlign = Element.ALIGN_LEFT;
-//					if (align.equalsIgnoreCase("right"))
-//						hrAlign = Element.ALIGN_RIGHT;
-//				}
-//				String width = (String) h.get("width");
-//				float hrWidth = 1;
-//				if (width != null) {
-//					float tmpWidth = Markup.parseLength(width, Markup.DEFAULT_FONT_SIZE);
-//					if (tmpWidth > 0) hrWidth = tmpWidth;
-//					if (!width.endsWith("%"))
-//						hrWidth = 100; // Treat a pixel width as 100% for now.
-//				}
-//				String size = (String) h.get("size");
-//				float hrSize = 1;
-//				if (size != null) {
-//					float tmpSize = Markup.parseLength(size, Markup.DEFAULT_FONT_SIZE);
-//					if (tmpSize > 0)
-//						hrSize = tmpSize;
-//				}
-//				if (addLeadingBreak)
-//					currentParagraph.add(Chunk.NEWLINE);
-//				currentParagraph.add(new LineSeparator(hrSize, hrWidth, null, hrAlign, currentParagraph.getLeading()/2));
-//				currentParagraph.add(Chunk.NEWLINE);
-//				return;
-//			}
+
 			if (tag.equals(HtmlTags.CHUNK) || tag.equals(HtmlTags.SPAN)) {
 				cprops.addToChain(tag, h);
 				return;
@@ -622,7 +580,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 
                                 
 				if (!(obj instanceof ListItem)) {
-                                    System.out.println("obj of listitem");
 					stack.push(obj);
 					return;
 				}
@@ -633,7 +590,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 				}
 				Object list = stack.pop();
 				if (!(list instanceof com.lowagie.text.List)) {
-                                    System.out.println("i am a pending lowagi text list.");
                                     //what is this?
 					stack.push(list);
 					return;
@@ -646,10 +602,12 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                                 for(int i = 0; i < (cks.size()-1);i++){
                                     String tmp = cks.get(i).toString();
                                     PdfPTable pp = null;
+                                    
                                     if(isTD)
                                         tempph = whtmlprefs.process(tmp);
                                     else
                                         tempph = whtmlfs.process(tmp);
+                                    
                                     if( isRTL(whtmlas,tempph) ) {
                                         System.out.println("yes i am rtl");
                                         pp = arabicText(tempph,writer);
@@ -803,15 +761,16 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 if (isPRE) {
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
+                    System.out.println("i am pre");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
                     isPRE = false;
 //			return;
@@ -819,30 +778,32 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 else if(isH3){
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
+                    System.out.println("i am h3");
 //                    ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
                     isH3 = false;
                 }
                 else if(isTD){
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
+                    System.out.println("i am other td");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
 //                    isTD = false;
                 }
@@ -852,16 +813,22 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 
                 Phrase ph = whtmlfs.process(buf.toString());
                 PdfPTable pp = null;
-                if( isRTL(whtmlas,ph) ) {
-                    System.err.println("yes i am rtl");
-                    pp = arabicText(ph,writer);
-                }
-                if(pp!=null){
-                    System.err.println(ph.toString());
-                    System.err.println("this was arabic");
-                    currentParagraph.add(pp);
-                }
-                else
+//                if( isRTL(whtmlas,ph) ) {
+//                    System.err.println("yes i am rtl");
+//                    System.err.println("soup ");
+//                    ph = processToArabic(ph,writer, whtmlas);
+//                      pp = arabicText(ph,writer);
+//                }
+//                if(pp!=null){
+//                    System.err.println(ph.toString());
+//                    System.err.println("this was arabic");
+//                        try {
+//                            document.add(pp);
+//                        } catch (DocumentException ex) {
+//                            System.err.println(ex);
+//                        }
+//                }
+//                else
                     currentParagraph.add(ph);
                 }
 		
@@ -870,8 +837,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
         ArrayList chunks = ph.getChunks();
                 for(int i=0; i < chunks.size(); i++){
                     Chunk lilchunk = (Chunk) chunks.get(i);
-                    String[][] ane = lilchunk.getFont().getBaseFont().getAllNameEntries();
-                    
+//                    System.out.println("begin lil chunk " + lilchunk.toString() + " end lil chunk");
                     if(as.contains(lilchunk.getFont())){
                         return true;
                         
@@ -879,6 +845,29 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 }
         
         return false;
+    }
+        
+    public Phrase processToArabic(Phrase ph, PdfWriter pdfWriter, ArrayList as) {
+        Phrase arab_phrase = new Phrase();
+        
+        ArrayList chunks = ph.getChunks();
+        for(int i=0; i < chunks.size(); i++){
+            Chunk lilchunk = (Chunk) chunks.get(i);
+                    
+                    if(as.contains(lilchunk.getFont())){
+
+                        arab_phrase.add("\u202B");
+                        arab_phrase.add(lilchunk);
+                        arab_phrase.add("\u200F"+"\u202C");
+//                        arab_phrase.add();
+                        continue;                        
+                    }
+                     
+            arab_phrase.add(lilchunk);
+        }
+        System.out.println("here is my arab phrase yo.");
+        System.out.println(arab_phrase);
+        return arab_phrase;
     }
         public PdfPTable arabicText(Phrase ph, PdfWriter pdfWriter){
             Paragraph pr = new Paragraph(ph);
@@ -892,6 +881,7 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
             table.setSpacingAfter(0);
             table.setSpacingBefore(0);
             table.addCell(celly);  
+            table.completeRow();
             System.out.println("yes you are arabic.");
             return table;
         }
