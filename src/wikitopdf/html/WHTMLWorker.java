@@ -764,13 +764,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     System.out.println("i am pre");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
                     isPRE = false;
 //			return;
@@ -781,13 +781,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     System.out.println("i am h3");
 //                    ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
                     isH3 = false;
                 }
@@ -797,13 +797,13 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                     System.out.println("i am other td");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
-                    if( isRTL(whtmlas,ph) ) {
-                        System.out.println("yes i am rtl");
-                        pp = arabicText(ph,writer);
-                    }
-                    if(pp!=null)
-                        currentParagraph.add(pp);
-                    else
+//                    if( isRTL(whtmlas,ph) ) {
+//                        System.out.println("yes i am rtl");
+//                        pp = arabicText(ph,writer);
+//                    }
+//                    if(pp!=null)
+//                        currentParagraph.add(pp);
+//                    else
                         currentParagraph.add(ph);
 //                    isTD = false;
                 }
@@ -813,22 +813,22 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 
                 Phrase ph = whtmlfs.process(buf.toString());
                 PdfPTable pp = null;
-                if( isRTL(whtmlas,ph) ) {
-                    System.err.println("yes i am rtl");
-                    System.err.println("soup ");
-                    ph = processToArabic(ph,writer, whtmlas);
-                      pp = arabicText(ph,writer);
-                }
-                if(pp!=null){
-                    System.err.println(ph.toString());
-                    System.err.println("this was arabic");
-                        try {
-                            document.add(pp);
-                        } catch (DocumentException ex) {
-                            System.err.println(ex);
-                        }
-                }
-                else
+//                if( isRTL(whtmlas,ph) ) {
+//                    System.err.println("yes i am rtl");
+//                    System.err.println("soup ");
+//                    ph = processToArabic(ph,writer, whtmlas);
+//                      pp = arabicText(ph,writer);
+//                }
+//                if(pp!=null){
+//                    System.err.println(ph.toString());
+//                    System.err.println("this was arabic");
+//                        try {
+//                            document.add(pp);
+//                        } catch (DocumentException ex) {
+//                            System.err.println(ex);
+//                        }
+//                }
+//                else
                     currentParagraph.add(ph);
                 }
 		
