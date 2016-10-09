@@ -214,10 +214,6 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     public void onEndPage(PdfWriter writer, Document document) {
         System.out.println("current page num");
         System.out.println(writer.getPageNumber());
-        if(writer.getPageNumber() >= 70){
-            System.out.println("falflflflflflflf");
-            return;
-        }
             
         pageNum = writer.getPageNumber() + startPage;
         contentPage.saveState();
@@ -303,8 +299,7 @@ public class PageHeaderEvent extends PdfPageEventHelper {
     private void writeHeader(String text, float x, float y, int align, Document document,PdfWriter pdfWriter) throws DocumentException{ //place the title and page number appropriately.
         //not liking that this is done using content bytes. should be using pdfpcell/table with phrase.
 //        PdfPTable pp = null;
-        if(pdfWriter.getPageNumber() >= 69)
-            return;
+        
         int sign = (align == PdfContentByte.ALIGN_LEFT) ? -1 : 1;
         Phrase ph = hfs.process(text.toUpperCase());
 //        if(isRTL(as,ph)){
