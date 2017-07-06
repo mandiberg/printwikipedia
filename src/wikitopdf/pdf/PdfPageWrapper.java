@@ -52,7 +52,11 @@ public class PdfPageWrapper {
         //Read settings.
         //'_' - prefix for for temp file. After stamping file would be renamed
         hard_page_limit = incoming_hard_page_limit;
-        System.out.println("i am start page " + pageNum);
+        System.out.println(previous_objects.toString());
+        System.out.println("above is arraylist of objects");
+        System.out.println(previous_title + " previous title $$$$");
+        
+//        System.out.println("i am start page " + pageNum);
         outputFileName = "_" + index + "-" + cVolNum + "-" + pageNum +"-"+ WikiSettings.getInstance().getOutputFileName();
         System.out.println(outputFileName);
         outputFileName = outputFileName.replace("/","\\");
@@ -206,7 +210,7 @@ public class PdfPageWrapper {
                 "This work is legally categorized as an artistic work. As such, this qualifies for trademark use under clause 3.6.3 (Artistic, scientific, literary, political, and other non-commercial uses) as denoted at wikimediafoundation.org/wiki/Trademark_policy\r\r"+
                 "Wikipedia is a trademark of the Wikimedia Foundation and is used with the permission of the Wikimedia Foundation. This work is not endorsed by or affiliated with the Wikimedia Foundation.\r\r"+
                 "Cover set in Linux Libertine. Book set in Cardo, with the following 36 typefaces added to handle the many languages contained within: Alef, Amiri, Android Emoji, Bitstream CyberCJK, Casy EA, cwTeXFangSong, cwTeXHei, cwTeXKai, cwTeXMing, cwTeXYen, DejaVu Sans, Droid Arabic Kufi, FreeSans, FreeSerif, GurbaniAkharSlim, IndUni-N, Junicode, Lohit Gujarati, Lohit Oriya, MAC C Times, MS Gothic, NanumGothic, Noto Kufi Arabic, Noto Sans, Noto Sans Bengali, Noto Sans Cherokee, Noto Sans Devanagari, Noto Sans Georgian, Noto Sans Japanese, Noto Sans Sinhala, Noto Sans Tamil UI, Noto Sans Telugu, Noto Sans Thai, Noto Serif Armenian, Open Sans, Roboto.\r\r"+
-                "Produced with support from Eyebeam, The Banff Centre, the City University of New York, and Lulu.com, The Wikimedia Foundation, and Denny Gallery. Designed and built with assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, and Colin Elliot.\r\r"+
+                "Produced with support from Eyebeam, The Banff Centre, the City University of New York, and Lulu.com, The Wikimedia Foundation, and Denny Gallery. Designed and built with assistance from Denis Lunev, Jonathan Kirtharan, Kenny Lozowski, Patrick Davison, Colin Elliot and Danara Sarıoğlu.\r\r"+
                 "PrintWikipedia.com\r\rGitHub.com/mandiberg/printwikipedia\r\rPrinted by Lulu.com";
         PdfPTable cpTable = new PdfPTable(1);
         try { //setting copyright text and adding to page
@@ -766,24 +770,12 @@ public class PdfPageWrapper {
             }
 
             
-            System.out.println(text);
-            System.out.println("\n\n\n\n\n");
+//            System.out.println(text);
+//            System.out.println("\n\n\n\n\n");
             
             
             
-<<<<<<< HEAD
-=======
-//             text is in BBCode (This is bliki)
-//            String reflistStr = "<H2><SPAN CLASS=\"MW-HEADLINE\" ID=\"EINZELNACHWEISE\">EINZELNACHWEISE</SPAN></H2>";
-//            Pattern pde = Pattern.compile(reflistStr, Pattern.CASE_INSENSITIVE);
-//            Matcher mref = pde.matcher(text);
-//
-//            if (mref.find()) {
-//                append_refs = true;
-//            }
-            System.out.println(text);
-            System.out.println("\n\n\n\n\n");
->>>>>>> master
+
             String html = WikiHtmlConverter.convertToHtml(text);
             
             
@@ -794,7 +786,7 @@ public class PdfPageWrapper {
                 is_refs=true;
             }
             
-            System.out.println(html);
+//            System.out.println(html);
 
 
             if(!is_refs)

@@ -51,6 +51,8 @@ public class WikiProcessor {
         long lastTime;
         long totalTime = 0;
         String last_title = "";
+        String obj_outputName = "";
+        boolean new_book  = false;
         ArrayList objects = new ArrayList();
         
         String tempName;
@@ -91,9 +93,7 @@ public class WikiProcessor {
             int artCount = sqlReader.getArticlesCount();// Counts total from database
             sqlReader = null;
             while (isInProggress && totalTime < timeLimit ) {
-                if(objects.size()>0){
-                    carry_over_art = true;
-                }
+                new_book=true;
                 pdfWrapper = new PdfPageWrapper(startLimit, cVolNum, totalPageNum, objects, last_title, hard_page_limit); // Start with page ID indicated in _output.pdf file.
                 
                 tempName = "./output/" + pdfWrapper.getOutputFileName(); // Added Wednesday May 22 by CE For file rename
@@ -105,11 +105,18 @@ public class WikiProcessor {
                     
                     // Get all article entries from the database
                     ArrayList<WikiPage> pages = sqlReader.getBunch(startLimit, pageBunch, 1);
-                    if(carry_over_art){
-                        outputName = last_title+"&&&";
+                    if(objects.size()>0 ){
+                        System.out.println("$$$$$ objects size is large and so first title is " + last_title + " here is obj title " + obj_outputName);
+                        if(obj_outputName=="")
+                            obj_outputName = last_title+"&&&";
+                        new_book=true;
                     }
-                    else{
-                        outputName = pages.get(0).getTitle()+"&&&";
+                    else if(new_book){
+                            System.out.println("we are new book");
+                            outputName = pages.get(0).getTitle()+"&&&";
+                            new_book=false;
+                            obj_outputName = "";
+                        
                     }
                     
                     
@@ -126,15 +133,27 @@ public class WikiProcessor {
                         }
                         
                         System.out.println("Current Article is: " + (startLimit + artWritten));
-                        if(startLimit + artWritten+1 == 8110166){//final pkey...
+                        if(startLimit + artWritten+1 == 2551123){//final pkey...
                             end_times = true;
                             break;//if you made it through then stop.
                         }
                     }
+                    System.out.println(i.hasNext());
+                    System.out.println(pdfWrapper.getPageNumb() + " < pdf pn    , pdfpl > " +pdfPageLimit);
+                    System.out.println(pdfWrapper.remaining_objects.size());
+                    System.out.println(pdfWrapper.checkOpen());
+                    System.out.println("^^$$$$ i hasnext, pn, remaining size, checkopen \n\n\n");
                     
-                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");    
-                    
-                    outputName = outputName + last_title;
+                    last_title = pages.get(artWritten - 1).getTitle().replace("_", " ");  
+                    System.out.println("$$$$$ so now this is the title of the last entry here " + last_title);
+                    if(obj_outputName!=""){
+                        System.out.println("$$$$ obj output name is not null. so title is going to be this big baby boi "  + obj_outputName);
+                        outputName = obj_outputName + last_title;
+                    }
+                    else{
+                        outputName = outputName + last_title;
+                    }
+
                     outputName = outputName.replace("/", "_");
                     outputName = outputName.replace("\\", "_");
                     outputName = outputName.replace(":", "");
@@ -188,7 +207,7 @@ public class WikiProcessor {
                 newFile = new File(outputName);
                 
                 if(!(oldFile.renameTo(newFile))){
-                    System.out.println("File not renamed first time");
+                    System.out.println("$$$$$ File not renamed first time");
 //                    if (!(oldFileNoUnderscore.renameTo(newFile))){
 //                        System.out.println("File not renamed second time, matching" );
 //                    }
@@ -196,6 +215,7 @@ public class WikiProcessor {
                 //check if the page limit is exceeded, chop, create new file, delete old file and rename new to old with correct page#
                 
                 if(pdfWrapper.getPageNumb()>hard_page_limit){
+                    System.out.println("$$$$$ i am in over my hp limit");
                     String abs_path_newFile = newFile.getAbsolutePath();
                     
                     PdfReader reader = new PdfReader(newFile.getAbsolutePath());
@@ -210,6 +230,8 @@ public class WikiProcessor {
                     File f = new File("./output/tmp_chop_file.pdf");
 
                     f.renameTo(new File(outputName));
+                    outputName = "";
+                    obj_outputName = "";
 
                 }
                 

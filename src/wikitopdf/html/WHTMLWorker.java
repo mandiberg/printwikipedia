@@ -225,7 +225,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
 		try {
                     whtmlfs = PdfPageWrapper.fs;
                     whtmlas = PdfPageWrapper.as;
-                    System.out.println("here is count of as " + whtmlas.size() );
                     whtmlprefs = PdfPageWrapper.pfs;
                     BaseFont bsCardo = BaseFont.createFont("fonts/Cardo_no_hebrew.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font cardo = new Font(bsCardo);
@@ -761,7 +760,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 if (isPRE) {
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
-                    System.out.println("i am pre");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
 //                    if( isRTL(whtmlas,ph) ) {
@@ -778,7 +776,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 else if(isH3){
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
-                    System.out.println("i am h3");
 //                    ph.setLeading(4f);
                     PdfPTable pp = null;
 //                    if( isRTL(whtmlas,ph) ) {
@@ -794,7 +791,6 @@ public class WHTMLWorker implements SimpleXMLDocHandler, DocListener {
                 else if(isTD){
                     Chunk chunk = factoryProperties.createChunk(buf.toString(), cprops);
                     Phrase ph = whtmlprefs.process(buf.toString());
-                    System.out.println("i am other td");
                     ph.setLeading(4f);
                     PdfPTable pp = null;
 //                    if( isRTL(whtmlas,ph) ) {
