@@ -1,22 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-lulu_email="blah@blah.blah"
-lulu_pass = ""
-input_file = "0001&&&firsttitle&&&secondtitle&&&.pdf"
-author_fn = ""
-author_ln = ""
-ftp_usr = lulu_email 
-ftp_host = "ftpupload.lulu.com"
-make_log = False
-upload_type = "" #contrib/toc/reg
-sleep_multiplier = 0
 
-crash_list=[]
+class IPass:
+	def __init__(self, password):
+		self.password = password
+		self.lulu_email="blah@blah.com"
+		self.lulu_pass = self.password.lulu_password
+		self.input_file ="volume#&&&1stTitle&&&2ndTitle&&&.pdf"
+		self.author_fn = ""
+		self.author_ln = ""
+		self.ftp_usr = self.lulu_email 	
+		self.ftp_host = "ftpupload.lulu.com"
+		self.make_log = False
+		self.upload_type = "reg" #contrib/toc/reg
+		self.sleep_multiplier = 0
+		self.is_private = False
+		self.success_file = "nl_success.json"
+		self.fail_file = "nl_fail.txt"
+		# if going through a list of volumes that are out of order, use crash list. fill with integers representative of the volume#s
+		self.crash_list=[]
 
-
-# twitter
-pw_consumer_key = ""
-pw_consumer_secret = ""
-pw_access_token = ""
-pw_access_token_secret = ""
+		# twitter
+		self.pw_consumer_key = ""
+		self.pw_consumer_secret = ""
+		self.pw_access_token = ""
+		self.pw_access_token_secret = ""
+	

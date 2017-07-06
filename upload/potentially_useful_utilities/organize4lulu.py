@@ -1,6 +1,6 @@
-
+#this file expects to be one level outside of a directory, "in", that contains all of the copyright files and volumes.
 #NOTE: if organizing for the upload via FTP run the file normally. Then drag the contents of the folder into your ftp client
-#this way you are not uploading unnecessary pre files.
+#this way you are not uploading unecessary pre files.
 #if you do that. move all files back out of those folders in terminal via: mv in/*/*.pdf in/ -------- then remove the directories: rm -r in/*/ ------- then run this again 
 #use the arguement "pre" following this filename to add the pre files.
 
