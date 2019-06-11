@@ -3,7 +3,7 @@ Print Wikipedia
 
 This code parses the entire Wikipedia database, creates print ready PDFs, and uploads them to Lulu.com. This is a multi-step process documented in the meta-and-documentation folder. The code can create three different sets of PDFs: Print Wikipedia (the encyclopedia), Wikipedia Table of Contents and Wikipedia Contributor Appendix.
 
-##About Print Wikipedia
+## About Print Wikipedia
 
 Print Wikipedia is a both a utilitarian visualization of the largest accumulation of human knowledge and a poetic gesture towards the challenges of knowing in an episteme of big data. Artist Michael Mandiberg wrote software that transforms the entirety of the English-language Wikipedia database into 7473 volumes of 700 pages each, complete with covers, and then uploads them for print-on-demand. Built on what is likely the largest appropriation ever made, it is also a work of found poetry that draws attention to the sheer size of the encyclopedia’s content and the impossibility of rendering Wikipedia as a material object in fixed form: once a volume is printed it is already out of date. The work is also a reflection on the actual transparency or completeness of knowledge containers and history.
 
@@ -11,7 +11,7 @@ This artwork was launched and first exhibited at Denny Gallery in New York City 
 
 Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 36 volume Wikipedia Contributor Appendix which lists the names of the 7.5 million Wikipedia users who have made at least a single edit to the website.
 
-##Next Steps
+## Next Steps
 
 1. Upgrade dependencies to most current versions
 2. Resolve Helvetica non-embed error
@@ -19,13 +19,13 @@ Print Wikipedia is complimented by a 91 volume Wikipedia Table of Contents and 3
 4. Correct Right-To-Left languages (Hebrew and Arabic), and make sure Joined languages (Arabic) are doing so
 
 
-##Other READMEs
+## Other READMEs
 All other READMEs live in the folder meta-and-documentation. 
 Use the main README.txt to learn how to set up this project
 UPLOAD_README.txt is how to set up the upload process and things to watch out for during the upload.
 REFACTORING_README.txt is notes for future developers on some overall issues/bugs that need to be solved and other advice.
 
-##Other URLs
+## Other URLs
 
 - www.printwikipedia.com
 - www.printwikipedia.lulu.com
